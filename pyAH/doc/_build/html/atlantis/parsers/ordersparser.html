@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>atlantis.parsers.ordersparser &mdash; pyAH a documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     'a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="pyAH a documentation" href="../../index.html" />
+    <link rel="up" title="atlantis.parsers" href="index.html" />
+    <link rel="next" title="atlantis.helpers.json" href="../helpers/helpers_json.html" />
+    <link rel="prev" title="atlantis.parsers.reportparser" href="reportparser.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../helpers/helpers_json.html" title="atlantis.helpers.json"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="reportparser.html" title="atlantis.parsers.reportparser"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">pyAH a documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U"><tt class="docutils literal"><span class="pre">atlantis.parsers</span></tt></a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-atlantis.parsers.ordersparser">
+<span id="atlantis-parsers-ordersparser"></span><h1><a class="reference internal" href="#module-atlantis.parsers.ordersparser" title="atlantis.parsers.ordersparser"><tt class="xref py py-mod docutils literal"><span class="pre">atlantis.parsers.ordersparser</span></tt></a><a class="headerlink" href="#module-atlantis.parsers.ordersparser" title="Permalink to this headline">¶</a></h1>
+<p>This module implements all classes needed to parse order files.</p>
+<p>It defines a <a class="reference internal" href="#atlantis.parsers.ordersparser.OrdersParser" title="atlantis.parsers.ordersparser.OrdersParser"><tt class="xref py py-class docutils literal"><span class="pre">OrdersParser</span></tt></a> which will parse report lines and
+will call a <a class="reference internal" href="#atlantis.parsers.ordersparser.OrdersConsumer" title="atlantis.parsers.ordersparser.OrdersConsumer"><tt class="xref py py-class docutils literal"><span class="pre">OrdersConsumer</span></tt></a> with parser data. Classes willing
+to consume data parser by <a class="reference internal" href="#atlantis.parsers.ordersparser.OrdersParser" title="atlantis.parsers.ordersparser.OrdersParser"><tt class="xref py py-class docutils literal"><span class="pre">OrdersParser</span></tt></a> will have to implement
+<a class="reference internal" href="#atlantis.parsers.ordersparser.OrdersConsumer" title="atlantis.parsers.ordersparser.OrdersConsumer"><tt class="xref py py-class docutils literal"><span class="pre">OrdersConsumer</span></tt></a> interface.</p>
+<p>Public classes in <a class="reference internal" href="#module-atlantis.parsers.ordersparser" title="atlantis.parsers.ordersparser"><tt class="xref py py-mod docutils literal"><span class="pre">atlantis.parsers.ordersparser</span></tt></a> module:</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#atlantis.parsers.ordersparser.OrdersConsumer" title="atlantis.parsers.ordersparser.OrdersConsumer"><tt class="xref py py-obj docutils literal"><span class="pre">OrdersConsumer</span></tt></a></td>
+<td>Virtual class for <a class="reference internal" href="#atlantis.parsers.ordersparser.OrdersParser" title="atlantis.parsers.ordersparser.OrdersParser"><tt class="xref py py-class docutils literal"><span class="pre">OrdersParser</span></tt></a> consumer.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#atlantis.parsers.ordersparser.OrdersParser" title="atlantis.parsers.ordersparser.OrdersParser"><tt class="xref py py-obj docutils literal"><span class="pre">OrdersParser</span></tt></a></td>
+<td>Atlantis orders parser.</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="ordersconsumer">
+<h2><a class="reference internal" href="#atlantis.parsers.ordersparser.OrdersConsumer" title="atlantis.parsers.ordersparser.OrdersConsumer"><tt class="xref py py-class docutils literal"><span class="pre">OrdersConsumer</span></tt></a><a class="headerlink" href="#ordersconsumer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="atlantis.parsers.ordersparser.OrdersConsumer">
+<em class="property">class </em><tt class="descclassname">atlantis.parsers.ordersparser.</tt><tt class="descname">OrdersConsumer</tt><a class="headerlink" href="#atlantis.parsers.ordersparser.OrdersConsumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Virtual class for <a class="reference internal" href="#atlantis.parsers.ordersparser.OrdersParser" title="atlantis.parsers.ordersparser.OrdersParser"><tt class="xref py py-class docutils literal"><span class="pre">OrdersParser</span></tt></a> consumer.</p>
+<p>This is an interface for classes willing to receive data from the
+<a class="reference internal" href="#atlantis.parsers.ordersparser.OrdersParser" title="atlantis.parsers.ordersparser.OrdersParser"><tt class="xref py py-class docutils literal"><span class="pre">OrdersParser</span></tt></a>. Classes implementing this interface should
+overwrite their public methods.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="ordersparser">
+<h2><a class="reference internal" href="#atlantis.parsers.ordersparser.OrdersParser" title="atlantis.parsers.ordersparser.OrdersParser"><tt class="xref py py-class docutils literal"><span class="pre">OrdersParser</span></tt></a><a class="headerlink" href="#ordersparser" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="atlantis.parsers.ordersparser.OrdersParser">
+<em class="property">class </em><tt class="descclassname">atlantis.parsers.ordersparser.</tt><tt class="descname">OrdersParser</tt><big>(</big><em>consumer</em><big>)</big><a class="headerlink" href="#atlantis.parsers.ordersparser.OrdersParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Atlantis orders parser.</p>
+<p><tt class="xref py py-class docutils literal"><span class="pre">OrdersParser</span></tt> is in charge of parsing an orders file, or
+the orders template part of an Atlantis PBEM report, and sends
+parsing result to its registered <a class="reference internal" href="#atlantis.parsers.ordersparser.OrdersConsumer" title="atlantis.parsers.ordersparser.OrdersConsumer"><tt class="xref py py-class docutils literal"><span class="pre">OrdersConsumer</span></tt></a> together
+with the original line, in case the <a class="reference internal" href="#atlantis.parsers.ordersparser.OrdersConsumer" title="atlantis.parsers.ordersparser.OrdersConsumer"><tt class="xref py py-class docutils literal"><span class="pre">OrdersConsumer</span></tt></a> needs
+it for description, as it happens with comments.</p>
+<dl class="method">
+<dt id="atlantis.parsers.ordersparser.OrdersParser.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>consumer</em><big>)</big><a class="headerlink" href="#atlantis.parsers.ordersparser.OrdersParser.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parser initializer.</p>
+<p>Its only parameter is the consumer (must implmement
+OrdersConsumer interface) of the parsed report.</p>
+<p>Parameter:
+consumer  OrdersConsumer instance to which parsed elements will</p>
+<blockquote>
+<div>be sent</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.ordersparser.OrdersParser.parse">
+<tt class="descname">parse</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#atlantis.parsers.ordersparser.OrdersParser.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read orders from an open file and parse them</p>
+<p>This method read lines from an open file. lines all passed
+to parse_line until the file ends.</p>
+<p>Parameters:
+f  Open file instance to be read</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.ordersparser.OrdersParser.parse_line">
+<tt class="descname">parse_line</tt><big>(</big><em>line</em><big>)</big><a class="headerlink" href="#atlantis.parsers.ordersparser.OrdersParser.parse_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse an orders line.</p>
+<p>Read line is always sent to the consumer before stripping
+them from its comments. The order line is parsed and its
+contents sent to the consumer.</p>
+<p>Parameters:
+line  Line being parsed</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="atlantis.parsers.ordersparser.OrdersParser.tokenize">
+<em class="property">static </em><tt class="descname">tokenize</tt><big>(</big><em>line</em><big>)</big><a class="headerlink" href="#atlantis.parsers.ordersparser.OrdersParser.tokenize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tokenize a line</p>
+<p>Splits a line into its tokens. In Atlantis tokens are defined
+by:
+- Double quotes: everything included between a pair of double
+quotes is a token, no matter which characters are in it.
+- Comments: comments is anything after a semi-colon ;. Comments
+suffer no longer tokenization, they&#8217;re a single token
+- Permanent mark: the at sign &#64; as the first not blank
+is interpreted as a permanent mark, and anything following
+it will be included in next turn orders template.
+- Spaces: tokens are separated by spaces.</p>
+<p>Tokenize returns a tuple with the following elements: list of
+tokens, permanent flag (True or False), comment string.</p>
+<p>Parameters:
+line  The line to be tokenized</p>
+<p>Returns:
+A three elements tuple with the list of tokens, the permanent
+flag and the commend string</p>
+<p>Raises:
+SyntaxError  If an error is found (like unmatched quotes)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">atlantis.parsers.ordersparser</span></tt></a><ul>
+<li><a class="reference internal" href="#ordersconsumer"><tt class="docutils literal"><span class="pre">OrdersConsumer</span></tt></a></li>
+<li><a class="reference internal" href="#ordersparser"><tt class="docutils literal"><span class="pre">OrdersParser</span></tt></a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="reportparser.html"
+                        title="previous chapter"><tt class="docutils literal"><span class="pre">atlantis.parsers.reportparser</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../helpers/helpers_json.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">atlantis.helpers.json</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/atlantis/parsers/ordersparser.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../helpers/helpers_json.html" title="atlantis.helpers.json"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="reportparser.html" title="atlantis.parsers.reportparser"
+             >previous</a> |</li>
+        <li><a href="../../index.html">pyAH a documentation</a> &raquo;</li>
+          <li><a href="index.html" ><tt class="docutils literal"><span class="pre">atlantis.parsers</span></tt></a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, David Lozano.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

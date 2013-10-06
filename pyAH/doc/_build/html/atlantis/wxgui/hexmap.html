@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>atlantis.wxgui.hexmap &mdash; pyAH a documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     'a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="pyAH a documentation" href="../../index.html" />
+    <link rel="up" title="atlantis.wxgui" href="index.html" />
+    <link rel="prev" title="atlantis.wxgui" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="atlantis.wxgui"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">pyAH a documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U"><tt class="docutils literal"><span class="pre">atlantis.wxgui</span></tt></a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-atlantis.wxgui.hexmap">
+<span id="atlantis-wxgui-hexmap"></span><h1><a class="reference internal" href="#module-atlantis.wxgui.hexmap" title="atlantis.wxgui.hexmap"><tt class="xref py py-mod docutils literal"><span class="pre">atlantis.wxgui.hexmap</span></tt></a><a class="headerlink" href="#module-atlantis.wxgui.hexmap" title="Permalink to this headline">¶</a></h1>
+<p>Hex map canvas.</p>
+<p>Most important part of an Atlantis PBEM client is the map. Actually you
+could develop a Atlantis PBEM helper that does only show a map, while
+any other action can be done using a text editor.</p>
+<p>This module defines an <a class="reference internal" href="#atlantis.wxgui.hexmap.HexMapWindow" title="atlantis.wxgui.hexmap.HexMapWindow"><tt class="xref py py-class docutils literal"><span class="pre">HexMapWindow</span></tt></a> class that implements a
+<a class="reference external" href="http://www.wxpython.org">wxPython</a> <tt class="xref py py-class docutils literal"><span class="pre">ScrolledCanvas</span></tt> that
+shows an hexagonal map.</p>
+<p><a class="reference internal" href="#atlantis.wxgui.hexmap.HexMapWindow" title="atlantis.wxgui.hexmap.HexMapWindow"><tt class="xref py py-class docutils literal"><span class="pre">HexMapWindow</span></tt></a> won&#8217;t hold map data on his own, but will define
+instead an interface that must to be implemented by map controllers.</p>
+<p>Public classes in <a class="reference internal" href="#module-atlantis.wxgui.hexmap" title="atlantis.wxgui.hexmap"><tt class="xref py py-mod docutils literal"><span class="pre">atlantis.wxgui.hexmap</span></tt></a> module:</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#atlantis.wxgui.hexmap.HexMapWindow" title="atlantis.wxgui.hexmap.HexMapWindow"><tt class="xref py py-obj docutils literal"><span class="pre">HexMapWindow</span></tt></a></td>
+<td>Hex map canvas.</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="hexmapwindow">
+<h2><a class="reference internal" href="#atlantis.wxgui.hexmap.HexMapWindow" title="atlantis.wxgui.hexmap.HexMapWindow"><tt class="xref py py-class docutils literal"><span class="pre">HexMapWindow</span></tt></a><a class="headerlink" href="#hexmapwindow" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="atlantis.wxgui.hexmap.HexMapWindow">
+<em class="property">class </em><tt class="descclassname">atlantis.wxgui.hexmap.</tt><tt class="descname">HexMapWindow</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#atlantis.wxgui.hexmap.HexMapWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hex map canvas.</p>
+<p>Implements a <tt class="xref py py-class docutils literal"><span class="pre">wx.ScrolledCanvas</span></tt> that shows an hex-based
+map.</p>
+<p>Defined constants:
+- Zoom values:</p>
+<blockquote>
+<div><ul class="simple">
+<li>ZOOM_25: zooms the map at 25% size.</li>
+<li>ZOOM_50: zooms the map at 50% size.</li>
+<li>ZOOM_75: zooms the map at 75% size.</li>
+<li>ZOOM_100: zooms the map at 100% (normal) size.</li>
+<li>ZOOM_150: zooms the map at 150% size.</li>
+<li>ZOOM_200: zooms the map at 200% size.</li>
+<li>ZOOM_OUT: equivalent to ZOOM_25.</li>
+<li>ZOOM_IN: equivalent to ZOOM_200.</li>
+</ul>
+</div></blockquote>
+<dl class="method">
+<dt id="atlantis.wxgui.hexmap.HexMapWindow.add_terrain_type">
+<tt class="descname">add_terrain_type</tt><big>(</big><em>terrain_type</em>, <em>brush</em><big>)</big><a class="headerlink" href="#atlantis.wxgui.hexmap.HexMapWindow.add_terrain_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new terrain type to the map.</p>
+<p>Each hexagon of the given terrain_type will be drawn with the
+give background for this type. Whether terrain_type existed
+its information is overwritten.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>terrain_type</strong> &#8211; terrain type added to the map.</li>
+<li><strong>brush</strong> &#8211; <tt class="xref py py-class docutils literal"><span class="pre">wx.Brush</span></tt> used to draw the hex.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.wxgui.hexmap.HexMapWindow.delete_terrain_type">
+<tt class="descname">delete_terrain_type</tt><big>(</big><em>terrain_type</em><big>)</big><a class="headerlink" href="#atlantis.wxgui.hexmap.HexMapWindow.delete_terrain_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a terrain type from the map.</p>
+<p>Drop this terrain type information from <a class="reference internal" href="#atlantis.wxgui.hexmap.HexMapWindow" title="atlantis.wxgui.hexmap.HexMapWindow"><tt class="xref py py-class docutils literal"><span class="pre">HexMapWindow</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>terrain_type</strong> &#8211; terrain type to be deleted.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises KeyError:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">if terrain type does not exist.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.wxgui.hexmap.HexMapWindow.clear_terrain_types">
+<tt class="descname">clear_terrain_types</tt><big>(</big><big>)</big><a class="headerlink" href="#atlantis.wxgui.hexmap.HexMapWindow.clear_terrain_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes terrain types information.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.wxgui.hexmap.HexMapWindow.set_map_data">
+<tt class="descname">set_map_data</tt><big>(</big><em>map_data</em><big>)</big><a class="headerlink" href="#atlantis.wxgui.hexmap.HexMapWindow.set_map_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set map data to be shown in by <a class="reference internal" href="#atlantis.wxgui.hexmap.HexMapWindow" title="atlantis.wxgui.hexmap.HexMapWindow"><tt class="xref py py-class docutils literal"><span class="pre">HexMapWindow</span></tt></a>.</p>
+<p>This map data has to be a list of hexes, where each hex
+is an <tt class="xref py py-class docutils literal"><span class="pre">HexMapData</span></tt>.</p>
+<p>After setting map_data <a class="reference internal" href="#atlantis.wxgui.hexmap.HexMapWindow" title="atlantis.wxgui.hexmap.HexMapWindow"><tt class="xref py py-class docutils literal"><span class="pre">HexMapWindow</span></tt></a> is forced to
+redraw with the new data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>map_data</strong> &#8211; list of <tt class="xref py py-class docutils literal"><span class="pre">HexMapData</span></tt>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.wxgui.hexmap.HexMapWindow.set_zoom">
+<tt class="descname">set_zoom</tt><big>(</big><em>zoom</em><big>)</big><a class="headerlink" href="#atlantis.wxgui.hexmap.HexMapWindow.set_zoom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set map zoom.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">atlantis.wxgui.hexmap</span></tt></a><ul>
+<li><a class="reference internal" href="#hexmapwindow"><tt class="docutils literal"><span class="pre">HexMapWindow</span></tt></a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter"><tt class="docutils literal"><span class="pre">atlantis.wxgui</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/atlantis/wxgui/hexmap.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="atlantis.wxgui"
+             >previous</a> |</li>
+        <li><a href="../../index.html">pyAH a documentation</a> &raquo;</li>
+          <li><a href="index.html" ><tt class="docutils literal"><span class="pre">atlantis.wxgui</span></tt></a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, David Lozano.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>atlantis.gamedata.gamedata &mdash; pyAH a documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     'a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="pyAH a documentation" href="../../index.html" />
+    <link rel="up" title="atlantis.gamedata" href="index.html" />
+    <link rel="next" title="atlantis.gamedata.region" href="region.html" />
+    <link rel="prev" title="atlantis.gamedata" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="region.html" title="atlantis.gamedata.region"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="atlantis.gamedata"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">pyAH a documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U"><tt class="docutils literal"><span class="pre">atlantis.gamedata</span></tt></a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-atlantis.gamedata.gamedata">
+<span id="atlantis-gamedata-gamedata"></span><h1><a class="reference internal" href="#module-atlantis.gamedata.gamedata" title="atlantis.gamedata.gamedata"><tt class="xref py py-mod docutils literal"><span class="pre">atlantis.gamedata.gamedata</span></tt></a><a class="headerlink" href="#module-atlantis.gamedata.gamedata" title="Permalink to this headline">¶</a></h1>
+<p>This module implements an Atlantis game data manager.</p>
+<p>Main class defined in this module is
+<a class="reference internal" href="#atlantis.gamedata.gamedata.GameData" title="atlantis.gamedata.gamedata.GameData"><tt class="xref py py-class docutils literal"><span class="pre">GameData</span></tt></a>, a class that implements
+<a class="reference internal" href="../parsers/reportparser.html#atlantis.parsers.reportparser.ReportConsumer" title="atlantis.parsers.reportparser.ReportConsumer"><tt class="xref py py-class docutils literal"><span class="pre">atlantis.parsers.reportparser.ReportConsumer</span></tt></a> and thus will
+hold all data read from Atlantis PBEM reports.</p>
+<p>Public classes in <a class="reference internal" href="#module-atlantis.gamedata.gamedata" title="atlantis.gamedata.gamedata"><tt class="xref py py-mod docutils literal"><span class="pre">atlantis.gamedata.gamedata</span></tt></a> module:</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#atlantis.gamedata.gamedata.GameData" title="atlantis.gamedata.gamedata.GameData"><tt class="xref py py-obj docutils literal"><span class="pre">GameData</span></tt></a></td>
+<td>This class hold all data of an Atlantis PBEM game.</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="gamedata">
+<h2><a class="reference internal" href="#atlantis.gamedata.gamedata.GameData" title="atlantis.gamedata.gamedata.GameData"><tt class="xref py py-class docutils literal"><span class="pre">GameData</span></tt></a><a class="headerlink" href="#gamedata" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="atlantis.gamedata.gamedata.GameData">
+<em class="property">class </em><tt class="descclassname">atlantis.gamedata.gamedata.</tt><tt class="descname">GameData</tt><a class="headerlink" href="#atlantis.gamedata.gamedata.GameData" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class hold all data of an Atlantis PBEM game.</p>
+<p>It implements
+<a class="reference internal" href="../parsers/reportparser.html#atlantis.parsers.reportparser.ReportConsumer" title="atlantis.parsers.reportparser.ReportConsumer"><tt class="xref py py-class docutils literal"><span class="pre">ReportConsumer</span></tt></a>
+interface defined in <a class="reference internal" href="../parsers/reportparser.html#module-atlantis.parsers.reportparser" title="atlantis.parsers.reportparser"><tt class="xref py py-mod docutils literal"><span class="pre">atlantis.parsers.reportparser</span></tt></a> module,
+so it will be in charge of handling data parsed by 
+<a class="reference internal" href="../parsers/reportparser.html#atlantis.parsers.reportparser.ReportParser" title="atlantis.parsers.reportparser.ReportParser"><tt class="xref py py-class docutils literal"><span class="pre">ReportParser</span></tt></a>.</p>
+<p>All objects managed by
+<a class="reference internal" href="#atlantis.gamedata.gamedata.GameData" title="atlantis.gamedata.gamedata.GameData"><tt class="xref py py-class docutils literal"><span class="pre">GameData</span></tt></a> mimics as much as
+possible the structure in Atlantis PBEM source code, to make it
+easier to implement simulation engines of any type (battle or
+economic simulators).</p>
+<dl class="method">
+<dt id="atlantis.gamedata.gamedata.GameData.line">
+<tt class="descname">line</tt><big>(</big><em>line</em><big>)</big><a class="headerlink" href="#atlantis.gamedata.gamedata.GameData.line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a new line.</p>
+<p>Whenever a line is read, it is sent to the consumer in case
+it wants to use it for the read entity description.</p>
+<p>The line is send just before the parsed object is sent to
+the consumer, so it should store it in a temporary buffer,
+and when the parsed entity is received attach the line(s)
+to it as a description.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>line</strong> &#8211; read line.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.gamedata.gamedata.GameData.region">
+<tt class="descname">region</tt><big>(</big><em>terrain</em>, <em>name</em>, <em>xloc</em>, <em>yloc</em>, <em>zloc=None</em>, <em>population=0</em>, <em>racenames=None</em>, <em>wealth=0</em>, <em>town=None</em><big>)</big><a class="headerlink" href="#atlantis.gamedata.gamedata.GameData.region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle first line of region report.</p>
+<p>Implements
+<a class="reference internal" href="../parsers/reportparser.html#atlantis.parsers.reportparser.ReportConsumer.region" title="atlantis.parsers.reportparser.ReportConsumer.region"><tt class="xref py py-meth docutils literal"><span class="pre">ReportConsumer.region</span></tt></a>.
+See this method documentation for further information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>xloc</strong> &#8211; X coordinates of the hexagon.</li>
+<li><strong>yloc</strong> &#8211; Y coordinates of the hexagon.</li>
+<li><strong>zloc</strong> &#8211; Z coordinates of the hexagon. If <em>None</em> is given
+the hexagon is on surface.</li>
+<li><strong>terrain</strong> &#8211; Terrain type.</li>
+<li><strong>name</strong> &#8211; Region name the hexagon belongs to.</li>
+<li><strong>population</strong> &#8211; Population of the hexagon, if any. Some
+terrain types as oceans have no population.</li>
+<li><strong>racenames</strong> &#8211; Name of the race (plural form) of region
+inhabitants.</li>
+<li><strong>wealth</strong> &#8211; Maximum amount available for taxing.</li>
+<li><strong>town</strong> &#8211; If present, a dictionary with <em>name</em> and <em>type</em> of
+the town there. Allowed <em>type</em> values are <tt class="docutils literal"><span class="pre">village</span></tt>,
+<tt class="docutils literal"><span class="pre">town</span></tt> and <tt class="docutils literal"><span class="pre">city</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.gamedata.gamedata.GameData.region_entertainment">
+<tt class="descname">region_entertainment</tt><big>(</big><em>amount</em><big>)</big><a class="headerlink" href="#atlantis.gamedata.gamedata.GameData.region_entertainment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle region entertainment report.</p>
+<p>Implements
+<a class="reference internal" href="../parsers/reportparser.html#atlantis.parsers.reportparser.ReportConsumer.region" title="atlantis.parsers.reportparser.ReportConsumer.region"><tt class="xref py py-meth docutils literal"><span class="pre">ReportConsumer.region_entertainment</span></tt></a>.
+See this method documentation for further information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>amount</strong> &#8211; Entertainment available in the region.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.gamedata.gamedata.GameData.region_market">
+<tt class="descname">region_market</tt><big>(</big><em>market</em>, <em>items</em><big>)</big><a class="headerlink" href="#atlantis.gamedata.gamedata.GameData.region_market" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle region market report.</p>
+<p>This method is called up to twice per region. One for the sell
+market (products that players can <em>sell</em> to the market) and one
+for the buy market (products that players can <em>buy</em> from the
+market). Each market is a list of items with their sell/buy
+prices.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>market</strong> &#8211; market type. Allowed values are <tt class="docutils literal"><span class="pre">sell</span></tt> and
+<tt class="docutils literal"><span class="pre">buy</span></tt>.</li>
+<li><strong>items</strong> &#8211; list of
+<tt class="xref py py-class docutils literal"><span class="pre">ItemMarket</span></tt> objects.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.gamedata.gamedata.GameData.region_products">
+<tt class="descname">region_products</tt><big>(</big><em>products</em><big>)</big><a class="headerlink" href="#atlantis.gamedata.gamedata.GameData.region_products" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle region products report.</p>
+<p>The only parameter of this method is a list of available
+products in the region.</p>
+<p>New products can be discovered in the region when units get
+the appropiate skill.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>products</strong> &#8211; list of
+<tt class="xref py py-class docutils literal"><span class="pre">ItemAmount</span></tt> objects.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.gamedata.gamedata.GameData.region_wages">
+<tt class="descname">region_wages</tt><big>(</big><em>productivity</em>, <em>amount</em><big>)</big><a class="headerlink" href="#atlantis.gamedata.gamedata.GameData.region_wages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle region wages report.</p>
+<p>This method report wages per month, and total available amount.
+Wages are a float value with one decimal value (ex. $14.3), but
+the total amount are truncated per unit.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>productivity</strong> &#8211; wages obtained per man and month.</li>
+<li><strong>amount</strong> &#8211; total amount of wages available in the region.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.gamedata.gamedata.GameData.region_weather">
+<tt class="descname">region_weather</tt><big>(</big><em>weather</em>, <em>nxtweather</em>, <em>clearskies=False</em>, <em>blizzard=False</em><big>)</big><a class="headerlink" href="#atlantis.gamedata.gamedata.GameData.region_weather" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle region weather report.</p>
+<p>Reports last and next month weather. Next month weather will be
+the one affecting movement orders given this turn. Weather can
+be <tt class="docutils literal"><span class="pre">clear</span></tt>, <tt class="docutils literal"><span class="pre">winter</span></tt>, <tt class="docutils literal"><span class="pre">monsoon</span> <span class="pre">season</span></tt> or <tt class="docutils literal"><span class="pre">blizzard</span></tt>.</p>
+<p>Also, if weather was affected by magic it is also reported.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>weather</strong> &#8211; last month weather. Valid values are <tt class="docutils literal"><span class="pre">clear</span></tt>,
+<tt class="docutils literal"><span class="pre">winter</span></tt>, <tt class="docutils literal"><span class="pre">monsoon</span> <span class="pre">season</span></tt> and <tt class="docutils literal"><span class="pre">blizzard</span></tt>.</li>
+<li><strong>nxtweather</strong> &#8211; next month weather. Valid values are
+<tt class="docutils literal"><span class="pre">clear</span></tt>, <tt class="docutils literal"><span class="pre">winter</span></tt> and <tt class="docutils literal"><span class="pre">monsoon</span> <span class="pre">season</span></tt>. Unnatural
+values are not reported here.</li>
+<li><strong>clearskies</strong> &#8211; if <em>True</em>, last month weather was caused by
+a Clear Skies spell. Defaults to <em>False</em>.</li>
+<li><strong>blizzard</strong> &#8211; if <em>True</em>, last month weather was caused by a
+Blizzard spell. Defaults to <em>False</em>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">atlantis.gamedata.gamedata</span></tt></a><ul>
+<li><a class="reference internal" href="#gamedata"><tt class="docutils literal"><span class="pre">GameData</span></tt></a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter"><tt class="docutils literal"><span class="pre">atlantis.gamedata</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="region.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">atlantis.gamedata.region</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/atlantis/gamedata/gamedata.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="region.html" title="atlantis.gamedata.region"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="atlantis.gamedata"
+             >previous</a> |</li>
+        <li><a href="../../index.html">pyAH a documentation</a> &raquo;</li>
+          <li><a href="index.html" ><tt class="docutils literal"><span class="pre">atlantis.gamedata</span></tt></a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, David Lozano.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

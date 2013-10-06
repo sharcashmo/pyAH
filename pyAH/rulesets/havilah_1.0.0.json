@@ -1,0 +1,301 @@
+{
+  "ruleset": {
+    "name": "Havilah",
+    "version": [1, 0, 0]
+  },
+  "terrain_types": [
+    {
+      "name": "ocean",
+      "riding_mounts": false,
+      "flying_mounts": false,
+      "products": [
+        {
+          "product": "fish",
+          "chance": 100,
+          "amount": 20
+        }
+      ],
+      "normal_races": null,
+      "coastal_races": null
+    },
+    {
+      "name": "lake",
+      "riding_mounts": false,
+      "flying_mounts": false,
+      "products": [
+        {
+          "product": "fish",
+          "chance": 100,
+          "amount": 20
+        }
+      ],
+      "normal_races": null,
+      "coastal_races": null
+    },
+    {
+      "name": "plain",
+      "riding_mounts": true,
+      "flying_mounts": true,
+      "products": [
+        {
+          "product": "hors",
+          "chance": 25,
+          "amount": 20
+        }
+      ],
+      "normal_races": ["plai", "helf", "noma"],
+      "coastal_races": ["self", "viki"]
+    },
+    {
+      "name": "forest",
+      "riding_mounts": false,
+      "flying_mounts": true,
+      "products": [
+        {
+          "product": "wood",
+          "chance": 100,
+          "amount": 20
+        },
+        {
+          "product": "fur",
+          "chance": 100,
+          "amount": 10
+        },
+        {
+          "product": "herb",
+          "chance": 100,
+          "amount": 10
+        },
+        {
+          "product": "irwd",
+          "chance": 25,
+          "amount": 5
+        },
+        {
+          "product": "yew",
+          "chance": 25,
+          "amount": 5
+        }
+      ],
+      "normal_races": ["viki", "welf"],
+      "coastal_races": ["self"]
+    },
+    {
+      "name": "mountain",
+      "riding_mounts": false,
+      "flying_mounts": true,
+      "products": [
+        {
+          "product": "iron",
+          "chance": 100,
+          "amount": 20
+        },
+        {
+          "product": "ston",
+          "chance": 100,
+          "amount": 10
+        },
+        {
+          "product": "mith",
+          "chance": 25,
+          "amount": 5
+        },
+        {
+          "product": "root",
+          "chance": 25,
+          "amount": 5
+        }
+      ],
+      "normal_races": ["barb", "hdwa", "orc"],
+      "coastal_races": ["self", "viki"]
+    },
+    {
+      "name": "swamp",
+      "riding_mounts": false,
+      "flying_mounts": true,
+      "products": [
+        {
+          "product": "wood",
+          "chance": 100,
+          "amount": 10
+        },
+        {
+          "product": "herb",
+          "chance": 100,
+          "amount": 10
+        },
+        {
+          "product": "floa",
+          "chance": 25,
+          "amount": 10
+        }
+      ],
+      "normal_races": ["telf", "tman"],
+      "coastal_races": ["self", "viki"]
+    },
+    {
+      "name": "jungle",
+      "riding_mounts": false,
+      "flying_mounts": true,
+      "products": [
+        {
+          "product": "wood",
+          "chance": 100,
+          "amount": 10
+        },
+        {
+          "product": "herb",
+          "chance": 100,
+          "amount": 20
+        },
+        {
+          "product": "irwd",
+          "chance": 20,
+          "amount": 10
+        }
+      ],
+      "normal_races": ["telf", "tman", "welf"],
+      "coastal_races": ["self", "viki"]
+    },
+    {
+      "name": "desert",
+      "riding_mounts": true,
+      "flying_mounts": true,
+      "products": [
+        {
+          "product": "iron",
+          "chance": 100,
+          "amount": 10
+        },
+        {
+          "product": "ston",
+          "chance": 100,
+          "amount": 10
+        },
+        {
+          "product": "hors",
+          "chance": 25,
+          "amount": 10
+        },
+        {
+          "product": "root",
+          "chance": 25,
+          "amount": 5
+        }
+      ],
+      "normal_races": ["noma", "ddwa"],
+      "coastal_races": ["self", "viki"]
+    },
+    {
+      "name": "tundra",
+      "riding_mounts": true,
+      "flying_mounts": true,
+      "products": [
+        {
+          "product": "herb",
+          "chance": 100,
+          "amount": 10
+        },
+        {
+          "product": "fur",
+          "chance": 100,
+          "amount": 10
+        },
+        {
+          "product": "wing",
+          "chance": 25,
+          "amount": 5
+        }
+      ],
+      "normal_races": ["eski", "idwa"],
+      "coastal_races": ["self", "viki"]
+    },
+    {
+      "name": "cavern",
+      "riding_mounts": false,
+      "flying_mounts": true,
+      "products": [
+        {
+          "product": "iron",
+          "chance": 100,
+          "amount": 20
+        },
+        {
+          "product": "ston",
+          "chance": 100,
+          "amount": 20
+        },
+        {
+          "product": "mith",
+          "chance": 25,
+          "amount": 5
+        },
+        {
+          "product": "root",
+          "chance": 25,
+          "amount": 5
+        }
+      ],
+      "normal_races": ["dman", "udwa", "orc"],
+      "coastal_races": null
+    },
+    {
+      "name": "underforest",
+      "riding_mounts": false,
+      "flying_mounts": true,
+      "products": [
+        {
+          "product": "wood",
+          "chance": 100,
+          "amount": 10
+        },
+        {
+          "product": "iron",
+          "chance": 100,
+          "amount": 10
+        },
+        {
+          "product": "ston",
+          "chance": 100,
+          "amount": 10
+        },
+        {
+          "product": "irwd",
+          "chance": 20,
+          "amount": 5
+        }
+      ],
+      "normal_races": ["dman", "udwa", "orc"],
+      "coastal_races": null
+    },
+    {
+      "name": "tunnels",
+      "riding_mounts": false,
+      "flying_mounts": false,
+      "products": [
+        {
+          "product": "iron",
+          "chance": 100,
+          "amount": 20
+        },
+        {
+          "product": "ston",
+          "chance": 100,
+          "amount": 20
+        },
+        {
+          "product": "mith",
+          "chance": 25,
+          "amount": 5
+        },
+        {
+          "product": "root",
+          "chance": 25,
+          "amount": 5
+        }
+      ],
+      "normal_races": null,
+      "coastal_races": null
+    }
+  ]
+}

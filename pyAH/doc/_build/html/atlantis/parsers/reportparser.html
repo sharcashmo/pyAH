@@ -1,0 +1,2347 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>atlantis.parsers.reportparser &mdash; pyAH a documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     'a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="pyAH a documentation" href="../../index.html" />
+    <link rel="up" title="atlantis.parsers" href="index.html" />
+    <link rel="next" title="atlantis.parsers.ordersparser" href="ordersparser.html" />
+    <link rel="prev" title="atlantis.parsers" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ordersparser.html" title="atlantis.parsers.ordersparser"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="atlantis.parsers"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">pyAH a documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U"><tt class="docutils literal"><span class="pre">atlantis.parsers</span></tt></a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-atlantis.parsers.reportparser">
+<span id="atlantis-parsers-reportparser"></span><h1><a class="reference internal" href="#module-atlantis.parsers.reportparser" title="atlantis.parsers.reportparser"><tt class="xref py py-mod docutils literal"><span class="pre">atlantis.parsers.reportparser</span></tt></a><a class="headerlink" href="#module-atlantis.parsers.reportparser" title="Permalink to this headline">¶</a></h1>
+<p>This module implements all classes needed to parse report files.</p>
+<p>It defines a <a class="reference internal" href="#atlantis.parsers.reportparser.ReportParser" title="atlantis.parsers.reportparser.ReportParser"><tt class="xref py py-class docutils literal"><span class="pre">ReportParser</span></tt></a> which will parse report lines and
+will call a <a class="reference internal" href="#atlantis.parsers.reportparser.ReportConsumer" title="atlantis.parsers.reportparser.ReportConsumer"><tt class="xref py py-class docutils literal"><span class="pre">ReportConsumer</span></tt></a> with parser data. Classes willing
+to consume data parser by <a class="reference internal" href="#atlantis.parsers.reportparser.ReportParser" title="atlantis.parsers.reportparser.ReportParser"><tt class="xref py py-class docutils literal"><span class="pre">ReportParser</span></tt></a> will have to implement
+<a class="reference internal" href="#atlantis.parsers.reportparser.ReportConsumer" title="atlantis.parsers.reportparser.ReportConsumer"><tt class="xref py py-class docutils literal"><span class="pre">ReportConsumer</span></tt></a> interface.</p>
+<p>In addition a helper <a class="reference internal" href="#atlantis.parsers.reportparser.ReportReader" title="atlantis.parsers.reportparser.ReportReader"><tt class="xref py py-class docutils literal"><span class="pre">ReportReader</span></tt></a> is defined. As report lines
+are wrapped at 70 chars length this class is in charge of reading the
+report file and unwrapping the lines.</p>
+<p>Public attributes in <a class="reference internal" href="#module-atlantis.parsers.reportparser" title="atlantis.parsers.reportparser"><tt class="xref py py-mod docutils literal"><span class="pre">atlantis.parsers.reportparser</span></tt></a> module:</p>
+<dl class="attribute">
+<dt id="atlantis.parsers.reportparser.TAB_SPACES">
+<tt class="descclassname">reportparser.</tt><tt class="descname">TAB_SPACES</tt><em class="property"> = 2</em><a class="headerlink" href="#atlantis.parsers.reportparser.TAB_SPACES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="atlantis.parsers.reportparser.TAB">
+<tt class="descclassname">reportparser.</tt><tt class="descname">TAB</tt><em class="property"> = '  '</em><a class="headerlink" href="#atlantis.parsers.reportparser.TAB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Public classes in <a class="reference internal" href="#module-atlantis.parsers.reportparser" title="atlantis.parsers.reportparser"><tt class="xref py py-mod docutils literal"><span class="pre">atlantis.parsers.reportparser</span></tt></a> module:</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#atlantis.parsers.reportparser.ReportReader" title="atlantis.parsers.reportparser.ReportReader"><tt class="xref py py-obj docutils literal"><span class="pre">ReportReader</span></tt></a></td>
+<td>Class used to read report lines, unwrapping them.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#atlantis.parsers.reportparser.ReportConsumer" title="atlantis.parsers.reportparser.ReportConsumer"><tt class="xref py py-obj docutils literal"><span class="pre">ReportConsumer</span></tt></a></td>
+<td>Virtual class for <a class="reference internal" href="#atlantis.parsers.reportparser.ReportParser" title="atlantis.parsers.reportparser.ReportParser"><tt class="xref py py-class docutils literal"><span class="pre">ReportParser</span></tt></a> consumer.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#atlantis.parsers.reportparser.ReportParser" title="atlantis.parsers.reportparser.ReportParser"><tt class="xref py py-obj docutils literal"><span class="pre">ReportParser</span></tt></a></td>
+<td>Report parser state machine.</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="reportreader">
+<h2><a class="reference internal" href="#atlantis.parsers.reportparser.ReportReader" title="atlantis.parsers.reportparser.ReportReader"><tt class="xref py py-class docutils literal"><span class="pre">ReportReader</span></tt></a><a class="headerlink" href="#reportreader" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="atlantis.parsers.reportparser.ReportReader">
+<em class="property">class </em><tt class="descclassname">atlantis.parsers.reportparser.</tt><tt class="descname">ReportReader</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportReader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class used to read report lines, unwrapping them.</p>
+<p>This class is used as a wrapper to read lines from a report file.
+These report files have their lines wrapped at 70 chars length,
+and what this class does is unwrapping them so its user will get
+complete logical lines, not the physical ones saved in the file.</p>
+<p>ReportReader implements a readline public method, that returns
+the next unwrapped line from the file being read. It also
+implements the __iter__ magic method, so the complete file can
+be read iterating the object as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;hello.txt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">reader</span> <span class="o">=</span> <span class="n">ReportReader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportReader.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportReader.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a <a class="reference internal" href="#atlantis.parsers.reportparser.ReportReader" title="atlantis.parsers.reportparser.ReportReader"><tt class="xref py py-class docutils literal"><span class="pre">ReportReader</span></tt></a> on a file object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f</strong> &#8211; file object to be read.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportReader.__iter__">
+<tt class="descname">__iter__</tt><big>(</big><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportReader.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an iterator on <a class="reference internal" href="#atlantis.parsers.reportparser.ReportReader" title="atlantis.parsers.reportparser.ReportReader"><tt class="xref py py-class docutils literal"><span class="pre">ReportReader</span></tt></a> instance.</p>
+<p>This iterator returns all lines in the file, unwrapped,
+allowing the use of <a class="reference internal" href="#atlantis.parsers.reportparser.ReportReader" title="atlantis.parsers.reportparser.ReportReader"><tt class="xref py py-class docutils literal"><span class="pre">ReportReader</span></tt></a> class as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;hello.txt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">reader</span> <span class="o">=</span> <span class="n">ReportReader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">an iterator on wrapped file lines.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportReader.readline">
+<tt class="descname">readline</tt><big>(</big><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportReader.readline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read next line from the file.</p>
+<p>When reading next line from the file <tt class="xref py py-meth docutils literal"><span class="pre">readline()</span></tt> unwraps
+it, joining all wrapped parts back to the original one.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">next line, unwrapped.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="reportconsumer">
+<h2><a class="reference internal" href="#atlantis.parsers.reportparser.ReportConsumer" title="atlantis.parsers.reportparser.ReportConsumer"><tt class="xref py py-class docutils literal"><span class="pre">ReportConsumer</span></tt></a><a class="headerlink" href="#reportconsumer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="atlantis.parsers.reportparser.ReportConsumer">
+<em class="property">class </em><tt class="descclassname">atlantis.parsers.reportparser.</tt><tt class="descname">ReportConsumer</tt><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Virtual class for <a class="reference internal" href="#atlantis.parsers.reportparser.ReportParser" title="atlantis.parsers.reportparser.ReportParser"><tt class="xref py py-class docutils literal"><span class="pre">ReportParser</span></tt></a> consumer.</p>
+<p>This is an interface for classes willing to receive data from the
+<a class="reference internal" href="#atlantis.parsers.reportparser.ReportParser" title="atlantis.parsers.reportparser.ReportParser"><tt class="xref py py-class docutils literal"><span class="pre">ReportParser</span></tt></a>. Classes implementing this interface should
+overwrite their public methods.</p>
+<p><a class="reference internal" href="#atlantis.parsers.reportparser.ReportConsumer" title="atlantis.parsers.reportparser.ReportConsumer"><tt class="xref py py-class docutils literal"><span class="pre">ReportConsumer</span></tt></a> has the following virtual public methods.</p>
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.atlantis_rules">
+<tt class="descname">atlantis_rules</tt><big>(</big><em>name</em>, <em>version</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.atlantis_rules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle atlantis ruleset.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>name</dt>
+<dd>Name of the ruleset.</dd>
+<dt>version</dt>
+<dd>Version of the ruleset.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.atlantis_version">
+<tt class="descname">atlantis_version</tt><big>(</big><em>version</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.atlantis_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle atlantis version.</p>
+<dl class="docutils">
+<dt>Parameter:</dt>
+<dd><dl class="first last docutils">
+<dt>version</dt>
+<dd>Atlantis version string.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.battle">
+<tt class="descname">battle</tt><big>(</big><em>att</em>, <em>tar</em>, <em>reg</em>, <em>ass=False</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.battle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a battle starting line.</p>
+<p>This method signals the starting of a new battle. Previous
+open battle (if any) should be closed, and next battle lines
+assigned to this one.</p>
+<p>When a new battle is reported it is given its attacking unit,
+defending unit, location and a flag telling if it&#8217;s due to
+an failed assassination attempt. Attacking and defending units
+will be the <em>leading</em> units of each side and further side
+reports (as healing, loses, etc) will use this unit as target
+although they refer to the entire side.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>att</strong> &#8211; The attacking unit, as a dictionary with unit <em>num</em>
+and <em>name</em>.</li>
+<li><strong>tar</strong> &#8211; The target (defending) unit, also as a dictionary
+with unit <em>num</em> and <em>name</em>.</li>
+<li><strong>reg</strong> &#8211; Location of the battle, as a region dictionary with
+region <em>type</em>, <em>name</em>, <em>xloc</em>, <em>yloc</em> and, if not
+in surface, <em>zloc</em>.</li>
+<li><strong>ass</strong> &#8211; <em>True</em> if it was an assassination attempt, <em>False</em>
+otherwise.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.battle_casualties">
+<tt class="descname">battle_casualties</tt><big>(</big><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.battle_casualties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle battle casualties marker.</p>
+<p>When battle ends, even the free round after loser side are
+broken, it&#8217;s time to report casualties and spoils.</p>
+<p>This method just signals this point.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.battle_casualties_heal">
+<tt class="descname">battle_casualties_heal</tt><big>(</big><em>unit</em>, <em>heal</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.battle_casualties_heal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle healing after battle.</p>
+<p>This function is called at the end of the battle when the
+winner side does heal. Total casualties are listed after
+healing, so healed units are not counted as battle loses.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>unit</dt>
+<dd>A dictionary with <em>num</em> and <em>name</em> of the leading unit
+of the side.</dd>
+<dt>heal</dt>
+<dd>Num of casualties healed.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.battle_casualties_units">
+<tt class="descname">battle_casualties_units</tt><big>(</big><em>units</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.battle_casualties_units" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle the list of damaged units.</p>
+<p>This function is called with a list of damaged units. While
+this function does have no information about which side damaged
+units belong, it&#8217;s called immediately after battle loses
+handler for their side, so the consumer can easily track it.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>units</dt>
+<dd>A list of units, being each unit a dictionary with
+<em>num</em> of the damaged unit.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.battle_end">
+<tt class="descname">battle_end</tt><big>(</big><em>result</em>, <em>unit=None</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.battle_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle battle end result.</p>
+<p>When one or both units are broken battle ends, and this
+method is called with the result in result parameter:</p>
+<ul class="simple">
+<li><strong>destroyed</strong>, losing side has completely been destroyed
+and battle has ended.</li>
+<li><strong>routed</strong>, losing side has been broken and winner side is
+granted a free round of attacks, that follows.</li>
+<li><strong>tie</strong>, both sides have been broken at once and no more
+rounds will take place.</li>
+</ul>
+<p>When there&#8217;s a loser side a unit parameter is also provided
+with the loser side leader unit as a dictionary.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>result</dt>
+<dd>What happened to the loser side. Can be <strong>destroyed</strong>,
+<strong>routed</strong>, or <strong>tie</strong> (no loser, no winner).</dd>
+<dt>unit</dt>
+<dd>Only when there&#8217;s a loser side. Loser side leader
+unit as a dictionary with <em>num</em> and <em>name</em> of the unit.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.battle_loses">
+<tt class="descname">battle_loses</tt><big>(</big><em>unit</em>, <em>loses</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.battle_loses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle rount/battle loses.</p>
+<p>This function is called at the end of each round with side
+loses of the round, and again at the end of the battle with
+total side casualties of the battle after healing has taken
+place.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>unit</dt>
+<dd>A dictionary with <em>num</em> and <em>name</em> of the leading unit.
+of the side</dd>
+<dt>loses</dt>
+<dd>Num of casualties of the round/battle.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.battle_raise">
+<tt class="descname">battle_raise</tt><big>(</big><em>undead</em>, <em>unit=None</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.battle_raise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle battle raised undead.</p>
+<p>This function is called at the very end of the battle. Part
+of the casualties raises again as skeletons and undead, joining
+a wandering undead unit or creating a new one if none exists.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>undead</dt>
+<dd>List of undead items. Each undead item is a dictionary
+with <em>abr</em>, <em>amt</em> and <em>name</em>/<em>names</em>.</dd>
+<dt>unit</dt>
+<dd>If the undead join an existing wandering unit this
+parameter will be set with a dictionary with <em>num</em> and
+<em>name</em> of the unit.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.battle_round">
+<tt class="descname">battle_round</tt><big>(</big><em>num</em>, <em>unit=None</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.battle_round" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a battle round marker</p>
+<p>This method signals the starting of a round. Every new round
+in the battle it is called.</p>
+<p>There&#8217;re two types of rounds: normal rounds (both sides attack)
+and free rounds (only one side attack). There&#8217;re two possible
+free rounds: at the beginning of the battle it is granted to
+the side with highest TACT skill, and at the end of the battle
+it is granted to the winner when the loser side breaks and
+routes.</p>
+<p>For normal rounds the only parameter is num, which takes the
+value of the round number (from 1 to the end of the battle).
+For free rounds, num takes the value <strong>free</strong>, and an
+additional unit parameter is given.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>num</dt>
+<dd><strong>free</strong> for free rounds (either first or last round),
+and round number for normal rounds.</dd>
+<dt>unit</dt>
+<dd>when in a free round, leader unit of the side granted
+the free round as a dictionary with <em>num</em> and <em>name</em>
+values.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.battle_round_regenerate">
+<tt class="descname">battle_round_regenerate</tt><big>(</big><em>soldier</em>, <em>regenerate</em>, <em>damage</em>, <em>hits</em>, <em>maxhits</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.battle_round_regenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle regeneration/damage in battle.</p>
+<p>While normal men die in battle with just a hit, larger monsters
+can take more hits before dying. Some of them even regenerate
+from their wounds and can even end a round with higher hit
+points than they started it.</p>
+<p>When this happens this method is called.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>soldier</dt>
+<dd>Soldier regenerating or taking damage, as a dictionary
+with unit <em>num</em> and <em>name</em>.</dd>
+<dt>regenerate</dt>
+<dd><strong>regenerate</strong> if unit is regenerating, or <strong>take</strong> if
+unit is taking damage.</dd>
+<dt>damage</dt>
+<dd>Amount of hit points the unit is being regenerated
+or damaged</dd>
+<dt>hits</dt>
+<dd>Hit points of the unit after regeneration/damage.</dd>
+<dt>maxhits</dt>
+<dd>Maximum number of hit points of the unit.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.battle_round_shield">
+<tt class="descname">battle_round_shield</tt><big>(</big><em>unit</em>, <em>shielddesc</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.battle_round_shield" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a cast shield in battle.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>unit</dt>
+<dd>Unit casting the shield, as a dictionary with unit
+<em>num</em> and <em>name</em>.</dd>
+<dt>shielddesc</dt>
+<dd>Description of the shield being cast.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.battle_round_special">
+<tt class="descname">battle_round_special</tt><big>(</big><em>soldier</em>, <em>spelldesc</em>, <em>spelldesc2=None</em>, <em>tot=0</em>, <em>spelltarget=None</em>, <em>deflected=False</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.battle_round_special" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a special effect in battle.</p>
+<p>When an effect takes place in a battle, its description is
+parsed in several pieces. For example:</p>
+<div class="highlight-python"><pre>Mage (314) strikes fear into enemy mounts, causing 8 mounts
+to panic.</pre>
+</div>
+<dl class="docutils">
+<dt>What we get is:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">Mage</span> <span class="pre">(314)</span></tt> is the <em>soldier</em> casting the effect.</li>
+<li><tt class="docutils literal"><span class="pre">strikes</span> <span class="pre">fear</span> <span class="pre">into</span> <span class="pre">enemy</span> <span class="pre">mounts</span></tt> is the description of
+the spell (<em>spelldesc</em>).</li>
+<li><tt class="docutils literal"><span class="pre">causing</span></tt> is the effect of the spell on the target
+(<em>spelldesc2</em>).</li>
+<li><tt class="docutils literal"><span class="pre">8</span></tt> is the number of affected targets (<em>tot</em>).</li>
+<li><tt class="docutils literal"><span class="pre">mounts</span> <span class="pre">to</span> <span class="pre">panic</span></tt> is the string describing the target
+(<em>spelltarget</em>).</li>
+</ul>
+</dd>
+</dl>
+<p>In addition the spell can be deflected by a shield, and
+<em>deflected</em> flag is set to <em>True</em>.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>soldier</dt>
+<dd>Soldier casting the special effect as a dictionary
+with unit <em>num</em> and <em>name</em>.</dd>
+<dt>spelldesc</dt>
+<dd>Description of the spell.</dd>
+<dt>spelldesc2</dt>
+<dd>String of the effect of the spell (ie killing).</dd>
+<dt>tot</dt>
+<dd>Number of targets affected.</dd>
+<dt>spelltarget</dt>
+<dd>String describing the target of the spell.</dd>
+<dt>deflected</dt>
+<dd>True if the effect has been deflected by a shield.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.battle_side">
+<tt class="descname">battle_side</tt><big>(</big><em>side</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.battle_side" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a battle side marker</p>
+<p>This marker is set just before the units in the given side
+are listed. So the consumer should initialize side data and
+attach following battle units entities to the side.</p>
+<p><a class="reference internal" href="#atlantis.parsers.reportparser.ReportConsumer.battle" title="atlantis.parsers.reportparser.ReportConsumer.battle"><tt class="xref py py-meth docutils literal"><span class="pre">ReportConsumer.battle()</span></tt></a></p>
+<dl class="docutils">
+<dt>Parameter:</dt>
+<dd><dl class="first last docutils">
+<dt>side</dt>
+<dd><strong>attacker</strong> or <strong>defender</strong>.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.battle_side_unit">
+<tt class="descname">battle_side_unit</tt><big>(</big><em>num</em>, <em>name</em>, <em>faction=None</em>, <em>behind=False</em>, <em>items=None</em>, <em>skills=None</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.battle_side_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a battle side units</p>
+<p>For each side its list of units is given. This unit report is
+not a complete one. Only items, skills and flags relevant for
+battle are reported.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>num</dt>
+<dd>Num of the unit.</dd>
+<dt>name</dt>
+<dd>Name of the unit.</dd>
+<dt>faction</dt>
+<dd>Optional. If faction is visible, a dictionary with
+faction <em>num</em> and <em>name</em>.</dd>
+<dt>behind</dt>
+<dd><em>True</em> if unit is behind in battle, <em>False</em> otherwise.</dd>
+<dt>items</dt>
+<dd><p class="first">A list of items. For each item a dictionary is given
+with <em>num</em>, <em>abr</em> and <em>name</em> or <em>names</em> of the item.</p>
+<p class="last">If the item is a monster also <em>monster</em> key is
+included, which value is another dictionary with
+<em>attackLevel</em>, <em>defense</em>, <em>numAttacks</em>, <em>hits</em> and
+<em>tactics</em> stats.</p>
+</dd>
+<dt>skills</dt>
+<dd>A list of skills. For each skill a dictionary is given
+with its <em>level</em> and <em>name</em>.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.battle_spoils">
+<tt class="descname">battle_spoils</tt><big>(</big><em>items</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.battle_spoils" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle battle spoils.</p>
+<p>Winner side gets spoils from battle.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>items</dt>
+<dd>List of spoiled items, each item being a dictionary
+with <em>abr</em>, <em>name</em>/<em>names</em> and <em>amt</em>.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.faction">
+<tt class="descname">faction</tt><big>(</big><em>name</em>, <em>num</em>, <em>factype=None</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.faction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle faction name and type.</p>
+<p>First line with data about a faction is the one reporting
+faction name and its time. This method handles this info.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>name</dt>
+<dd>Faction name.</dd>
+<dt>num</dt>
+<dd>Faction number.</dd>
+<dt>factype</dt>
+<dd>Faction type. It&#8217;s a dictionary where keys are possible
+faction types and values are faction points spent on
+the type. Usually allowed types are <strong>war</strong>, <strong>trade</strong>
+and <strong>magic</strong>, but different types can exists in some
+games.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.faction_attitudes">
+<tt class="descname">faction_attitudes</tt><big>(</big><em>defaultattitude=None</em>, <em>hostile=None</em>, <em>unfriendly=None</em>, <em>neutral=None</em>, <em>friendly=None</em>, <em>ally=None</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.faction_attitudes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle faction attitudes.</p>
+<p>Atlantis reports faction attitudes in several lines. First, it
+reports default faction attitude, that&#8217;s the attitude towards
+unlisted factions in the following lines, or towards seen units
+of unknown faction. Then declared faction attitudes follow,
+having a list of factions per attitude type.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>defaultattitude</dt>
+<dd>Default faction attitude. Allowed values are
+<strong>hostile</strong>, <strong>unfriendly</strong>, <strong>neutral</strong>, <strong>friendly</strong>
+and <strong>ally</strong>.</dd>
+<dt>hostile</dt>
+<dd>List of factions declared as <strong>hostile</strong>. Each faction
+is a dictionary with its <em>num</em> and <em>name</em>.</dd>
+<dt>unfriendly</dt>
+<dd>List of factions declared as <strong>unfriendly</strong>. Each
+faction is a dictionary with its <em>num</em> and <em>name</em>.</dd>
+<dt>neutral</dt>
+<dd>List of factions declared as <strong>neutral</strong>. Each faction
+is a dictionary with its <em>num</em> and <em>name</em>.</dd>
+<dt>friendly</dt>
+<dd>List of factions declared as <strong>friendly</strong>. Each faction
+is a dictionary with its <em>num</em> and <em>name</em>.</dd>
+<dt>ally</dt>
+<dd>List of factions declared as <strong>ally</strong>. Each faction is
+a dictionary with its <em>num</em> and <em>name</em>.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.faction_date">
+<tt class="descname">faction_date</tt><big>(</big><em>month</em>, <em>year</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.faction_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle report turn date.</p>
+<p>Report turn date is defined by its month and is year.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>month</dt>
+<dd>Month name of the report. Month names are usually
+english month names, but different month names can be
+set up in some games.</dd>
+<dt>year</dt>
+<dd>Year number of the report. First year is year 1.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.faction_event">
+<tt class="descname">faction_event</tt><big>(</big><em>message_type</em>, <em>message</em>, <em>unit=None</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.faction_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a read event or error.</p>
+<p>Faction are reported a number of events and errors. Most of
+them are attached to a unit, and in this case the <em>unit</em>
+parameter will be set. A few of them are general faction
+events and errors.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>message_type</dt>
+<dd><strong>event</strong> or <strong>error</strong></dd>
+<dt>message</dt>
+<dd>Text of the event.</dd>
+<dt>unit</dt>
+<dd>If set the event is attached to the unit. Unit is given
+as a dictionary with its <em>num</em> and <em>name</em>.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.faction_status">
+<tt class="descname">faction_status</tt><big>(</big><em>what</em>, <em>num</em>, <em>allowed</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.faction_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a faction status report.</p>
+<p>Atlantis reports faction status as one status type per line, so
+this method will be called several times per report, once per
+each faction status report received.</p>
+<dl class="docutils">
+<dt>Each time it is called this parameters are provided:</dt>
+<dd><dl class="first last docutils">
+<dt>what</dt>
+<dd>The status reported. Possible values are
+<strong>Tax Regions</strong>, <strong>Trade Regions</strong>, <strong>Quartermasters</strong>
+<strong>Tacticians</strong>, <strong>Mages</strong> and <strong>Apprentices</strong> (or
+<strong>Acolytes</strong> or whatever the apprentice name is set
+in the game).</dd>
+<dt>num</dt>
+<dd>Number of elements that faction currently has.</dd>
+<dt>allowed</dt>
+<dd>Max Number of elements allowed to the faction.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.faction_unclaimed">
+<tt class="descname">faction_unclaimed</tt><big>(</big><em>unclaimed</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.faction_unclaimed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle faction unclaimed.</p>
+<dl class="docutils">
+<dt>Parameter:</dt>
+<dd><dl class="first last docutils">
+<dt>unclaimed</dt>
+<dd>Amount of faction unclaimed money.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.faction_warn">
+<tt class="descname">faction_warn</tt><big>(</big><em>notimes=False</em>, <em>nopassword=False</em>, <em>inactive=None</em>, <em>quitgame=None</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.faction_warn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a warn message for the faction.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>notimes</dt>
+<dd>If <em>True</em> times are not being sent to the player.
+Defaults to <em>False</em>.</dd>
+<dt>nopassword</dt>
+<dd>If <em>True</em> the faction has no password set. Defaults to
+<em>False</em>.</dd>
+<dt>inactive</dt>
+<dd>If set, number of turns until the faction is removed
+due to inactivity. Defaults to <em>None</em>.</dd>
+<dt>quitgame</dt>
+<dd>If set, the faction has quitted the game. Allowed
+values are <strong>restart</strong> if the faction player has
+decided to restart the game, <strong>gameover</strong> if the
+game has finished and the player is not the winner,
+<strong>won</strong> if the player is the winner, and <strong>eliminated</strong>
+if the player has been eliminated from the game.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.item">
+<tt class="descname">item</tt><big>(</big><em>abr</em>, <em>name</em>, <em>descr=None</em>, <em>illusion=False</em>, <em>weight=None</em>, <em>hitch=None</em>, <em>walking=None</em>, <em>riding=None</em>, <em>swimming=None</em>, <em>flying=None</em>, <em>speed=None</em>, <em>max_inventory=None</em>, <em>food=None</em>, <em>withdraw=None</em>, <em>cantgive=False</em>, <em>mageonly=False</em>, <em>money=False</em>, <em>resource=False</em>, <em>grantSkill=None</em>, <em>wind=None</em>, <em>stealth=None</em>, <em>observation=None</em>, <em>mount=None</em>, <em>battle=None</em>, <em>trade=None</em>, <em>tool=None</em>, <em>armor=None</em>, <em>weapon=None</em>, <em>monster=None</em>, <em>man=None</em>, <em>ship=None</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle an item definition.</p>
+<p>This handler is called when an item description is read. Items
+are very complex objects in Atlantis, and they can be divided
+into two main categories: ships and normal items.</p>
+<p>Ships have a diffent behaviour because they are items while
+unfinished, but become structures when finished. In addition
+they&#8217;re build using the build command, as structures, instead
+of produce.</p>
+<p>There&#8217;re several types of normal items: men and leaders,
+monsters, weapons and armors, tools, raw materials. Items can
+be referred to by using its name (singular, like <em>horse</em>),
+names (plural, like <em>horses</em>) and abr (four letters
+abbreviature, like <em>hors</em>).</p>
+<dl class="docutils">
+<dt>Common parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>name</dt>
+<dd>Name of the item.</dd>
+<dt>abr</dt>
+<dd>Abbreviature of the item.</dd>
+<dt>descr</dt>
+<dd>Complete description of the item. It&#8217;s everything after
+name and abbreviature.</dd>
+<dt>illusion</dt>
+<dd><em>True</em> if the item is an illusion. Defaults to <em>False</em>.</dd>
+<dt>weight</dt>
+<dd>Weight of the item.</dd>
+<dt>hitch</dt>
+<dd><p class="first">If the item can be hitched to a mount this parameter
+will be present, as a dictionary with:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>item</em></dt>
+<dd>Mount to be hitched, as a dictionary with <em>abr</em>
+and <em>name</em>.</dd>
+<dt><em>walk</em></dt>
+<dd>Waling capacity of the item when it is hitched.</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>walking</dt>
+<dd>Walking capacity of the item. Defaults to <em>None</em>.</dd>
+<dt>riding</dt>
+<dd>Riding capacity of the item. Defaults to <em>None</em>.</dd>
+<dt>swimming</dt>
+<dd>Swimming capacity of the item. Defaults to <em>None</em>.
+Normal ships only define this capacity parameter.</dd>
+<dt>flying</dt>
+<dd>Flying capacity of the item. Defaults to <em>None</em>. Flying
+ships only define this capacity parameter.</dd>
+<dt>speed</dt>
+<dd>Number of movement points available per month. Defaults
+to <em>None</em>.</dd>
+<dt>max_inventory</dt>
+<dd>If present, maximum number of this item that a unit can
+have.</dd>
+<dt>food</dt>
+<dd>If present, the item can be used for maintenance, as
+parameter value in gold.</dd>
+<dt>withdraw</dt>
+<dd>If present, the item can be withdrawed using unclaimed
+at the cost of this parameter value.</dd>
+<dt>cantgive</dt>
+<dd>If <em>True</em> the item cannot be give. Defaults to <em>False</em>.</dd>
+<dt>mageonly</dt>
+<dd>If <em>True</em>, only mages and apprentices can use the item.
+Defaults to <em>False</em>.</dd>
+<dt>money</dt>
+<dd>If <em>True</em>, the item is used as money in the game.
+Defaults to <em>False</em>.</dd>
+<dt>resource</dt>
+<dd>If <em>True</em>, the item is a trade resource. Ie, it&#8217;s
+produced from the region and not from input items.
+Defaults to <em>False</em>.</dd>
+<dt>grantSkill</dt>
+<dd><p class="first">If present the item grants a skill to its user.
+<em>grantSkill</em> is defined as a dictionary with the
+following values:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>name</em></dt>
+<dd>Name of the skill being granted by the item.</dd>
+<dt><em>minGrant</em></dt>
+<dd>Minimum level of skill granted by the item.</dd>
+<dt><em>maxGrant</em></dt>
+<dd>Maximum level of skill granted by the item.</dd>
+<dt><em>fromSkills</em></dt>
+<dd><p class="first">If <em>minGrant</em> &lt; <em>maxGrant</em>, the actual skill
+level granted will be the highest of the unit
+levels on a serie of skills, always between
+<em>minGrant</em> and <em>maxGrant</em>.</p>
+<p class="last"><em>fromSkills</em> is then a list of skills, being
+each skill in the list is a dictionary with a
+unique key, <em>name</em> of the skill.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>wind</dt>
+<dd><p class="first">If present the item gives a wind boost to ships as
+defined in a dictionary with the following values:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>windBoost</em></dt>
+<dd>Movement points boosted to the ship.</dd>
+<dt><em>val</em></dt>
+<dd>Maximum number of sailors of the boosted ship
+to get the movement bonus.</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>stealth</dt>
+<dd><p class="first">If present the item gives a bonus on unit&#8217;s stealth as
+defined in a dictionary with the following values:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>val</em></dt>
+<dd>Stealth bonus.</dd>
+<dt><em>perman</em></dt>
+<dd>If <em>True</em>, at least one item per man in the
+unit is needed to get the bonus. Defaults to
+<em>False</em>.</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>observation</dt>
+<dd><p class="first">If present the item gives a bonus on unit&#8217;s observation
+as defined in a dictionary with the following values:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>val</em></dt>
+<dd>Stealth bonus.</dd>
+<dt><em>perman</em></dt>
+<dd><p class="first">An item granting observation grants it even if
+there aren&#8217;t an item per man in the unit, but
+not always repels assassination attemps from
+units using an stealth item.</p>
+<p class="last">If this parameter is <em>True</em>, at least one item
+per man in the unit is needed to repel these
+assassination attempts. Defaults to <em>False</em>.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>mount</dt>
+<dd><p class="first">If present the item is a mount, with the stats given in
+a dictionary with the following values:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>minBonus</em></dt>
+<dd>Minimum bonus granted by the mount in combat.</dd>
+<dt><em>maxBonus</em></dt>
+<dd>Maximum bonus granted by the mount in combat.</dd>
+<dt><em>skill</em></dt>
+<dd>Name of the skill used to ride the mount.
+Defaults to <em>None</em>.</dd>
+<dt><em>unridable</em></dt>
+<dd>If <em>True</em> the mount cannot be riden in combat.
+Defaults to <em>False</em>.</dd>
+<dt><em>specialstr</em></dt>
+<dd>If present, description of the special effect
+caused by the mount.</dd>
+<dt><em>special</em></dt>
+<dd>Special effect caused by the mount. Special
+effect are very complex entities. A detailed
+description can be found at
+<a href="#id1"><span class="problematic" id="id2">:method:`ReportConsumer.skill`</span></a> documentation.</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>battle</dt>
+<dd><p class="first">If present the item is a miscellaneous battle item with
+the stats given in a dictionary with the values:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>mageonly</em></dt>
+<dd>If <em>True</em>, only mages and apprentices can use
+the item. Defaults to <em>False</em>.</dd>
+<dt><em>shield</em></dt>
+<dd>If <em>True</em>, the item provides with a shield its
+wearer. Defaults to <em>False</em>.</dd>
+<dt><em>specialstr</em></dt>
+<dd>If present, description of the special effect
+caused by the item.</dd>
+<dt><em>special</em></dt>
+<dd>Special effect caused by the item. Special
+effect are very complex entities. A detailed
+description can be found at
+<a href="#id3"><span class="problematic" id="id4">:method:`ReportConsumer.skill`</span></a> documentation.</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>trade</dt>
+<dd><p class="first">If present the item is a trade good. It cannot be
+produced in any way, just bought and sold in markets.
+It is a dictionary with the following stats:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><em>baseprice</em></dt>
+<dd>Usual price, if there&#8217;re not better selling
+than buying prices in the game.</dd>
+</dl>
+</div></blockquote>
+<dl class="last docutils">
+<dt>Or</dt>
+<dd><dl class="first last docutils">
+<dt><em>minbuy</em></dt>
+<dd>Minimum buy price.</dd>
+<dt><em>maxbuy</em></dt>
+<dd>Maximum buy price.</dd>
+<dt><em>minsell</em></dt>
+<dd>Minimum sell price.</dd>
+<dt><em>maxsell</em></dt>
+<dd>Maximum sell price.</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>tool</dt>
+<dd><p class="first">If present the item is a tool, boosting production of
+one or more items. Tool parameter is a dictionary with
+an unique key, <em>items</em>, which value is a list of items.
+For each element of <em>items</em> list a dictionary is given
+with the following values:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><em>abr</em></dt>
+<dd>Abbreviature of the item which production is
+boosted.</dd>
+<dt><em>name</em></dt>
+<dd>Name of the item wich production is boosted.</dd>
+<dt><em>val</em></dt>
+<dd>Boost applied to the item production.</dd>
+</dl>
+</div></blockquote>
+<p class="last">If production aided is entertainment, no <em>abr</em> is given
+and <em>name</em> is <strong>entertainment</strong>.</p>
+</dd>
+<dt>armor</dt>
+<dd><p class="first">If present the item is an armor, protecting its wearer
+from death in a percentage depending of the weapon type
+of the attacker. Armor parameter is a dictionary with
+two values:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>useinassassinate</em></dt>
+<dd>If <em>True</em> the armor can be used in
+assassination attempts. Defaults to <em>False</em>.</dd>
+<dt><em>saves</em></dt>
+<dd>A list of save percentages depending on weapon
+type. Each element of this list is a dictionary
+with <em>weapClass</em> and <em>percent</em> values.</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>weapon</dt>
+<dd><p class="first">If present the item is an armor, boosting combat stats
+of its wearer and allowing it to tax a region. Weapon
+parameter is a dictionary with the following values:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>attackBonus</em></dt>
+<dd>Bonus granted on attack. Can be negative.</dd>
+<dt><em>defenseBonus</em></dt>
+<dd>Bonus granted on defense. Can be negative.</dd>
+<dt><em>mountBonus</em></dt>
+<dd>Bonus granted against mounted oponents. Can be
+negative. Defaults to <em>None</em>.</dd>
+<dt><em>attackType</em></dt>
+<dd>Attack type of the weapon.</dd>
+<dt><em>class</em></dt>
+<dd>Weapon class of the weapon.</dd>
+<dt><em>range</em></dt>
+<dd>Rage of the weapon. Can be <em>short</em>, <em>long</em> and
+<em>ranged</em>. Defaults to <em>None</em>.</dd>
+<dt><em>skill</em></dt>
+<dd>If present, a skill is needed to handle this
+weapon. It&#8217;s a dictionary with the skill <em>abbr</em>
+and <em>name</em>.</dd>
+<dt><em>nofoot</em></dt>
+<dd>If <em>True</em>, only mounted troops can use this
+weapon. Defaults to <em>False</em>.</dd>
+<dt><em>nomount</em></dt>
+<dd>If <em>True</em>, only on foot troops can use this
+weapon. Defaults to <em>False</em>.</dd>
+<dt><em>ridingbonus</em></dt>
+<dd>If <em>True</em>, riding troops will add its riding
+skill on attack and defense. Defaults to
+<em>False</em>.</dd>
+<dt><em>ridingbonusdefense</em></dt>
+<dd>If <em>True</em>, riding troops will add its riding
+skill on defense. Defaults to <em>False</em>.</dd>
+<dt><em>nodefense</em></dt>
+<dd>If <em>True</em>, defenders are treated as if they
+have an effective combat skill of 0. Defaults
+to <em>False</em>.</dd>
+<dt><em>noattackerskill</em></dt>
+<dd>If <em>True</em>, attackers do not get skill bonus on
+defense. Defaults to <em>False</em>.</dd>
+<dt><em>alwaysready</em></dt>
+<dd>If <em>True</em>, attacker will have a chance to
+attack each round, instead of the usual 50%.
+Defaults to <em>False</em>.</dd>
+<dt><em>numAttacks</em></dt>
+<dd><p class="first">Number of attacks per round granted by the
+weapon. It is a dictionary with the following
+values:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>attacksSkill</em></dt>
+<dd>If <em>True</em> the weapon grants a number of
+attacks equal to the skill level of the
+attacker. Defaults to <em>False</em>.</dd>
+<dt><em>attacksHalfSkill</em></dt>
+<dd>If <em>True</em> the weapon grants a number of
+attacks equal to half the skill level
+of the attacker. Defaults to <em>False</em>.</dd>
+<dt><em>atts</em></dt>
+<dd>If <em>attacksSkill</em> or <em>attacksHalfSkill</em>
+are <em>True</em>, this parameter is added to
+the number of attacks granted by the
+skill. Else, if <em>atts</em> &gt; 0 user is
+granted this number of attacks per
+round, and if <em>atts</em> &lt; 0 user is
+granted one attack each number of
+rounds.</dd>
+</dl>
+</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>monster</dt>
+<dd><p class="first">If present, the item is a monster. It is defined by a
+dictionary with the following parameters:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>attackLevel</em></dt>
+<dd>Attack level of the monster.</dd>
+<dt><em>defense</em></dt>
+<dd>Defense of the monster against the attack
+types. It is a dictionary where keys are attack
+types and values are resistence against them.</dd>
+<dt><em>stealth</em></dt>
+<dd>Stealth score of the monster.</dd>
+<dt><em>observation</em></dt>
+<dd>Observation score of the monster.</dd>
+<dt><em>tactics</em></dt>
+<dd>Tactics score of the monster.</dd>
+<dt><em>spoils</em></dt>
+<dd>Type of items found as spoils in addition to
+silver. It can be <strong>normal</strong>, <strong>advanced</strong> or
+<strong>magic</strong>.</dd>
+<dt><em>specialstr</em></dt>
+<dd>If present, description of the special effect
+caused by the monster.</dd>
+<dt><em>special</em></dt>
+<dd>Special effect caused by the monster. Special
+effect are very complex entities. A detailed
+description can be found at
+<a href="#id5"><span class="problematic" id="id6">:method:`ReportConsumer.skill`</span></a> documentation.</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>man</dt>
+<dd><p class="first">If present, the item is a man. It is defined by a
+dictionary with the following parameters:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>defaultLevel</em></dt>
+<dd>Maximum level allowed to the man to any skill.</dd>
+<dt><em>specialLevel</em></dt>
+<dd>If present, maximum level allowed to the man to
+skills he can specialize.</dd>
+<dt><em>skills</em></dt>
+<dd>List of skills where the man can specialize.
+Each list element is a dictionary with <em>name</em>
+and <em>abbr</em> of the skill.</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>ship</dt>
+<dd><p class="first">If present, the item is a ship. It is defined by a
+dictionary with the following parameters:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>sailors</em></dt>
+<dd>Number of sailors to sail the ship.</dd>
+<dt><em>protect</em></dt>
+<dd>Number of soldiers protected by the ship.
+Defaults to <em>None</em>.</dd>
+<dt><em>defense</em></dt>
+<dd>A dictionary where keys are attack types and
+values are bonuses applied against these attack
+types. Defaults to <em>None</em>.</dd>
+<dt><em>maxMages</em></dt>
+<dd>Number of mages allowed to study in the ship
+beyond 2th level. Defaults to <em>None</em>.</dd>
+</dl>
+</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.line">
+<tt class="descname">line</tt><big>(</big><em>line</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a new line.</p>
+<p>Whenever a line is read, it is sent to the consumer in case
+it wants to use it for the read entity description.</p>
+<p>The line is send just before the parsed object is sent to
+the consumer, so it should store it in a temporary buffer,
+and when the parsed entity is received attach the line(s)
+to it as a description.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>line</strong> &#8211; read line.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises NotImplementedError:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">if not overriden.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.region">
+<tt class="descname">region</tt><big>(</big><em>terrain</em>, <em>name</em>, <em>xloc</em>, <em>yloc</em>, <em>zloc=None</em>, <em>population=0</em>, <em>racenames=None</em>, <em>wealth=0</em>, <em>town=None</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle line of region report.</p>
+<p>This is the very first handler called when a new region hexagon
+is found. This call signals the start of an hexagon information
+and also basic information about it: coordinates, terrain type,
+region name, peasants race and present town (if any).</p>
+<p><a class="reference internal" href="#atlantis.parsers.reportparser.ReportConsumer" title="atlantis.parsers.reportparser.ReportConsumer"><tt class="xref py py-class docutils literal"><span class="pre">ReportConsumer</span></tt></a> implementations should initialize hex
+information when this method is called.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>xloc</strong> &#8211; X coordinates of the hexagon.</li>
+<li><strong>yloc</strong> &#8211; Y coordinates of the hexagon.</li>
+<li><strong>zloc</strong> &#8211; Z coordinates of the hexagon. If <em>None</em> is given
+the hexagon is on surface.</li>
+<li><strong>terrain</strong> &#8211; Terrain type.</li>
+<li><strong>name</strong> &#8211; Region name the hexagon belongs to.</li>
+<li><strong>population</strong> &#8211; Population of the hexagon, if any. Some
+terrain types as oceans have no population.</li>
+<li><strong>racenames</strong> &#8211; Name of the race (plural form) of region
+inhabitants.</li>
+<li><strong>wealth</strong> &#8211; Maximum amount available for taxing.</li>
+<li><strong>town</strong> &#8211; If present, a dictionary with <em>name</em> and <em>type</em> of
+the town there. Allowed <em>type</em> values are <tt class="docutils literal"><span class="pre">village</span></tt>,
+<tt class="docutils literal"><span class="pre">town</span></tt> and <tt class="docutils literal"><span class="pre">city</span></tt>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises NotImplementedError:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">if not overriden.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.region_entertainment">
+<tt class="descname">region_entertainment</tt><big>(</big><em>amount</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.region_entertainment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle region entertainment report.</p>
+<p>The only parameter of this method is the total amount of
+entertainment available.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>amount</strong> &#8211; Entertainment available in the region.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises NotImplementedError:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">if not overriden.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.region_exits">
+<tt class="descname">region_exits</tt><big>(</big><em>direction</em>, <em>terrain</em>, <em>name</em>, <em>xloc</em>, <em>yloc</em>, <em>zloc='surface'</em>, <em>town=None</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.region_exits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a region exit direction.</p>
+<p>Each region has a number of linked hexagons. Each of them
+are reported by calling this method. When an exit is found some
+basic information of the linked hexagon is attached.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>direction</strong> &#8211; direction of the exit. Allowed values are
+<tt class="docutils literal"><span class="pre">North</span></tt>, <tt class="docutils literal"><span class="pre">Northeast</span></tt>, <tt class="docutils literal"><span class="pre">Southeast</span></tt>, <tt class="docutils literal"><span class="pre">South</span></tt>,
+<tt class="docutils literal"><span class="pre">Southwest</span></tt>, <tt class="docutils literal"><span class="pre">Northwest</span></tt>.</li>
+<li><strong>xloc</strong> &#8211; X coordinates of the hexagon.</li>
+<li><strong>yloc</strong> &#8211; Y coordinates of the hexagon.</li>
+<li><strong>zloc</strong> &#8211; Z coordinates of the hexagon. If <em>None</em> is given
+the hexagon is on surface.</li>
+<li><strong>terrain</strong> &#8211; terrain type.</li>
+<li><strong>name</strong> &#8211; region name the hexagon belongs to.</li>
+<li><strong>town</strong> &#8211; if present, a dictionary with <em>name</em> and <em>type</em> of
+the town there. Allowed <em>type</em> values are <tt class="docutils literal"><span class="pre">village</span></tt>,
+<tt class="docutils literal"><span class="pre">town</span></tt> and <tt class="docutils literal"><span class="pre">city</span></tt>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises NotImplementedError:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">if not overriden.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.region_gate">
+<tt class="descname">region_gate</tt><big>(</big><em>gate</em>, <em>gateopen</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.region_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a gate report.</p>
+<p>If a gate is found in the region it is reported.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>gate</dt>
+<dd>Gate number, or 0 if it&#8217;s closed.</dd>
+<dt>gateopen</dt>
+<dd><em>True</em> if the gate is open, <em>False</em> otherwise.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.region_market">
+<tt class="descname">region_market</tt><big>(</big><em>market</em>, <em>items</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.region_market" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle region market report.</p>
+<p>This method is called up to twice per region. One for the sell
+market (products that players can <em>sell</em> to the market) and one
+for the buy market (products that players can <em>buy</em> from the
+market). Each market is a list of items with their sell/buy
+prices.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>market</strong> &#8211; market type. Allowed values are <tt class="docutils literal"><span class="pre">sell</span></tt> and
+<tt class="docutils literal"><span class="pre">buy</span></tt>.</li>
+<li><strong>items</strong> &#8211; list of
+<tt class="xref py py-class docutils literal"><span class="pre">ItemMarket</span></tt> objects.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises NotImplementedError:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">if not overriden.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.region_products">
+<tt class="descname">region_products</tt><big>(</big><em>products</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.region_products" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle region products report.</p>
+<p>The only parameter of this method is a list of available
+products in the region.</p>
+<p>New products can be discovered in the region when units get
+the appropiate skill.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>products</strong> &#8211; list of
+<tt class="xref py py-class docutils literal"><span class="pre">ItemAmount</span></tt> objects.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises NotImplementedError:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">if not overriden.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.region_structure">
+<tt class="descname">region_structure</tt><big>(</big><em>num</em>, <em>name</em>, <em>ob</em>, <em>items=None</em>, <em>incomplete=False</em>, <em>decay=False</em>, <em>maintenance=False</em>, <em>inner=False</em>, <em>runes=False</em>, <em>canenter=True</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.region_structure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a structure in a region report.</p>
+<p>A structure is a complex entity in Atlantis. Structures can
+hold player or monster units inside, open paths to other map
+levels, improve resource production, provide protection to
+soldiers inside or, in case of ships, provide sailing or even
+flying transportation.</p>
+<p>When a region report is finished with their products listing
+it&#8217;s time for units and structures. First all units outside
+structures are listed, then each object, followed by their
+stacked units.</p>
+<dl class="docutils">
+<dt>Structure is defined by the following parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>num</dt>
+<dd>Unique number for the structure in the hex. Structures
+will be listed ordered by its number, and it&#8217;s the
+direction unit must issue in order to enter inside it.</dd>
+<dt>name</dt>
+<dd>Name of the structure. Note that this is the name given
+by the owner player to the structure, not the name of
+the structure type.</dd>
+<dt>ob</dt>
+<dd>Structure type. This parameter is a dictionary with
+only the <em>name</em> value of the structure type. This
+<em>name</em> is the generic structure type (like <strong>Mine</strong> or
+<strong>Castle</strong>).</dd>
+<dt>items</dt>
+<dd>List of items, only given in case the structure is a
+fleet of ships. In this case each element in the list
+is a dictionary with <em>num</em> and <em>name</em>, <em>names</em> of the
+ship items building the fleet. Defaults to <em>None</em>.</dd>
+<dt>incomplete</dt>
+<dd>Amount of work needed to complete the structure.
+Defaults to zero.</dd>
+<dt>decay</dt>
+<dd>When decay is activated it is <em>about to decay</em> when it
+could be completely ruined next month if it&#8217;s not
+repaired. When this happens this flag is <em>True</em>.
+Defaults to <em>False</em>.</dd>
+<dt>maintenance</dt>
+<dd>When decay is activated it <em>needs maintenance</em> when the
+structure is damaged and needs to be repaired but it&#8217;s
+not <em>about to decay</em> next month. Defaults to <em>False</em>.</dd>
+<dt>inner</dt>
+<dd>Some structures have inner locations, a shafts. Units
+can move <em>in</em> such structures. This structures have
+their inner flag set to <em>True</em>. Defaults to <em>False</em>.</dd>
+<dt>runes</dt>
+<dd><em>True</em> if the structure has engraved runes of guard,
+<em>False</em> otherwise. Defaults to <em>False</em>.</dd>
+<dt>canenter</dt>
+<dd><em>True</em> if player units can enter the structure, <em>False</em>
+otherwise. Defaults to <em>True</em>.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.region_unit">
+<tt class="descname">region_unit</tt><big>(</big><em>num</em>, <em>name</em>, <em>items</em>, <em>tab=False</em>, <em>guard=None</em>, <em>faction=None</em>, <em>attitude='neutral'</em>, <em>behind=False</em>, <em>holding=False</em>, <em>autotax=False</em>, <em>noaid=False</em>, <em>sharing=False</em>, <em>nocross=False</em>, <em>reveal=None</em>, <em>consuming=None</em>, <em>spoils=None</em>, <em>visited=None</em>, <em>canstudy=None</em>, <em>readyitem=None</em>, <em>readyarmor=None</em>, <em>readyweapon=None</em>, <em>combat=None</em>, <em>skills=None</em>, <em>weight=None</em>, <em>capacity=None</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.region_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a unit report in a region.</p>
+<p>Units are the main entities in Atlantis: every action a player
+does is by issuing orders to their units.</p>
+<p>Units are mainly a group of items, of which at least one must
+be a man or a monster, plus a group of learned skills. In
+addition units will have some identifiers (num and name),
+a reference to its owner faction and a good bunch of flags.</p>
+<p>Unit reports are not complete. While a complete report is
+received from own units, units stats are hidden to other
+players. Some of them can be revealed depending on unit&#8217;s
+reveal flag or relative <em>OBSE</em> and <em>STEA</em> skills.</p>
+<p>There&#8217;re three levels of unit visibility:</p>
+<ul class="simple">
+<li>Own units. Always visible and complete report.</li>
+<li>Extended report. Unit is revealing faction or our <em>OBSE</em> is</li>
+</ul>
+<p>greater than unit <em>STEA</em>. Faction is revealed, as well as some
+flags like <em>avoiding</em> and <em>behind</em>.</p>
+<ul class="simple">
+<li>Basic report. Unit is revealing unit, on guard, or our <em>OBSE</em></li>
+</ul>
+<p>is equal than unit <em>STEA</em>. Unit is visible, but less stats are
+reported.</p>
+<dl class="docutils">
+<dt>These parameters are reported every time a unit is visible:</dt>
+<dd><dl class="first last docutils">
+<dt>num</dt>
+<dd>Unique identifier of the unit.</dd>
+<dt>name</dt>
+<dd>Name of the unit.</dd>
+<dt>items</dt>
+<dd><p class="first">List of items in the unit (including men). All items
+are reported <em>except</em> weightless items, that are only
+reported for own units.</p>
+<p>Each element in the list is a dictionary with the
+following keys:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>amt</em></dt>
+<dd>Amount of items of this type.</dd>
+<dt><em>abr</em></dt>
+<dd>Abbreviature of the item type.</dd>
+<dt><em>name</em>/<em>names</em></dt>
+<dd>Name or names of the item.</dd>
+<dt><em>illusion</em></dt>
+<dd><em>True</em> if it&#8217;s an illusion. Defaults to
+<em>False</em>.</dd>
+<dt><em>unfinished</em></dt>
+<dd><em>True</em> if the item is unfinished. Defaults to
+<em>False</em>.</dd>
+<dt><em>num</em></dt>
+<dd>Amount of work needed to finish the item if
+it&#8217;s unfinished. Defaults to 0.</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>tab</dt>
+<dd>If <em>True</em> the unit is tabbed. That is, the unit is
+inside a structure. Defaults to <em>False</em>.</dd>
+<dt>guard</dt>
+<dd>Flags if the unit is on guard (<strong>guard</strong>), avoiding
+(<strong>avoid</strong>) or <em>None</em>. Note that while <strong>guard</strong> is
+always reported, <strong>avoid</strong> only in the <em>extended</em>
+report. Defaults to <em>None</em>.</dd>
+</dl>
+</dd>
+</dl>
+<p>In addition these parameters are reported with superior <em>OBSE</em>
+or if the unit is revealing faction:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>faction</dt>
+<dd>If visible, faction will be a dictionary with <em>num</em> and
+<em>name</em> of unit&#8217;s faction. Defaults to <em>None</em>.</dd>
+<dt>attitude</dt>
+<dd><p class="first">If the option <em>showattitudes</em> is chosen for the report
+this parameter will show our attitude towards unit&#8217;s
+faction. Possible values are <strong>me</strong>, <strong>ally</strong>,
+<strong>friendly</strong>, <strong>neutral</strong>, <strong>unfriendly</strong> and
+<strong>hostile</strong>.</p>
+<p class="last">If <em>showattitudes</em> is not active or unit&#8217;s faction is
+unknown <em>attitude</em> will take <strong>neutral</strong> value.</p>
+</dd>
+<dt>behind</dt>
+<dd>If <em>True</em> the unit is <em>behind</em> in combat. Defaults to
+<em>False</em>.</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Parameters only give for own units:</dt>
+<dd><dl class="first last docutils">
+<dt>holding</dt>
+<dd>If <em>True</em> the unit is <em>holding</em> its position. Defaults
+to <em>False</em>.</dd>
+<dt>autotax</dt>
+<dd>If <em>True</em> the unit will always tax without having to
+issue the <em>tax</em> order. Defaults to <em>False</em>.</dd>
+<dt>noaid</dt>
+<dd>If <em>True</em> the unit won&#8217;t call for help if attacked.
+Defaults to <em>False</em>.</dd>
+<dt>sharing</dt>
+<dd>If <em>True</em> the unit will share its posessions with any
+other unit of your faction that needs them. Defaults to
+<em>False</em>.</dd>
+<dt>nocross</dt>
+<dd>If <em>True</em> the unit won&#8217;t cross a body of water even if
+it can do it. Defaults to <em>False</em>.</dd>
+<dt>reveal</dt>
+<dd>Reveal flag of the unit. Can be <strong>faction</strong>, <strong>unit</strong>
+or <em>None</em>. Defaults to <em>None</em>.</dd>
+<dt>consuming</dt>
+<dd>If set the unit will consume food in preference to
+silver. Possible values are <strong>unit</strong> and <strong>faction</strong>
+to consume own&#8217;s unit food or faction food. Defaults to
+<em>None</em>.</dd>
+<dt>spoils</dt>
+<dd>If set the unit has limited which spoils can take from
+battle. Possible values are <strong>weightless</strong>, <strong>flying</strong>,
+<strong>walking</strong>, <strong>riding</strong> and <strong>sailing</strong>. Defaults to
+<em>None</em>.</dd>
+<dt>visited</dt>
+<dd>List of places (strings) the unit has visited, for
+quests. Defaults to <em>None</em>.</dd>
+<dt>canstudy</dt>
+<dd>List of advanced skills that need prerequisites that
+the unit has fulfilled so it can now study them. Each
+element in the list is a dicionary with skill <em>abbr</em>
+and <em>name</em>. Defaults to <em>None</em>.</dd>
+<dt>readyitem</dt>
+<dd>List of ready miscellaneous combat items for the unit.
+Each element in the list is a dictionary with item
+<em>abr</em> and <em>name</em>. Defaults to <em>None</em>.</dd>
+<dt>readyarmor</dt>
+<dd>List of ready armor items for the unit. Each element in
+the list is a dictionary with item <em>abr</em> and <em>name</em>.
+Defaults to <em>None</em>.</dd>
+<dt>readyweapon</dt>
+<dd>List of ready weapon items for the unit. Each element
+in the list is a dictionary with item <em>abr</em> and <em>name</em>.
+Defaults to <em>None</em>.</dd>
+<dt>combat</dt>
+<dd>Unit combat spell. It&#8217;s a dictionary with skill <em>abbr</em>
+and <em>name</em>. Defaults to <em>None</em>.</dd>
+<dt>skills</dt>
+<dd><p class="first">List of unit skills. Each element in the list is a
+dictionary with <em>abbr</em>, <em>name</em>, <em>level</em> and <em>days</em> of
+the studied skill. In addition, if skills require
+experience is activated a <em>rate</em> is added to the
+dictionary.</p>
+<p class="last">Defaults to <em>None</em>.</p>
+</dd>
+<dt>weight</dt>
+<dd>Unit weight. Defaults to <em>None</em>.</dd>
+<dt>capacity</dt>
+<dd><p class="first">Unit capacity. It&#8217;s a dictionary where keys are the
+movement types and values are capacities for them. Note
+that capacity include own weight, so a man will have
+a capacity of 15 and a weight of 10, being able to
+carry up to 5 weight of items with him.</p>
+<p class="last">Movement types are: <em>flying</em>, <em>riding</em>, <em>walking</em> and
+<em>swimming</em>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.region_wages">
+<tt class="descname">region_wages</tt><big>(</big><em>productivity</em>, <em>amount</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.region_wages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle region wages report.</p>
+<p>This method report wages per month, and total available amount.
+Wages are a float value with one decimal value (ex. $14.3), but
+the total amount are truncated per unit.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>productivity</strong> &#8211; wages obtained per man and month.</li>
+<li><strong>amount</strong> &#8211; total amount of wages available in the region.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises NotImplementedError:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">if not overriden.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.region_weather">
+<tt class="descname">region_weather</tt><big>(</big><em>weather</em>, <em>nxtweather</em>, <em>clearskies=False</em>, <em>blizzard=False</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.region_weather" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle region weather report.</p>
+<p>Reports last and next month weather. Next month weather will be
+the one affecting movement orders given this turn. Weather can
+be <tt class="docutils literal"><span class="pre">clear</span></tt>, <tt class="docutils literal"><span class="pre">winter</span></tt>, <tt class="docutils literal"><span class="pre">monsoon</span> <span class="pre">season</span></tt> or <tt class="docutils literal"><span class="pre">blizzard</span></tt>.</p>
+<p>Also, if weather was affected by magic it is also reported.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>weather</strong> &#8211; last month weather. Valid values are <tt class="docutils literal"><span class="pre">clear</span></tt>,
+<tt class="docutils literal"><span class="pre">winter</span></tt>, <tt class="docutils literal"><span class="pre">monsoon</span> <span class="pre">season</span></tt> and <tt class="docutils literal"><span class="pre">blizzard</span></tt>.</li>
+<li><strong>nxtweather</strong> &#8211; next month weather. Valid values are
+<tt class="docutils literal"><span class="pre">clear</span></tt>, <tt class="docutils literal"><span class="pre">winter</span></tt> and <tt class="docutils literal"><span class="pre">monsoon</span> <span class="pre">season</span></tt>. Unnatural
+values are not reported here.</li>
+<li><strong>clearskies</strong> &#8211; if <em>True</em>, last month weather was caused by
+a Clear Skies spell. Defaults to <em>False</em>.</li>
+<li><strong>blizzard</strong> &#8211; if <em>True</em>, last month weather was caused by a
+Blizzard spell. Defaults to <em>False</em>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises NotImplementedError:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">if not overriden.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.skill">
+<tt class="descname">skill</tt><big>(</big><em>name</em>, <em>abbr</em>, <em>level</em>, <em>descr=None</em>, <em>cost=None</em>, <em>skilldescr=None</em>, <em>noexp=False</em>, <em>noteach=False</em>, <em>nostudy=False</em>, <em>slowstudy=False</em>, <em>builds=None</em>, <em>production=None</em>, <em>mProduction=None</em>, <em>depends=None</em>, <em>discovers=None</em>, <em>foundation=False</em>, <em>combat=False</em>, <em>cast=False</em>, <em>apprentice=False</em>, <em>specialstr=None</em>, <em>special=None</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.skill" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a skill definition.</p>
+<p>This method is called when a skill description is read. Skill
+are very complex entities in Atlantis, with lots of flags and
+specially complex special effects.</p>
+<p>Basically a skill is always defined by name, abbr and level.
+As:</p>
+<div class="highlight-python"><pre>combat [COMB] 2: No skill report</pre>
+</div>
+<p>There&#8217;re some basic properties of the skills that are not given
+in every report, but only are reported at the first level, and
+are supposed to be generic data for all levels of the skill. So
+happens with description, study cost, and several flags. This
+will be noted in the description of the parameters.</p>
+<dl class="docutils">
+<dt>Basic parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>name</dt>
+<dd>Skill name.</dd>
+<dt>abbr</dt>
+<dd>Skill abbreviature.</dd>
+<dt>level</dt>
+<dd>Skill level.</dd>
+<dt>descr</dt>
+<dd>Complete skill description. Everything after the colon.</dd>
+<dt>cost</dt>
+<dd><em>Level 1</em>. Cost of skill study.</dd>
+<dt>skilldescr</dt>
+<dd><em>Optional</em>. A generic skill description. It&#8217;s
+usually given only for level 1 skill report, but
+sometimes additional descriptions are given at
+further levels when additional abilities are
+granted by the skill.</dd>
+</dl>
+</dd>
+<dt>Flags:</dt>
+<dd><dl class="first last docutils">
+<dt>noexp</dt>
+<dd><em>True</em> if skill cannot be increased by experience.</dd>
+<dt>noteach</dt>
+<dd><em>True</em> if skill cannot be teached.</dd>
+<dt>nostudy</dt>
+<dd><em>True</em> if skill cannot be studied.</dd>
+<dt>slowstudy</dt>
+<dd><em>Level 1</em>. <em>True</em> if skill study is slow.</dd>
+</dl>
+</dd>
+<dt>Production parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>builds</dt>
+<dd><p class="first"><em>Optional</em>. List of structures that current skill
+level allows to build. Each structure is a dictionary
+with <em>name</em>, <em>cost</em> and <em>item</em>.</p>
+<p><em>item</em> value is a list of items that can be used to
+build the structure. Each item in <em>item</em> list is a
+dictionary with <em>abr</em> and <em>name</em> (singular) of the
+item.</p>
+<p class="last"><strong>Note that the structure won&#8217;t need both items,
+but it can use any of them to be built.</strong></p>
+</dd>
+<dt>production</dt>
+<dd><p class="first"><em>Optional</em>. Normal production granted by the skill
+level. This parameter is a dictionary with <em>command</em>,
+that can take the values of <strong>build</strong> for ships and
+<strong>produce</strong> for items; and <em>items</em>, that it&#8217;s a list of
+items that can be produced.</p>
+<p>When producing items each element in <em>items</em> list is a
+dictionary with its <em>abr</em>, <em>names</em>, <em>pOut</em> (items
+produced per <em>pMonths</em> man months) and <em>pMonths</em>
+(months needed to produce <em>pOut</em> items).</p>
+<p>Other optional elements in item dictionary are
+<em>skillout</em> (default <em>False</em>) that if <em>True</em> means that
+production is multiplied per skill level, <em>orinputs</em>
+(default <em>False</em>) that if <em>True</em> means that input items
+can be used alternatively instead of having to use them
+all, and <em>pInput</em>, which is a list of input items
+needed for production.</p>
+<p>Each item in <em>pInput</em> list is a dictionary with <em>abr</em>,
+<em>amt</em> and <em>name</em>/<em>names</em> of input item.</p>
+<p>When building ships, each element in <em>items</em> list is a
+dictionary with <em>abr</em>, <em>names</em> and <em>pMonths</em> (<em>pOut</em> is
+not given). <em>pMonths</em> is both for time needed to build
+the ship and the amount of items needed.</p>
+<p class="last">Optionals elements in item dictionary are, as with
+items, <em>skillout</em>, <em>orinputs</em> and <em>pInput</em>.</p>
+</dd>
+<dt>mProduction</dt>
+<dd><p class="first"><em>Optional</em>. Magical production granted by the skill
+level. This parameter is a dictionary with <em>command</em>,
+that it&#8217;s <strong>cast</strong>, and <em>items</em>, that it&#8217;s a list of
+items that can be produced.</p>
+<p>Each element of <em>items</em> list is a dictionary with <em>abr</em>
+of the item being produced, its <em>name</em> or <em>names</em>,
+<em>mOut</em> (number of items produced per level multiplied
+by 100, so 20 means 20% chance, 200 means 2 times the
+skill level items), and optionally <em>mInput</em>, as a list
+of items needed for production.</p>
+<p class="last">Each element of <em>mInput</em> is a dictionary with <em>amt</em>,
+<em>abr</em> and <em>name</em>/<em>names</em> of needed items.</p>
+</dd>
+</dl>
+</dd>
+<dt>Advanced items and skills parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>depends</dt>
+<dd><em>Level 1</em>. <em>Optional</em>. List of skills current skills
+depends on. Each skill in the list is given as a
+dictionary with <em>name</em>, <em>abbr</em> and <em>level</em> of the
+prerequisite skill.</dd>
+<dt>discovers</dt>
+<dd><em>Optional</em>. List of advanced products than can be
+discovered by this skill. Each item in the list is a
+dictionary with item <em>names</em> value.</dd>
+</dl>
+</dd>
+<dt>Magic parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>foundation</dt>
+<dd><em>Level 1</em>. <em>True</em> if skill is a foundational one.</dd>
+<dt>combat</dt>
+<dd><em>Level 1</em>. <em>True</em> if skill can be used as combat spell.</dd>
+<dt>cast</dt>
+<dd><em>True</em> if skill can be cast.</dd>
+<dt>apprentice</dt>
+<dd><em>Level 1</em>. <em>True</em> if the skill allows the unit to use
+magical items (manipulation skill).</dd>
+<dt>specialstr</dt>
+<dd><em>Optional</em>. If special effect is caused, the special
+effect description string.</dd>
+<dt>special</dt>
+<dd><p class="first"><em>Optional</em>. Special effect caused by the spell.</p>
+<p>This is a complex object passed as a dictionary, with
+the following keys and values, all of them optionals
+but the name:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>name</em></dt>
+<dd>only mandatory key, name of the effect.</dd>
+<dt><em>level</em></dt>
+<dd>level of the effect. This is given for items
+with special effects. For skills, the skill
+level will be used.</dd>
+<dt><em>damage</em></dt>
+<dd><p class="first">if it&#8217;s a damage spell, <em>damage</em> is set as a
+list of damages. Each element in <em>damage</em> list
+is a dictionary with</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>minnum</em></dt>
+<dd>minimum affected targets.</dd>
+<dt><em>maxnum</em></dt>
+<dd>maximum affected targets.</dd>
+<dt><em>expandLevel</em></dt>
+<dd><em>optional</em>, if <em>True</em>, multiply nums by
+skill level of the mage.</dd>
+<dt><em>type</em></dt>
+<dd>type of attack.</dd>
+<dt><em>effectstr</em></dt>
+<dd><em>optional</em>, effect description.</dd>
+<dt><em>effect</em></dt>
+<dd><p class="first"><em>optional</em>, parsed effect as a
+dictionary:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><em>name</em></dt>
+<dd>name of the effect.</dd>
+<dt><em>cancelEffect</em></dt>
+<dd><em>optional</em>, name of effect
+cancelled by this one.</dd>
+</dl>
+</div></blockquote>
+<p>If the effect affects target attack and
+defense stats the following keys are
+also included in effect:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>oneshot</em></dt>
+<dd><em>True</em> if effect is only for
+next round, <em>False</em> if its for
+the entire battle.</dd>
+<dt><em>attackVal</em></dt>
+<dd>mod on target attack stat.</dd>
+<dt><em>defMods</em></dt>
+<dd>a list of mods on target
+defensive stats. Each element
+in the list is a dictionary
+with <em>type</em>, type of attack and
+<em>val</em>, defense modifier.</dd>
+</dl>
+</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt><em>defs</em></dt>
+<dd><p class="first">a list of defensive bonuses. Each element in
+<em>defs</em> list is a dictionary with</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>type</em></dt>
+<dd>attack type affected.</dd>
+<dt><em>val</em></dt>
+<dd>value of defensive bonus.</dd>
+<dt><em>expandLevel</em></dt>
+<dd><em>optional</em>, if <em>True</em>, multiply <em>val</em>
+by skill level of the mage.</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt><em>shield</em></dt>
+<dd>list of attack types shielded as dictionaries
+with <em>type</em> key and value.</dd>
+<dt><em>nobuilding</em></dt>
+<dd>if <em>True</em> target soldiers don&#8217;t get
+benefit of being in a building.</dd>
+<dt><em>nomonster</em></dt>
+<dd>if <em>True</em> cannot target monsters.</dd>
+<dt><em>illusion</em></dt>
+<dd>if <em>True</em> can target only illusions.</dd>
+<dt><em>effectexcept</em></dt>
+<dd>if <em>True</em>, won&#8217;t affect soldiers affected by
+effects in <em>effects</em> list.</dd>
+<dt><em>effectif</em></dt>
+<dd>if <em>True</em>, will only affect soldiers affected by
+effects in <em>effects</em> list.</dd>
+<dt><em>effects</em></dt>
+<dd>list of effects. Each effect is a dictionary
+with <em>name</em> key and value.</dd>
+<dt><em>mountexcept</em></dt>
+<dd>if <em>True</em>, won&#8217;t affect soldiers mounted on
+<em>target</em> mounts.</dd>
+<dt><em>mountif</em></dt>
+<dd>if <em>True</em>, will only affect soldiers mounted on
+<em>target</em> mounts.</dd>
+<dt><em>soldierexcept</em></dt>
+<dd>if <em>True</em>, won&#8217;t affect soldiers of <em>target</em>
+races.</dd>
+<dt><em>soldierif</em></dt>
+<dd>if <em>True</em>, will only affect soldiers of
+<em>target</em> races.</dd>
+<dt><em>targets</em></dt>
+<dd>list of items. Each item is a dictionary with
+<em>abr</em> and <em>names</em> of the item.</dd>
+<dt><em>buildingexcept</em></dt>
+<dd>if <em>True</em>, won&#8217;t affect soldiers inside
+<em>buildings</em> buildings.</dd>
+<dt><em>buildingif</em></dt>
+<dd>if <em>True</em>, will only affect soldiers inside
+<em>buildings</em> buildings.</dd>
+<dt><em>buildings</em></dt>
+<dd>list of structures. Each structure is a
+dictionary with <em>name</em> key and value.</dd>
+</dl>
+</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportConsumer.structure">
+<tt class="descname">structure</tt><big>(</big><em>name</em>, <em>structuretype</em>, <em>monster=False</em>, <em>nomonstergrowth=False</em>, <em>canenter=False</em>, <em>nobuildable=False</em>, <em>protect=None</em>, <em>defense=None</em>, <em>maxMages=None</em>, <em>specials=None</em>, <em>sailors=None</em>, <em>productionAided=None</em>, <em>neverdecay=False</em>, <em>maxMaintenance=None</em>, <em>maxMonthlyDecay=None</em>, <em>maintFactor=None</em>, <em>maintItem=None</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportConsumer.structure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a structure definition.</p>
+<p>Structures are places were units can enter into. Main types of
+structures are buildings and ships. Some of them have inner
+locations, like passages into underworld, some are monster
+lairs, forts and castles, production buildings like mines, etc.</p>
+<dl class="docutils">
+<dt>Structures are defined by the following parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>name</dt>
+<dd>Name of the structure type.</dd>
+<dt>structuretype</dt>
+<dd>Type of the structure. Can be <strong>building</strong>, <strong>ship</strong> or
+<strong>group of ships</strong>.</dd>
+<dt>monster</dt>
+<dd>If <em>True</em> it&#8217;s a monster lair. Defaults to <em>False</em>.</dd>
+<dt>nomonstergrowth</dt>
+<dd>It <em>True</em> monster in this structure won&#8217;t regenerate.
+Defaults to <em>False</em></dd>
+<dt>canenter</dt>
+<dd>If <em>True</em> player units can enter the structure.
+Defaults to <em>False</em>.</dd>
+<dt>nobuildable</dt>
+<dd>If <em>True</em> the structure cannot be build by players.
+Defaults to <em>False</em>.</dd>
+<dt>protect</dt>
+<dd>Number of soldiers the structure can protect. Defaults
+to <em>None</em>.</dd>
+<dt>defense</dt>
+<dd>Defense bonus granted to the units protected by the
+structure. It is a dicionary where keys are the attack
+types and values the bonus granted.</dd>
+<dt>maxMages</dt>
+<dd>Number of mages that can study inside the structure
+magic skills beyond 2nd level.</dd>
+<dt>specials</dt>
+<dd><p class="first">List of special effects affected by the structure. Each
+element in the list is a dictionary with two keys:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><em>specialname</em></dt>
+<dd>Name of the special effect affected by the
+structure.</dd>
+<dt><em>affected</em></dt>
+<dd>If <em>True</em>, units inside this building are
+affected by the special. If <em>False</em>, units
+inside the building are not affected by it.</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>sailors</dt>
+<dd>For ships, number of sailors needed to sail the ship.
+Defaults to <em>None</em>.</dd>
+<dt>productionAided</dt>
+<dd>names of the item the structure aids to produce.
+<em>entertainment</em> is an allowed special value.</dd>
+<dt>neverdecay</dt>
+<dd>If <em>True</em> the structure never decay. Defaults to
+<em>False</em>.</dd>
+<dt>maxMaintenance</dt>
+<dd>Maximum points of damage taken by the structure before
+it begins to decaul. Defauls to <em>None</em>.</dd>
+<dt>maxMonthlyDecay</dt>
+<dd>Maximum damage the structure will take per month as
+decay. Defaults to <em>None</em>.</dd>
+<dt>maintFactor</dt>
+<dd>Damage repaired per unit of material used. Defaults to
+<em>None</em>.</dd>
+<dt>maintItem</dt>
+<dd>Name of the item used to repair the structure.
+<em>wood or stone</em> is a valid special value. Defaults to
+<em>None</em>.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="reportparser">
+<h2><a class="reference internal" href="#atlantis.parsers.reportparser.ReportParser" title="atlantis.parsers.reportparser.ReportParser"><tt class="xref py py-class docutils literal"><span class="pre">ReportParser</span></tt></a><a class="headerlink" href="#reportparser" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="atlantis.parsers.reportparser.ReportParser">
+<em class="property">class </em><tt class="descclassname">atlantis.parsers.reportparser.</tt><tt class="descname">ReportParser</tt><big>(</big><em>consumer</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Report parser state machine.</p>
+<p><a class="reference internal" href="#atlantis.parsers.reportparser.ReportParser" title="atlantis.parsers.reportparser.ReportParser"><tt class="xref py py-class docutils literal"><span class="pre">ReportParser</span></tt></a> parses whole report. It is implemented as
+state machine, with different handler functions depending of which
+is being parsed. Parsing result is sent to its registered consumer
+together with the original line, in case the consumer needs it
+for entity description.</p>
+<p>Although the common use of <a class="reference internal" href="#atlantis.parsers.reportparser.ReportParser" title="atlantis.parsers.reportparser.ReportParser"><tt class="xref py py-class docutils literal"><span class="pre">ReportParser</span></tt></a> should be
+instantiate the class and calling its public parse method all
+methods completely parsing a single report line are public too, so
+this class can be used to parse any single line in the report.
+Helper methods parsing portions of a line are not public, however.</p>
+<p><a class="reference internal" href="#atlantis.parsers.reportparser.ReportParser" title="atlantis.parsers.reportparser.ReportParser"><tt class="xref py py-class docutils literal"><span class="pre">ReportParser</span></tt></a> has the following public methods.</p>
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportParser.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>consumer</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportParser.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parser initializer.</p>
+<p>Its only parameter is the consumer (must implement
+<a class="reference internal" href="#atlantis.parsers.reportparser.ReportConsumer" title="atlantis.parsers.reportparser.ReportConsumer"><tt class="xref py py-class docutils literal"><span class="pre">ReportConsumer</span></tt></a> interface) of the parsed report.</p>
+<dl class="docutils">
+<dt>Parameter:</dt>
+<dd><dl class="first last docutils">
+<dt>consumer</dt>
+<dd><a class="reference internal" href="#atlantis.parsers.reportparser.ReportConsumer" title="atlantis.parsers.reportparser.ReportConsumer"><tt class="xref py py-class docutils literal"><span class="pre">ReportConsumer</span></tt></a> instance to which parsed
+elements will be sent.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportParser.parse">
+<tt class="descname">parse</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportParser.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a report from an open file and parse it.</p>
+<p>This method uses a <a class="reference internal" href="#atlantis.parsers.reportparser.ReportReader" title="atlantis.parsers.reportparser.ReportReader"><tt class="xref py py-class docutils literal"><span class="pre">ReportReader</span></tt></a> instance to read from
+an open file. The <a class="reference internal" href="#atlantis.parsers.reportparser.ReportReader" title="atlantis.parsers.reportparser.ReportReader"><tt class="xref py py-class docutils literal"><span class="pre">ReportReader</span></tt></a> joins back wrapped
+lines, and then the rebuild lines are passed to
+<a href="#id7"><span class="problematic" id="id8">:method:`ReportParser.line`</span></a> until the file ends.</p>
+<p>This method returns False if the file has been read to the end,
+and True if orders template have been found and the file has
+still to be parsed by an <tt class="xref py py-class docutils literal"><span class="pre">OrdersParser</span></tt> before the end
+is reached.</p>
+<dl class="docutils">
+<dt>Parameter:</dt>
+<dd><dl class="first last docutils">
+<dt>f</dt>
+<dd>Open file instance to be read.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd><em>False</em> if the file has been completely read (no template
+orders where found), and <em>True</em> if there&#8217;re still lines for
+reading (template orders).</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportParser.parse_battle">
+<tt class="descname">parse_battle</tt><big>(</big><em>l</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportParser.parse_battle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse battle report lines.</p>
+<p>This method parses battle report lines, begining from the
+start line:</p>
+<div class="highlight-python"><pre>Fulano (123) attacks Mengano (321) in plain (19, 19) in
+Region.</pre>
+</div>
+<p>to the spoils, calling the following ReportConsumer methods:
+<a href="#id9"><span class="problematic" id="id10">:method:`battle`</span></a>, <a href="#id11"><span class="problematic" id="id12">:method:`battle_side`</span></a>,
+<a href="#id13"><span class="problematic" id="id14">:method:`battle_side_unit`</span></a>, <a href="#id15"><span class="problematic" id="id16">:method:`battle_round`</span></a>,
+<a href="#id17"><span class="problematic" id="id18">:method:`battle_round_shield`</span></a>, <a href="#id19"><span class="problematic" id="id20">:method:`battle_round_special`</span></a>,
+<a href="#id21"><span class="problematic" id="id22">:method:`battle_round_regenerate`</span></a>, <a href="#id23"><span class="problematic" id="id24">:method:`battle_loses`</span></a>,
+<a href="#id25"><span class="problematic" id="id26">:method:`battle_end`</span></a>, <a href="#id27"><span class="problematic" id="id28">:method:`battle_casualties`</span></a>,
+<a href="#id29"><span class="problematic" id="id30">:method:`battle_casualties_heal`</span></a>,
+<a href="#id31"><span class="problematic" id="id32">:method:`battle_casualties_units`</span></a>, <a href="#id33"><span class="problematic" id="id34">:method:`battle_spoils`</span></a> and
+<a href="#id35"><span class="problematic" id="id36">:method:`battle_raise`</span></a>.</p>
+<p>Parsing of a battle works following these phases:</p>
+<div class="highlight-python"><pre>Fulano (123) attacks Mengano (321) in plain (19, 19) in
+  Region</pre>
+</div>
+<p>or:</p>
+<div class="highlight-python"><pre>Fulano (123) attempts to assassinate</pre>
+</div>
+<p>When such a line is found, battle method is call, signaling
+the consumer than a new battle has begun (and the previous
+one has finished).</p>
+<p>Then sides description follows:</p>
+<div class="highlight-python"><pre>Attackers:
+Fulano (123), 2 vikings [VIKI], combat 1.
+Peasants (127), 2 plainsmen [PLAI], behind.
+...
+
+Defenders:
+Mengano (321), 1 leader [LEAD], 1 sword [SWOR].
+...</pre>
+</div>
+<dl class="docutils">
+<dt>When these lines are found two methods are called:</dt>
+<dd><dl class="first last docutils">
+<dt>battle_side</dt>
+<dd>when the <strong>Attackers</strong> or <strong>Defenders</strong> item is found,
+signaling the consumer that the list of units for that
+side follows.</dd>
+<dt>battle_side_unit</dt>
+<dd>for each unit read</dd>
+</dl>
+</dd>
+</dl>
+<p>Then one or more battle round follows, with a starting line
+with the number of the round, and then a very short report of
+what happend this round (only shields casting, special effects,
+regeneration/damage for monsters with more than one hit and
+total loses are reported). Something like:</p>
+<div class="highlight-python"><pre>Round 1:
+Mage eart (397) casts Force Shield.
+Other mage (314) strikes fear into enemy mounts, causing 8
+  mounts to panic.
+Big monster (666) takes 8 hits bringing it to 252/300.
+City Guard (67) loses 13.</pre>
+</div>
+<dl class="docutils">
+<dt>The following consumer methods are called:</dt>
+<dd><dl class="first last docutils">
+<dt>battle_round</dt>
+<dd><tt class="docutils literal"><span class="pre">Round</span> <span class="pre">1:</span></tt></dd>
+<dt>battle_round_shield</dt>
+<dd><tt class="docutils literal"><span class="pre">Mage</span> <span class="pre">eart</span> <span class="pre">(397)</span> <span class="pre">casts</span> <span class="pre">Force</span> <span class="pre">Shield</span></tt></dd>
+<dt>battle_round_special</dt>
+<dd><tt class="docutils literal"><span class="pre">Other</span> <span class="pre">mage</span> <span class="pre">(314)</span> <span class="pre">strikes</span> <span class="pre">fear</span> <span class="pre">into</span> <span class="pre">...</span></tt></dd>
+<dt>battle_round_regenerate</dt>
+<dd><tt class="docutils literal"><span class="pre">Big</span> <span class="pre">monster</span> <span class="pre">(666)</span> <span class="pre">takes</span> <span class="pre">8</span> <span class="pre">hits</span> <span class="pre">...</span></tt></dd>
+<dt>battle_loses</dt>
+<dd><tt class="docutils literal"><span class="pre">City</span> <span class="pre">Guard</span> <span class="pre">(67)</span> <span class="pre">loses</span> <span class="pre">13</span></tt></dd>
+</dl>
+</dd>
+</dl>
+<p>When one of the sides is broken, it is reported that way:</p>
+<div class="highlight-python"><pre>Mengano (321) is routed!
+Fulano (123) gets a free round of attacks</pre>
+</div>
+<dl class="docutils">
+<dt>And a last round is played. Called methods are:</dt>
+<dd><dl class="first docutils">
+<dt>battle_end</dt>
+<dd>with the result of the battle.</dd>
+</dl>
+<p class="last">and all previous listed round methods.</p>
+</dd>
+</dl>
+<p>Once battle is finished, loses and healing are written for
+each side. First loses from the losing side, then heal and
+loses from the winning side:</p>
+<div class="highlight-python"><pre>Total casualites:
+
+Mengano (321) loses 113.
+Damaged units: 321, 126, ...
+
+Fulano (123) heals 14.
+Fulano (123) loses 23.
+Damaged units: 123, 147, 193, 300, ...</pre>
+</div>
+<dl class="docutils">
+<dt>The following consumer methods are called:</dt>
+<dd><dl class="first last docutils">
+<dt>battle_casualties</dt>
+<dd>The starting line, signaling the consumer that
+casualties follow.</dd>
+<dt>battle_casualties_heal</dt>
+<dd>Healing line.</dd>
+<dt>battle_loses</dt>
+<dd>Loses line.</dd>
+<dt>battle_casualties_units</dt>
+<dd>Damaged unit list.</dd>
+</dl>
+</dd>
+</dl>
+<p>Finally spoils and raised undead follows:</p>
+<div class="highlight-python"><pre>Spoils: sword [SWOR], 12 silver [SILV]
+2 skeletons [SKEL] rise from the grave ...</pre>
+</div>
+<dl class="docutils">
+<dt>For these two lines the following methods are called:</dt>
+<dd><dl class="first last docutils">
+<dt>battle_spoils</dt>
+<dd>Spoils line.</dd>
+<dt>battle_raise</dt>
+<dd>Undead raise lines.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportParser.parse_event">
+<tt class="descname">parse_event</tt><big>(</big><em>message_type</em>, <em>line</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportParser.parse_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse event or error message.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>message_type</dt>
+<dd><strong>event</strong> or <strong>error</strong>.</dd>
+<dt>line</dt>
+<dd>line to be parsed.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportParser.parse_faction">
+<tt class="descname">parse_faction</tt><big>(</big><em>l</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportParser.parse_faction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse faction info.</p>
+<p>Parses faction level information. This faction info is at the
+very beginning of the report, before the listing of regions
+and units begins, and include data as faction type, attitudes,
+unclaimed and so on.</p>
+<p>Read <a class="reference internal" href="#atlantis.parsers.reportparser.ReportConsumer" title="atlantis.parsers.reportparser.ReportConsumer"><tt class="xref py py-class docutils literal"><span class="pre">ReportConsumer</span></tt></a> documentation for further details.</p>
+<dl class="docutils">
+<dt>Parameter:</dt>
+<dd><dl class="first last docutils">
+<dt>l</dt>
+<dd>Line to be parsed.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportParser.parse_item">
+<tt class="descname">parse_item</tt><big>(</big><em>line</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportParser.parse_item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses an item description.</p>
+<p>As with skills, item descriptions appear at the very beginning
+of the report when they&#8217;re first discovered or when the player
+issues a show order.</p>
+<p>When found, <a href="#id37"><span class="problematic" id="id38">:method:`ReportConsumer.item`</span></a> is called. See
+<a class="reference internal" href="#atlantis.parsers.reportparser.ReportConsumer" title="atlantis.parsers.reportparser.ReportConsumer"><tt class="xref py py-class docutils literal"><span class="pre">ReportConsumer</span></tt></a> documentation for further details.</p>
+<dl class="docutils">
+<dt>Parameter:</dt>
+<dd><dl class="first last docutils">
+<dt>line</dt>
+<dd>Line to be parsed.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportParser.parse_line">
+<tt class="descname">parse_line</tt><big>(</big><em>line</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportParser.parse_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a report line.</p>
+<p>Read line is always sent to the consumer before stripping
+them from its comments. Then line comments are removed and
+the line parsed depending on the section of the report being
+read and the results sent to the consumer.</p>
+<p>While reading lines current read report section is stored into
+an internal variable. So parse_line method has also the side
+effect of updating section information. This is important
+because parsing depends on which section is being read, so
+if lines parsed in wrong order some entity types won&#8217;t be
+matched.</p>
+<p>If you plan to do so it will be better using the
+parse_&lt;entity_type&gt; methods.</p>
+<dl class="docutils">
+<dt>Parameter:</dt>
+<dd><dl class="first last docutils">
+<dt>line</dt>
+<dd>Line being parsed.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportParser.parse_region">
+<tt class="descname">parse_region</tt><big>(</big><em>l</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportParser.parse_region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a region</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportParser.parse_skill">
+<tt class="descname">parse_skill</tt><big>(</big><em>l</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportParser.parse_skill" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a skill description.</p>
+<p>Skills are described at the very beginning of the report,
+because the skill have just been studied or the player has
+issued a <em>show</em> order.</p>
+<p>For every skill found <a href="#id39"><span class="problematic" id="id40">:method:`~ReportConsumer.skill`</span></a> is
+called. See :class:<a href="#id41"><span class="problematic" id="id42">`</span></a>ReportConsumer`documentation for further
+details.</p>
+<dl class="docutils">
+<dt>Parameter:</dt>
+<dd><dl class="first last docutils">
+<dt>l</dt>
+<dd>Line to be parsed</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="atlantis.parsers.reportparser.ReportParser.parse_structure">
+<tt class="descname">parse_structure</tt><big>(</big><em>l</em><big>)</big><a class="headerlink" href="#atlantis.parsers.reportparser.ReportParser.parse_structure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse an object description line.</p>
+<p>As with skills and items, structure descriptions appear at the
+very beginning of the report when they&#8217;re first discovered or
+when the player issues a show order.</p>
+<p>When found, <a href="#id43"><span class="problematic" id="id44">:method:`ReportConsumer.structure`is called. See
+:class:`Reportconsumer`</span></a> documentation for further details.</p>
+<dl class="docutils">
+<dt>Parameter:</dt>
+<dd><dl class="first last docutils">
+<dt>l</dt>
+<dd>Line to be parsed.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">atlantis.parsers.reportparser</span></tt></a><ul>
+<li><a class="reference internal" href="#reportreader"><tt class="docutils literal"><span class="pre">ReportReader</span></tt></a></li>
+<li><a class="reference internal" href="#reportconsumer"><tt class="docutils literal"><span class="pre">ReportConsumer</span></tt></a></li>
+<li><a class="reference internal" href="#reportparser"><tt class="docutils literal"><span class="pre">ReportParser</span></tt></a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter"><tt class="docutils literal"><span class="pre">atlantis.parsers</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ordersparser.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">atlantis.parsers.ordersparser</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/atlantis/parsers/reportparser.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ordersparser.html" title="atlantis.parsers.ordersparser"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="atlantis.parsers"
+             >previous</a> |</li>
+        <li><a href="../../index.html">pyAH a documentation</a> &raquo;</li>
+          <li><a href="index.html" ><tt class="docutils literal"><span class="pre">atlantis.parsers</span></tt></a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, David Lozano.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

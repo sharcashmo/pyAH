@@ -1,0 +1,10 @@
+{
+  "months": [
+    "january", "february", "march", "april", "may", "june",
+    "july", "august", "september", "october", "november", "december"
+  ],
+  "directions": {
+    "n": "north", "ne": "northeast", "se": "southeast",
+    "s": "south", "sw": "southwest", "nw": "northwest" 
+  }
+}
