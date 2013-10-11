@@ -12,14 +12,14 @@ Project has been developed to provide general tools to work with Atlantis. So
 be used by other projects others Atlantis PBEM players can develop, not only
 for :ref:`pyAH <pyAH-project>`.
 
-Packages in :ref:`pyAH project <pyAH-project>`:
+Packages and modules in :ref:`pyAH project <pyAH-project>`:
 
 .. toctree::
    :maxdepth: 2
 
    atlantis/parsers/index
    
-   atlantis/helpers/helpers_json
+   atlantis/helpers/index
    
    atlantis/gamedata/index
    
