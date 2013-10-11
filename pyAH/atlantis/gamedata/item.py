@@ -17,9 +17,11 @@ as they're :class:`ItemRef`, :class:`ItemAmount` and
 
 """
 
-from atlantis.helpers.comparable import RichComparable
 
-class ItemRef(RichComparable):
+from atlantis.helpers.json import JsonSerializable
+from atlantis.helpers.comparable import RichComparable # For testing
+
+class ItemRef(JsonSerializable, RichComparable):
     """Item reference.
     
     This class holds any reference to an item: an item is referenced by
@@ -53,6 +55,32 @@ class ItemRef(RichComparable):
         self.abr = abr
         self.name = name
         self.names = names
+    
+    def json_serialize(self):
+        """Return a serializable version of :class:`ItemRef`.
+        
+        :return: a *dict* representing the :class:`ItemRef`
+            object.
+        
+        .. seealso::
+           :meth:`JsonSerializable.json_serialize`
+        
+        """
+        return {'abr': self.abr, 'name': self.name, 'names': self.names}
+    
+    @staticmethod
+    def json_deserialize(json_object):
+        """Load :class:`ItemRef` from a deserialized json object.
+
+        :param json_object: object returned by :func:`json.load`.
+        
+        :return: the :class:`ItemRef` object from json data.
+        
+        .. seealso::
+           :meth:`JsonSerializable.json_deserialize`
+        
+        """
+        return ItemRef(**json_object)
 
 class ItemAmount(ItemRef):
     """Item amount.
@@ -81,6 +109,33 @@ class ItemAmount(ItemRef):
         """
         ItemRef.__init__(self, abr, name, names)
         self.amt = amt
+    
+    def json_serialize(self):
+        """Return a serializable version of :class:`ItemAmount`.
+        
+        :return: a *dict* representing the :class:`ItemAmount`
+            object.
+        
+        .. seealso::
+           :meth:`JsonSerializable.json_serialize`
+        
+        """
+        return {'abr': self.abr, 'name': self.name, 'names': self.names,
+                'amt': self.amt}
+    
+    @staticmethod
+    def json_deserialize(json_object):
+        """Load :class:`ItemAmount` from a deserialized json object.
+
+        :param json_object: object returned by :func:`json.load`.
+        
+        :return: the :class:`ItemAmount` object from json data.
+        
+        .. seealso::
+           :meth:`JsonSerializable.json_deserialize`
+        
+        """
+        return ItemAmount(**json_object)
 
 class ItemMarket(ItemAmount):
     """Items in market.
@@ -108,3 +163,30 @@ class ItemMarket(ItemAmount):
         """
         ItemAmount.__init__(self, abr, amt, name, names)
         self.price = price
+    
+    def json_serialize(self):
+        """Return a serializable version of :class:`ItemMarket`.
+        
+        :return: a *dict* representing the :class:`ItemMarket`
+            object.
+        
+        .. seealso::
+           :meth:`JsonSerializable.json_serialize`
+        
+        """
+        return {'abr': self.abr, 'name': self.name, 'names': self.names,
+                'amt': self.amt, 'price': self.price}
+    
+    @staticmethod
+    def json_deserialize(json_object):
+        """Load :class:`ItemMarket` from a deserialized json object.
+
+        :param json_object: object returned by :func:`json.load`.
+        
+        :return: the :class:`ItemMarket` object from json data.
+        
+        .. seealso::
+           :meth:`JsonSerializable.json_deserialize`
+        
+        """
+        return ItemMarket(**json_object)
