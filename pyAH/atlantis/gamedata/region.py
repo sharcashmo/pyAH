@@ -11,43 +11,56 @@ surrounding world. They provide the players of money throught taxing
 or Region's markets, control movement, are battle fields, etc.
 
 Main class in :mod:`atlantis.gamedata.region` is :class:`Region`, which
-holds and handle all data about these terrain hexes.
+holds and handle all data about these terrain hexes. It implements
+:class:`~atlantis.helper.json.JsonSerializable` and
+:class:`~atlantis.helper.comparable.RichComparable` interfaces.
 
 """
 
-class Region():
+from atlantis.gamedata.item import ItemAmount, ItemMarket
+
+from atlantis.helpers.json import JsonSerializable
+from atlantis.helpers.comparable import RichComparable # For testing
+
+class Region(JsonSerializable, RichComparable):
     """Holds all data of an Atlantis PBEM region.
     
     :class:`Region` has the following public attributes:
     
     .. attribute:: report
+    
        List of report lines describing the region.
     
     .. attribute:: location
+    
        Region location, as a three elements tuple.
     
     .. attribute:: terrain
+    
        Terrain type of the region.
        
     .. attribute:: name
+    
        Name of the region.
     
     .. attribute:: population
+    
        Inhabitants in the region.
     
     .. attribute:: racenames
+    
        Name (plural) of the race living in the region.
     
     .. attribute:: wealth
+    
        Amount available for taxing.
     
     .. attribute:: town
+    
        Dictionary with *name* and *type* of the present town if any.
     
-    .. attribute:: entertainment
-       Entertainment available in the region.
-    
     .. attribute:: weather
+    
        Dictionary with *last*, *next*, *clearskies* and *blizzard*.
        First two keys are weather for *last* and *next* month
        respectively, while the latter are flags telling if last
@@ -55,10 +68,36 @@ class Region():
        spells.
     
     .. attribute:: wages
+    
        Wages available in the region. It's a dictionary with
        *productivity* and *amount* values. The first is the amount
        received per man and month by work, while the latter is the
        maximum total amount available in the region.
+       
+    .. attribute:: market
+    
+       Available products in region market. This attribute is a
+       dictionary with at most two keys, *sell* and *buy*. Values are a
+       list of :class:`~atlantis.gamedata.item.ItemMarket` objects.
+    
+    .. attribute:: entertainment
+    
+       Entertainment available in the region.
+    
+    .. attribute:: products
+    
+       Available production in region. This attribute is a list of
+       :class:`~atlantis.gamedata.item.ItemAmount` objects.
+    
+    .. attribute:: exits
+    
+        Available exits from the region. This attribute is dictionary
+        with the exit directions are the keys and destination locations
+        the values.
+        
+        Directions are defined in :class:`~atlantis.gamedasta.rules`
+        but usually are ``north``, ``northeast``, ``southeast``,
+        ``south``, ``southwest`` and ``northwest``.
        
     """
     
@@ -72,15 +111,15 @@ class Region():
         town, if any. And when we visit the region population and
         wealth information are given.
         
-        :param location: Location as a three elements tuple, containing
+        :param location: location as a three elements tuple, containing
             xloc, yloc and zloc.
-        :param terrain: Terrain type of the region.
-        :param name: Name of the region the hexagon belongs to.
-        :param population: Number of inhabitants of the region.
-        :param racenames: Name (plural) of the race living in the
+        :param terrain: terrain type of the region.
+        :param name: name of the region the hexagon belongs to.
+        :param population: number of inhabitants of the region.
+        :param racenames: name (plural) of the race living in the
             region.
-        :param wealth: Amount available for taxing.
-        :param town: Dictionary with *name* and *type* of the town.
+        :param wealth: amount available for taxing.
+        :param town: dictionary with *name* and *type* of the town.
         
         """
         
@@ -91,14 +130,7 @@ class Region():
         self.racenames = racenames
         self.wealth = wealth
         self.town = town
-    
-    def set_report_description(self, line):
-        """Set a new description string from read report line.
-        
-        :param line: report line describing the item.
-        
-        """
-        self.report = [line]
+        self.report = []
         
     def append_report_description(self, line):
         """Append a new report line to item description.
@@ -107,14 +139,6 @@ class Region():
         
         """
         self.report.append(line)
-    
-    def set_entertainment(self, amount):
-        """Set region entertainment.
-        
-        :param amount: Entertainment available in the region.
-        
-        """
-        self.entertainment = amount
     
     def set_weather(self, weather, nxtweather,
                       clearskies=False, blizzard=False):
@@ -156,6 +180,125 @@ class Region():
             self.market[market] = items
         except AttributeError:
             self.market = {market: items}
+    
+    def set_entertainment(self, amount):
+        """Set region entertainment.
+        
+        :param amount: entertainment available in , 'location': the region.
+        
+        """
+        self.entertainment = amount
+    
+    def set_products(self, products):
+        """Set region production available.
+        
+        :param products: list of
+            :class:`~atlantis.gamedata.item.ItemAmount` objects.
+        
+        """
+        self.products = products
+    
+    def set_exit(self, direction, location):
+        """Set an exit from the region.
+        
+        :param direction: a string with the direction of the exit.
+        :param location: location the exit leads to as a three elements
+            tuple.
+        
+        """
+        try:
+            self.exits[direction] = location
+        except AttributeError:
+            self.exits = {direction: location}
+    
+    # JsonSerializable methods
+    def json_serialize(self):
+        """Return a serializable version of :class:`Region`.
+        
+        :return: a *dict* representing the :class:`Region` object.
+        
+        .. seealso::
+           :meth:`JsonSerializable.json_serialize`
+        
+        """
+        json_object = {'location': self.location,
+                       'terrain': self.terrain,
+                       'name': self.name,
+                       'population': self.population,
+                       'racenames': self.racenames,
+                       'wealth': self.wealth,
+                       'town': self.town,
+                       'report': self.report}
+        try:
+            json_object['weather'] = self.weather
+        except AttributeError:
+            pass
+        try:
+            json_object['wages'] = self.wages
+        except AttributeError:
+            pass
+        try:
+            md = self.market
+        except AttributeError:
+            pass
+        else:
+            json_object['market'] = dict()
+            for k in md:
+                json_object['market'][k] = [it.json_serialize() \
+                                            for it in md[k]]
+        try:
+            json_object['entertainment'] = self.entertainment
+        except AttributeError:
+            pass
+        try:
+            json_object['products'] = [pr.json_serialize() \
+                                       for pr in self.products]
+        except AttributeError:
+            pass
+        try:
+            json_object['exits'] = self.exits
+        except AttributeError:
+            pass
+                
+        return json_object
+    
+    @staticmethod
+    def json_deserialize(json_object):
+        """Load :class:`Region` from a deserialized json object.
+
+        :param json_object: object returned by :func:`json.load`.
+        
+        :return: the :class:`Region` object from json data.
+        
+        .. seealso::
+           :meth:`JsonSerializable.json_deserialize`
+        
+        """
+        r = Region(json_object['location'], json_object['terrain'],
+                   json_object['name'], json_object['population'],
+                   json_object['racenames'], json_object['wealth'],
+                   json_object['town'])
+        if 'report' in json_object.keys():
+            r.report = json_object['report']
+        if 'weather' in json_object.keys():
+            r.weather = json_object['weather']
+        if 'wages' in json_object.keys():
+            r.wages = json_object['wages']
+        if 'market' in json_object.keys():
+            r.market = dict()
+            for mtype, mlist in json_object['market'].items():
+                r.market[mtype] = [ItemMarket.json_deserialize(it) \
+                                   for it in mlist]
+        if 'entertainment' in json_object.keys():
+            r.entertainment = json_object['entertainment']
+        if 'products' in json_object.keys():
+            r.products = [ItemAmount.json_deserialize(it) \
+                          for it in json_object['products']]
+        if 'exits' in json_object.keys():
+            r.exits = dict([(k, tuple(loc)) \
+                            for k, loc in json_object['exits'].items()])
+            
+        return r
     
     def update(self, region):
         """Update region with new data.
