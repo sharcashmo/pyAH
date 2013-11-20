@@ -126,6 +126,8 @@ class AtlantisRules(JsonSerializable, RichComparable):
                 self.terrain_types = dict(
                         [(ob['name'], TerrainType.json_deserialize(ob)) \
                          for ob in json_data['terrain_types']])
+            if 'strings' in json_data.keys():
+                self.strings = json_data['strings']
     
     def json_serialize(self):
         """Return a serializable version of :class:`AtlantisRules`.
@@ -138,10 +140,15 @@ class AtlantisRules(JsonSerializable, RichComparable):
         
         """
         json_object = dict()
+        
         if self.terrain_types:
             json_object['terrain_types'] = \
                     [t.json_serialize() for t in self.terrain_types.values()]
-        return json_object
+                    
+        if self.strings:
+            json_object['strings'] = self.strings
+            
+        return json_object 
     
     @staticmethod
     def json_deserialize(json_object):
@@ -163,8 +170,10 @@ class AtlantisRules(JsonSerializable, RichComparable):
         
         This method loads data from a rules folder with the following
         files:
+        
         - strings.json
             Basic strings in the game (months, directions, etc).
+            
         - terrain_types.json
             Terrain types in the game, with their stats.
 
@@ -178,9 +187,6 @@ class AtlantisRules(JsonSerializable, RichComparable):
         
         with open(os.path.join(folder_name, 'strings.json')) as f:
             ar.strings = json_load_dict(f)
-        
-        with open(os.path.join(folder_name, 'gui_colors.json')) as f:
-            ar.gui_colors = json_load_dict(f)
         
         return ar
         
