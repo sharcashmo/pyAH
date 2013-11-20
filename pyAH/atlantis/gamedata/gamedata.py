@@ -196,6 +196,17 @@ class GameData(ReportConsumer):
         self._region.set_exit(direction.lower(), (xloc, yloc, zloc))
         self.map.add_region_info(Region((xloc, yloc, zloc), terrain, name,
                                         town=town), HEX_EXITS)
+    
+    def region_gate(self, gate, gateopen):
+        """Handle a gate report.
+        
+        If a gate is found in the region it is reported.
+        
+        :param gate: gate number, or 0 if it's closed.
+        :param gateopen: *True* if the gate is open, *False* otherwise.
+        
+        """
+        self._region.set_gate(gate, gateopen)
         
     # Methods handling definitions
     def update_item_definitions(self, items):
