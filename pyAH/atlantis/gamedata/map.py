@@ -263,7 +263,8 @@ class MapLevel(JsonSerializable, RichComparable):
         
         :param region: :class:`~atlantis.gamedata.map.MapHex` data
             to be added to the level.
-        :raise KeyError: if region does not belong to this level. 
+        :raise: :class:`KeyError` if region does not belong to this
+            level. 
             
         """
         

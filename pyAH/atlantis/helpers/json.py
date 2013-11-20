@@ -18,10 +18,10 @@ def json_dump_list(file, object_list):
     :param object_list: list of objects implementing
         :class:`JsonSerializable` interface.
     
-    :raise NotImplementedError: if
+    :raise: class:`NotImplementedError` if
         :meth:`JsonSerializable.json_serialize` is not implemented.
-    :raise TypeError: if elements in *object_list* are not serializable
-        nor implement :class:`JsonSerializable` interface. 
+    :raise: class:`TypeError` if elements in *object_list* are not
+        serializable nor implement :class:`JsonSerializable` interface. 
     
     """
     try:
@@ -47,10 +47,10 @@ def json_load_list(file, serializable_class=None):
     
     :return: the list of objects
     
-    :raise NotImplementedError: if
+    :raise: :class:`NotImplementedError` if
         :meth:`JsonSerializable.json_deserialize` is not overriden.
-    :raise TypeError: if *serializable_class* does not implements
-        :class:`JsonSerializable`.
+    :raise: :class:`TypeError` if *serializable_class* does not
+        implements :class:`JsonSerializable`.
     
     """
     read_list = json.load(file)
@@ -80,10 +80,10 @@ def json_dump_dict(file, object_dict):
     :param object_dict: dictionary of objects implementing
         :class:`JsonSerializable` interface.
     
-    :raise NotImplementedError: if
+    :raise: :class:`NotImplementedError` if
         :meth:`JsonSerializable.json_serialize` is not implemented.
-    :raise TypeError: if elements in *object_dict* are not serializable
-        nor implement :class:`JsonSerializable` interface. 
+    :raise: :class:`TypeError` if elements in *object_dict* are not
+        serializable nor implement :class:`JsonSerializable` interface. 
     
     """
     try:
@@ -110,10 +110,10 @@ def json_load_dict(file, serializable_class=None):
     
     :return: the dictionary of objects
     
-    :raise NotImplementedError: if
+    :raise: :class:`NotImplementedError` if
         :meth:`JsonSerializable.json_deserialize` is not overriden.
-    :raise TypeError: if *serializable_class* does not implements
-        :class:`JsonSerializable`.
+    :raise: :class:`TypeError` if *serializable_class* does not
+        implements :class:`JsonSerializable`.
     
     """
     read_dict = json.load(file)
@@ -143,7 +143,7 @@ class JsonSerializable():
         
         :return: Serializable object.
         
-        :raise NotImplementedError: if not overriden.
+        :raise: :class:`NotImplementedError` if not overriden.
         
         """
         raise NotImplementedError('json_serialize must be overriden')
@@ -159,7 +159,7 @@ class JsonSerializable():
         
         :return: the :class:`JsonSerializable` object from json data.
         
-        :raise NotImplementedError: if not overriden.
+        :raise: :class:`NotImplementedError` if not overriden.
         
         """
         raise NotImplementedError('json_deserialize must be overriden') 

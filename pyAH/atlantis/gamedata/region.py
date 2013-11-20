@@ -308,8 +308,8 @@ class Region(JsonSerializable, RichComparable):
         be overwritten.
         
         :param region: A :class:`Region` object with new data.
-        :raise: `KeyError` if region it's not the same (locations does
-            not coincide).
+        :raise: :class:`KeyError` if region it's not the same
+            (locations does not coincide).
         
         """
         if region.location != self.location:

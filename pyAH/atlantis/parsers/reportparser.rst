@@ -3,12 +3,6 @@
 ------------------------------------
 
 .. automodule:: atlantis.parsers.reportparser
-
-Public attributes in :mod:`atlantis.parsers.reportparser` module:
-
-.. autoattribute:: atlantis.parsers.reportparser.TAB_SPACES
-
-.. autoattribute:: atlantis.parsers.reportparser.TAB
    
 Public classes in :mod:`atlantis.parsers.reportparser` module:
 

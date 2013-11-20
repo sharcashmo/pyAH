@@ -1,13 +1,26 @@
 """This module implements all classes needed to parse report files.
 
-It defines a :class:`ReportParser` which will parse report lines and
-will call a :class:`ReportConsumer` with parser data. Classes willing
-to consume data parser by :class:`ReportParser` will have to implement
-:class:`ReportConsumer` interface.
+Main class defined by this module is :class:`ReportParser`, which will
+parse report lines and will call a :class:`ReportConsumer` with parser
+data.
+
+Also the above mentioned :class:`ReportConsumer` interface is declared.
+Classes willing to consume data parser by :class:`ReportParser`
+will have to implement :class:`ReportConsumer` interface.
 
 In addition a helper :class:`ReportReader` is defined. As report lines
 are wrapped at 70 chars length this class is in charge of reading the
 report file and unwrapping the lines.
+
+Public attributes in :mod:`atlantis.parsers.reportparser` module:
+
+.. attribute:: TAB_SPACES
+
+   Number of spaces used for tabbing report lines.
+
+.. attribute:: TAB
+
+   Tab string. It's made of :obj:`!TAB_SPACES` spaces.
 
 """
 
@@ -17,10 +30,8 @@ import re
 
 # Wrapping definitions
 TAB_SPACES = 2
-"""Number of tab spaces used in reports"""
 
 TAB = ' ' * TAB_SPACES
-"""A string made of TAB_SPACES spaces"""
 
 class ReportReader:
     """Class used to read report lines, unwrapping them.
@@ -30,10 +41,10 @@ class ReportReader:
     and what this class does is unwrapping them so its user will get
     complete logical lines, not the physical ones saved in the file.
     
-    ReportReader implements a readline public method, that returns
-    the next unwrapped line from the file being read. It also
-    implements the __iter__ magic method, so the complete file can
-    be read iterating the object as::
+    ReportReader implements a :meth:`readline` public method, that
+    returns the next unwrapped line from the file being read. It also
+    implements the :meth:`__iter__` magic method, so the complete file
+    can be read iterating the object as::
     
         with open('hello.txt') as f:
             reader = ReportReader(f)
@@ -146,8 +157,6 @@ class ReportConsumer:
     This is an interface for classes willing to receive data from the
     :class:`ReportParser`. Classes implementing this interface should
     overwrite their public methods.
-    
-    :class:`ReportConsumer` has the following virtual public methods.
         
     """
     
@@ -164,7 +173,7 @@ class ReportConsumer:
         
         :param line: read line.
         
-        :raise NotImplementedError: if not overriden.
+        :raise: :class:`NotImplementedError` if not overriden.
             
         """
         raise NotImplementedError('ReportConsumer method must be overriden')
@@ -877,7 +886,7 @@ class ReportConsumer:
                         Special effect caused by the mount. Special
                         effect are very complex entities. A detailed
                         description can be found at
-                        :method:`ReportConsumer.skill` documentation.
+                        :meth:`ReportConsumer.skill` documentation.
             battle
                 If present the item is a miscellaneous battle item with
                 the stats given in a dictionary with the values:
@@ -894,7 +903,7 @@ class ReportConsumer:
                         Special effect caused by the item. Special
                         effect are very complex entities. A detailed
                         description can be found at
-                        :method:`ReportConsumer.skill` documentation.
+                        :meth:`ReportConsumer.skill` documentation.
             trade
                 If present the item is a trade good. It cannot be
                 produced in any way, just bought and sold in markets.
@@ -1031,7 +1040,7 @@ class ReportConsumer:
                         Special effect caused by the monster. Special
                         effect are very complex entities. A detailed
                         description can be found at
-                        :method:`ReportConsumer.skill` documentation.
+                        :meth:`ReportConsumer.skill` documentation.
             man
                 If present, the item is a man. It is defined by a
                 dictionary with the following parameters:
@@ -1347,7 +1356,7 @@ class ReportConsumer:
             the town there. Allowed *type* values are ``village``,
             ``town`` and ``city``.
         
-        :raise NotImplementedError: if not overriden.
+        :raise: :class:`NotImplementedError` if not overriden.
             
         """
         raise NotImplementedError('ReportConsumer method must be overriden')
@@ -1372,7 +1381,7 @@ class ReportConsumer:
         :param blizzard: if *True*, last month weather was caused by a
             Blizzard spell. Defaults to *False*.
         
-        :raise NotImplementedError: if not overriden.
+        :raise: :class:`NotImplementedError` if not overriden.
                 
         """
         raise NotImplementedError('ReportConsumer method must be overriden')
@@ -1387,7 +1396,7 @@ class ReportConsumer:
         :param productivity: wages obtained per man and month.
         :param amount: total amount of wages available in the region.
         
-        :raise NotImplementedError: if not overriden.
+        :raise: :class:`NotImplementedError` if not overriden.
         
         """
         raise NotImplementedError('ReportConsumer method must be overriden')
@@ -1406,7 +1415,7 @@ class ReportConsumer:
         :param items: list of
             :class:`~atlantis.gamedata.item.ItemMarket` objects.
         
-        :raise NotImplementedError: if not overriden.
+        :raise: :class:`NotImplementedError` if not overriden.
         
         """
         raise NotImplementedError('ReportConsumer method must be overriden')
@@ -1419,7 +1428,7 @@ class ReportConsumer:
         
         :param amount: Entertainment available in the region.
         
-        :raise NotImplementedError: if not overriden.
+        :raise: :class:`NotImplementedError` if not overriden.
         
         """
         raise NotImplementedError('ReportConsumer method must be overriden')
@@ -1436,7 +1445,7 @@ class ReportConsumer:
         :param products: list of
             :class:`~atlantis.gamedata.item.ItemAmount` objects.
         
-        :raise NotImplementedError: if not overriden.
+        :raise: :class:`NotImplementedError` if not overriden.
         
         """
         raise NotImplementedError('ReportConsumer method must be overriden')
@@ -1462,7 +1471,7 @@ class ReportConsumer:
             the town there. Allowed *type* values are ``village``,
             ``town`` and ``city``.
             
-        :raise NotImplementedError: if not overriden.
+        :raise: :class:`NotImplementedError` if not overriden.
         
         """
         raise NotImplementedError('ReportConsumer method must be overriden')
@@ -2165,7 +2174,7 @@ class ReportParser:
         This method uses a :class:`ReportReader` instance to read from
         an open file. The :class:`ReportReader` joins back wrapped
         lines, and then the rebuild lines are passed to
-        :method:`ReportParser.line` until the file ends.
+        :meth:`ReportParser.line` until the file ends.
         
         This method returns False if the file has been read to the end,
         and True if orders template have been found and the file has
@@ -2351,14 +2360,14 @@ class ReportParser:
             Region.
         
         to the spoils, calling the following ReportConsumer methods:
-        :method:`battle`, :method:`battle_side`,
-        :method:`battle_side_unit`, :method:`battle_round`,
-        :method:`battle_round_shield`, :method:`battle_round_special`,
-        :method:`battle_round_regenerate`, :method:`battle_loses`,
-        :method:`battle_end`, :method:`battle_casualties`,
-        :method:`battle_casualties_heal`,
-        :method:`battle_casualties_units`, :method:`battle_spoils` and
-        :method:`battle_raise`.
+        :meth:`battle`, :meth:`battle_side`,
+        :meth:`battle_side_unit`, :meth:`battle_round`,
+        :meth:`battle_round_shield`, :meth:`battle_round_special`,
+        :meth:`battle_round_regenerate`, :meth:`battle_loses`,
+        :meth:`battle_end`, :meth:`battle_casualties`,
+        :meth:`battle_casualties_heal`,
+        :meth:`battle_casualties_units`, :meth:`battle_spoils` and
+        :meth:`battle_raise`.
         
         Parsing of a battle works following these phases::
         
@@ -2819,7 +2828,7 @@ class ReportParser:
         because the skill have just been studied or the player has
         issued a *show* order.
         
-        For every skill found :method:`~ReportConsumer.skill` is
+        For every skill found :meth:`~ReportConsumer.skill` is
         called. See :class:`ReportConsumer`documentation for further
         details.
         
@@ -3053,7 +3062,7 @@ class ReportParser:
         of the report when they're first discovered or when the player
         issues a show order.
         
-        When found, :method:`ReportConsumer.item` is called. See
+        When found, :meth:`ReportConsumer.item` is called. See
         :class:`ReportConsumer` documentation for further details.
         
         Parameter:
@@ -3075,7 +3084,7 @@ class ReportParser:
         very beginning of the report when they're first discovered or
         when the player issues a show order.
         
-        When found, :method:`ReportConsumer.structure`is called. See
+        When found, :meth:`ReportConsumer.structure`is called. See
         :class:`Reportconsumer` documentation for further details.
         
         Parameter:
