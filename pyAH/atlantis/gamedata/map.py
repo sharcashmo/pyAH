@@ -237,15 +237,24 @@ class MapLevel(JsonSerializable, RichComparable):
     .. attribute:: hexes
     
        Dictionary of :class:`~atlantis.gamedata.map.MapHex` objects.
+       
+    :class:`.MapLevel` defines an iterator on its hexes. So hexes on
+    :class:`!MapLevel` instance lvl can be accessed by::
+    
+        for h in lvl:
+            print(h.status)
     
     """
     
     def __init__(self, name):
-        """Create an empty :class:`~atlantis.gamedata.map.MapLevel`.
-        
-        """
+        """Create an empty :class:`~atlantis.gamedata.map.MapLevel`."""
         self.name = name
         self.hexes = dict()
+        
+    def __iter__(self):
+        """Iterate level hexes."""
+        for h in self.hexes.values():
+            yield h
     
     def set_region(self, map_hex):
         """Set a region in the level.
