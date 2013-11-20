@@ -1481,14 +1481,13 @@ class ReportConsumer:
         
         If a gate is found in the region it is reported.
         
-        Parameters:
-            gate
-                Gate number, or 0 if it's closed.
-            gateopen
-                *True* if the gate is open, *False* otherwise.
+        :param gate: gate number, or 0 if it's closed.
+        :param gateopen: *True* if the gate is open, *False* otherwise.
+            
+        :raise: :class:`NotImplementedError` if not overriden.
         
         """
-        print('region_gate', gate, gateopen)
+        raise NotImplementedError('ReportConsumer method must be overriden')
     
     def region_structure(self, num, name, ob, items=None,
                            incomplete=False, decay=False, maintenance=False,
