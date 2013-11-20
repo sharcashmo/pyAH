@@ -12,19 +12,21 @@ use :mod:`atlantis.helpers.json` functions to *dump* and *load* their data.
 Modules in :ref:`atlantis.gamedata` package:
 
 .. autosummary::
-   atlantis.gamedata.item
    atlantis.gamedata.gamedata
-   atlantis.gamedata.map
+   atlantis.gamedata.item
    atlantis.gamedata.region
+   atlantis.gamedata.map
    atlantis.gamedata.rules
+   atlantis.gamedata.theme
  
 Contents of :ref:`atlantis.gamedata` package:
 
 .. toctree::
    :maxdepth: 2
    
-   item
    gamedata
-   map
+   item
    region
+   map
    rules
+   theme
