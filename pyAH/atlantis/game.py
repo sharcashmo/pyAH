@@ -5,13 +5,14 @@ It creates an application showing current state of the art."""
 import wx
 import sys
 from atlantis.wxgui.hexmap import HexMapWindow
-from atlantis.wxgui.hexmap import HexMapData
 from atlantis.wxgui.hexmap import EVT_HEX_SELECTED
+from atlantis.wxgui import hexmapdata
 
 from atlantis.gamedata.gamedata import GameData
 from atlantis.parsers.reportparser import ReportParser
 
 from atlantis.gamedata.rules import AtlantisRules
+from atlantis.gamedata.theme import Theme
 
 if __name__ == '__main__':
     class TestFrame(wx.Frame):
@@ -34,12 +35,9 @@ if __name__ == '__main__':
     if openDirDialog.ShowModal() == wx.ID_CANCEL:
         sys.exit()
     
-    ar = AtlantisRules.read_folder(openDirDialog.GetPath())
-    
-    for tt in ar.gui_colors['terrain_types']:
-        print(ar.gui_colors['terrain_types'][tt])
-        brush = wx.Brush(wx.Colour(*(ar.gui_colors['terrain_types'][tt])))
-        frame.mapwindow.add_terrain_type(tt, brush)
+    rules_folder = openDirDialog.GetPath()
+    ar = AtlantisRules.read_folder(rules_folder)
+    th = Theme.read_folder(rules_folder)
     
     openFileDialog = wx.FileDialog(None, 'Choose report file', '/home/david/Data/Atlantis/games/havilah', '',
                                    'Report files (*.rep)|*.rep',
@@ -54,7 +52,7 @@ if __name__ == '__main__':
     with open(openFileDialog.GetPath()) as f:
         parser.parse(f)
     
-    map_data = [HexMapData(tuple(list(r.location)[:2]), r.terrain, None, None) for r in gd.map.regions.values()]
+    map_data = hexmapdata.MapData.from_map_and_theme(gd.map, th)
     
     frame.mapwindow.set_map_data(map_data)
 
