@@ -1,15 +1,58 @@
-"""Hex map canvas.
+"""Handle tan hex map scrolled canvas.
 
 Most important part of an Atlantis PBEM client is the map. Actually you
 could develop a Atlantis PBEM helper that does only show a map, while
 any other action can be done using a text editor.
 
-This module defines an :class:`HexMapWindow` class that implements a
-`wxPython <http://www.wxpython.org>`_ :class:`ScrolledCanvas` that
-shows an hexagonal map.
+This module defines an :class:`~atlantis.wxgui.hexmap.HexMapWindow`
+class that implements a `wxPython <http://www.wxpython.org>`_
+:class:`wx.ScrolledCanvas` that shows an hexagonal map.
 
-:class:`HexMapWindow` won't hold map data on his own, but will define
-instead an interface that must to be implemented by map controllers.
+In addition a set of interfaces are defined to handle data to be shown
+by :class:`HexMapWindow`. These classes are
+:class:`~atlantis.wxgui.hexmap.HexMapDataHex` and
+:class:`~atlantis.wxgui.hexmap.HexMapData` that hold hexagon and map
+data respectively.
+    
+:mod:`atlantis.wxgui.hexmap` defines the following constant attributes:
+
+Zoom values:
+
+.. attribute:: ZOOM_25
+   
+   zooms the map at 25% size.
+
+.. attribute:: ZOOM_50
+   
+   zooms the map at 50% size.
+   
+.. attribute:: ZOOM_75
+
+   zooms the map at 75% size.
+   
+.. attribute:: ZOOM_100
+
+   zooms the map at 100% (normal) size.
+   
+.. attribute:: ZOOM_150
+  
+   zooms the map at 150% size.
+   
+.. attribute:: ZOOM_200
+   
+   zooms the map at 200% size.
+   
+.. attribute:: ZOOM_OUT
+
+   equivalent to ``ZOOM_25``.
+   
+.. attribute:: ZOOM_IN
+
+   equivalent to ``ZOOM_200``.
+
+.. attribute:: ZOOM_VALUES
+
+   total number of zoom values
 
 """
 
@@ -19,31 +62,78 @@ import math
 
 HexSelected, EVT_HEX_SELECTED = wx.lib.newevent.NewCommandEvent()
 
-class HexMapData():
-    """Holds data for an hex."""
-    def __init__(self, location, terrain_type, hex_symbols, hex_borders):
-        """:class:HexMapData constructor.
+ZOOM_VALUES = 6
+ZOOM_25, ZOOM_50, ZOOM_75, ZOOM_100, ZOOM_150, ZOOM_200 = range(ZOOM_VALUES)
+ZOOM_OUT = ZOOM_25
+ZOOM_IN = ZOOM_200
+
+class HexMapDataHex():
+    """Interface to hold data for an HexMapWindow hex.
+    
+    This interface should be implemented by data willing to be shown
+    by :class:`~atlantis.wxgui.hexmap.HexMapWindow`.
+    
+    """
+    
+    def get_brushes(self):
+        """Return the brushes the hexagon has to be painted with.
         
-        Creates an object with all data :class:`HexMapWindow` needs
-        to draw an hexagon.
+        :return: a list of :class:`wx.Brush` objects.
         
-        :param location: a tuple with (x,y) hexagon coordinates.
-        :param terrain_type: this parameter controls hexagon
-            background.
-        :param hex_symbols: a list of tuples. Each tuple has the form
-            of (type, name) of the symbol.
-            This parameter controls which symbols have to be drawn on
-            the hex.
-        :param hex_borders: a list of tuples. Each tuple has the form
-            of (border, type) of the border.
-            This parameter controls which borders have to be drawn on
-            the hex.
+        """
+        raise NotImplementedError('method must be defined')
+    
+
+    def get_bitmaps(self):
+        """Return the bitmaps to be drawn on the hexagon.
+        
+        :return: a list of :class:`wx.Bitmap` objects.
+        
+        """
+        raise NotImplementedError('method must be defined')
+
+    def get_location(self):
+        """Return hexagon location.
+        
+        :return: A two elements tuple with hexagon location within its
+            level.
             
         """
-        self.location = location
-        self.terrain_type = terrain_type
-        self.hex_symbols = hex_symbols
-        self.hex_borders = hex_borders
+        raise NotImplementedError('method must be defined')
+
+class HexMapData():
+    """Interface to hold data for an HexMapWindow map.
+    
+    This interface should be implemented by data willing to be shown
+    by :class:`HexMapWindow`.
+    
+    """
+        
+    def __iter__(self):
+        """Return an iterator on :class:`HexMapData` instance.
+        
+        This iterator returns all
+        :class:`HexMapDataHex` objects in the map.
+        
+        :return: an iterator on :class:`HexMapDataHex` in the map.
+        
+        """ 
+        raise NotImplementedError('method must be defined')
+
+    def set_zoom(self, zoom):
+        """Set map zoom.
+        
+        Map zoom is used by :class:`HexMapDataHex` themed class to
+        choose with elements have to be shown (in case some of them
+        are only shown in inner zoom values) and to resize bitmaps if
+        needed.
+        
+        :param zoom: zoom value, must be between ``ZOOM_OUT`` and
+            ``ZOOM_IN``.
+        
+        """
+        raise NotImplementedError('method must be defined')
+    
 
 class HexMapWindow(wx.ScrolledCanvas):
     """Hex map canvas.
@@ -51,24 +141,7 @@ class HexMapWindow(wx.ScrolledCanvas):
     Implements a :class:`wx.ScrolledCanvas` that shows an hex-based
     map.
     
-    Defined constants:
-    - Zoom values:
-        + ZOOM_25: zooms the map at 25% size.
-        + ZOOM_50: zooms the map at 50% size.
-        + ZOOM_75: zooms the map at 75% size.
-        + ZOOM_100: zooms the map at 100% (normal) size.
-        + ZOOM_150: zooms the map at 150% size.
-        + ZOOM_200: zooms the map at 200% size.
-        + ZOOM_OUT: equivalent to ZOOM_25.
-        + ZOOM_IN: equivalent to ZOOM_200.
-    
     """
-
-    # Zoom constant values
-    ZOOM_VALUES = 6
-    ZOOM_25, ZOOM_50, ZOOM_75, ZOOM_100, ZOOM_150, ZOOM_200 = range(ZOOM_VALUES)
-    ZOOM_OUT = ZOOM_25
-    ZOOM_IN = ZOOM_200
     
     _min_size = 6
     """Hex side size for zoomed out map."""
@@ -93,9 +166,6 @@ class HexMapWindow(wx.ScrolledCanvas):
     its half height value (sin(60) + hexside).
     
     """
-    
-    # Data used to configure how each element has to be drawn
-    _terrain_brushes = None
     
     # Map data
     _map_data = None
@@ -137,69 +207,43 @@ class HexMapWindow(wx.ScrolledCanvas):
 #        self.Bind(wx.EVT_MOTION, self._OnMouseMove)
         self.Bind(wx.EVT_LEFT_UP, self._OnMouseClick)
         
-        # Initialize map data
-        self.clear_terrain_types()
-        
-        self.set_zoom(self.ZOOM_200)
-    
-    ## Definitions controlling how the map has to be shown
-    
-    # Terrain types definitions
-    def add_terrain_type(self, terrain_type, brush):
-        """Adds a new terrain type to the map.
-        
-        Each hexagon of the given terrain_type will be drawn with the
-        give background for this type. Whether terrain_type existed
-        its information is overwritten.
-        
-        :param terrain_type: terrain type added to the map.
-        :param brush: :class:`wx.Brush` used to draw the hex.
-        
-        """
-        self._terrain_brushes[terrain_type] = brush
-        
-    def delete_terrain_type(self, terrain_type):
-        """Delete a terrain type from the map.
-        
-        Drop this terrain type information from :class:`HexMapWindow`.
-        
-        :param terrain_type: terrain type to be deleted.
-        
-        :raise KeyError: if terrain type does not exist.
-        
-        """
-        del self._terrain_brushes[terrain_type]
-    
-    def clear_terrain_types(self):
-        """Deletes terrain types information."""
-        self._terrain_brushes = dict()
+        self.set_zoom(ZOOM_200)
         
     ## Map data
     
     # Map data
     def set_map_data(self, map_data):
-        """Set map data to be shown in by :class:`HexMapWindow`.
+        """Set map data to be drawn.
         
-        This map data has to be a list of hexes, where each hex
-        is an :class:`HexMapData`.
+        This map data has to be an instance of
+        :class:`~atlantis.wxgui.hexmap.HexMapData`.
         
-        After setting map_data :class:`HexMapWindow` is forced to
+        After setting map data
+        :class:`~atlantis.wxgui.hexmap.HexMapWindow` is forced to
         redraw with the new data.
         
-        :param map_data: list of :class:`HexMapData`.
+        :param map_data: a :class:`~atlantis.wxgui.hexmap.HexMapData`
+            instance.
         
         """
         self._map_data = map_data
+        self._map_data.set_zoom(self._zoom)
         self._redraw()
     
     # Zoom    
     def set_zoom(self, zoom):
         """Set map zoom.
         
+        :param zoom: zoom value. It must be one value from ``ZOOM_OUT``
+            to ``ZOOM_IN``.
+        
         """
-        if zoom in range(self.ZOOM_VALUES):
+        if zoom in range(ZOOM_VALUES):
             if zoom != self._zoom:
                 self._zoom = zoom
+                
+                if self._map_data:
+                    self._map_data.set_zoom(zoom)
                 
                 self._hex_long_side = self._hex_sizes[zoom]
                 self._hex_short_side = round(self._hex_long_side * self._ratio)
@@ -229,12 +273,11 @@ class HexMapWindow(wx.ScrolledCanvas):
         self._redraw()
 
     def _OnScroll(self, event):
+        """Handle scroll events."""
         wx.CallAfter(self._redraw)
     
     def _OnMouseClick(self, event):
-        """Handle mouse clicks.
-        
-        """
+        """Handle mouse clicks."""
         target_hex = self._event_position_to_hex(event)
         if not self._current_hex or target_hex != self._current_hex:
             self._current_hex = target_hex
@@ -265,7 +308,7 @@ class HexMapWindow(wx.ScrolledCanvas):
             Hexagon position.
         
         """
-        print(hexagon)
+        
         x, y = hexagon
         xoffset = (1.5 * x + 1) * self._hex_long_side + self._padding
         yoffset = self._hex_short_side * (y + 1) + self._padding
@@ -366,10 +409,14 @@ class HexMapWindow(wx.ScrolledCanvas):
         del dc
     
     def _draw_hex(self, dc, hexagon):
-        xoffset, yoffset = self._hex_position(hexagon.location)
+        xoffset, yoffset = self._hex_position(hexagon.get_location())
         dc.SetPen(self._thin_pen)
-        dc.SetBrush(self._terrain_brushes[hexagon.terrain_type])
-        dc.DrawPolygon(self._hexagon, xoffset=xoffset, yoffset=yoffset)
+        for br in hexagon.get_brushes():
+            dc.SetBrush(br)
+            dc.DrawPolygon(self._hexagon, xoffset=xoffset, yoffset=yoffset)
+        for bm in hexagon.get_bitmaps():
+            dc.DrawBitmap(bm, xoffset - bm.GetWidth() / 2,
+                          yoffset - bm.GetHeight() / 2)
     
     def _draw_selected_hex(self, dc):
         if not self._current_hex:
@@ -407,7 +454,6 @@ if __name__ == '__main__':
                              random.choice(('ocean', 'forest',
                                             'mountain', 'plain')),
                              None, None)
-            print((i,j), hmd.terrain_type)
             map_data.append(hmd)
     
     frame.mapwindow.set_map_data(map_data)
