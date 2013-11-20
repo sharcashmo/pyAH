@@ -13,5 +13,10 @@
     "underforest": [116, 158, 44],
     "tunnels": [65, 146, 137],
     "nexus": [0, 147, 217]
+  },
+  "towns": {
+    "village": "village.png",
+    "town": "town.png",
+    "city": "city.png"
   }
 }
