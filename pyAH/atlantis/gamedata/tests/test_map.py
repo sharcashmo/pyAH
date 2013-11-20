@@ -134,6 +134,28 @@ class TestMapLevel(unittest.TestCase):
         self.assertIs(mh, mh_new)
         
         self.assertIsNone(lvl.get_region((1,1)))
+    
+    def test_iter(self):
+        """Test :meth:`~atlantis.gamedata.game.MapLevel.__iter__`."""
+        
+        lvl = MapLevel('surface')
+        self.assertEqual(lvl.name, 'surface')
+        self.assertEqual(lvl.hexes, dict())
+        
+        r = Region((21, 93, None), 'plain', 'Isshire', 9836, 'vikings', 11016,
+                   {'name': 'Durshire', 'type': 'town'})
+        mh = MapHex(r, HEX_CURRENT)
+        lvl.hexes[(21,93)] = mh
+        
+        r2 = Region((21, 95, None), 'plain', 'Isshire', 2836, 'sea elves',
+                    3016, None)
+        mh2 = MapHex(r2, HEX_CURRENT)
+        lvl.hexes[(21,95)] = mh2
+        
+        my_list = [h for h in lvl]
+        other_list = [mh2, mh]
+        
+        self.assertSameElements(my_list, other_list)
 
     def test_json_methods(self):
         """Test implementation of 
