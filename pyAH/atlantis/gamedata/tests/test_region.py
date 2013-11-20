@@ -128,6 +128,16 @@ class TestRegion(unittest.TestCase):
         region.set_exit('north', (21,91, None))
         
         self.assertEqual(region.exits, {'north': (21, 91, None)})
+    
+    def test_set_gate(self):
+        """Test
+        :meth:`~atlantis.gamedata.region.Region.set_gate`."""
+        region = Region((21, 93, None), 'plain', 'Isshire',
+                        2392, 'vikings', 11016,
+                        {'name': 'Durshire', 'type': 'town'})
+        region.set_gate(12, True)
+        
+        self.assertEqual(region.gate, {'number': 12, 'is_open': True})
 
     def test_json_methods(self):
         """Test implementation of 
