@@ -98,6 +98,12 @@ class Region(JsonSerializable, RichComparable):
         Directions are defined in :class:`~atlantis.gamedasta.rules`
         but usually are ``north``, ``northeast``, ``southeast``,
         ``south``, ``southwest`` and ``northwest``.
+        
+    .. attribute:: gate
+    
+        If a gate exists in the region it is a dictionary with two
+        keys, *number* which stores gate number, and *is_open* that is
+        *True* if the gate is open and *False* if it's closed.
        
     """
     
@@ -211,6 +217,15 @@ class Region(JsonSerializable, RichComparable):
         except AttributeError:
             self.exits = {direction: location}
     
+    def set_gate(self, number, is_open):
+        """Set a gate for the region.
+        
+        :param number: gate number.
+        :param is_open: flag if gate is open or not.
+        
+        """
+        self.gate = {'number': number, 'is_open': is_open}
+    
     # JsonSerializable methods
     def json_serialize(self):
         """Return a serializable version of :class:`Region`.
@@ -259,6 +274,10 @@ class Region(JsonSerializable, RichComparable):
             json_object['exits'] = self.exits
         except AttributeError:
             pass
+        try:
+            json_object['gate'] = self.gate
+        except AttributeError:
+            pass
                 
         return json_object
     
@@ -297,6 +316,8 @@ class Region(JsonSerializable, RichComparable):
         if 'exits' in json_object.keys():
             r.exits = dict([(k, tuple(loc)) \
                             for k, loc in json_object['exits'].items()])
+        if 'gate' in json_object.keys():
+            r.gate = json_object['gate']
             
         return r
     
