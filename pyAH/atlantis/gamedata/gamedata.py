@@ -6,7 +6,7 @@ Main class defined in this module is
 hold all data read from Atlantis PBEM reports."""
 
 from atlantis.parsers.reportparser import ReportConsumer
-from atlantis.gamedata.map import Map
+from atlantis.gamedata.map import Map, HEX_EXITS
 from atlantis.gamedata.region import Region
 
 class GameData(ReportConsumer):
@@ -80,9 +80,10 @@ class GameData(ReportConsumer):
             ``town`` and ``city``.
         
         """
+        
         self._region = Region((xloc, yloc, zloc), terrain, name,
                               population, racenames, wealth, town)
-        self._region.set_report_description(self._line)
+        self._region.append_report_description(self._line)
         self._descr_in_region = True
         self.map.add_region_info(self._region)
     
@@ -166,12 +167,36 @@ class GameData(ReportConsumer):
             :class:`~atlantis.gamedata.item.ItemAmount` objects.
         
         """
-        self._region.products = products
+        self._region.set_products(products)
         self._descr_in_region = False
     
-    def region_exits(self, **kwarg):
-        pass
-    
+    def region_exits(self, direction, terrain, name,
+                     xloc, yloc, zloc='surface', town=None):
+        """Handle a region exit direction.
+        
+        Each region has a number of linked hexagons. Each of them
+        are reported by calling this method. When an exit is found some
+        basic information of the linked hexagon is attached.
+        
+        :param direction: direction of the exit. Allowed values are
+            ``North``, ``Northeast``, ``Southeast``, ``South``,
+            ``Southwest``, ``Northwest``. 
+        :param xloc: X coordinates of the hexagon.
+        :param yloc: Y coordinates of the hexagon.
+        :param zloc: Z coordinates of the hexagon. If *None* is given
+            the hexagon is on surface.
+        :param terrain: terrain type.
+        :param name: region name the hexagon belongs to.
+        :param town: if present, a dictionary with *name* and *type* of
+            the town there. Allowed *type* values are ``village``,
+            ``town`` and ``city``.
+        
+        """
+        
+        self._region.set_exit(direction.lower(), (xloc, yloc, zloc))
+        self.map.add_region_info(Region((xloc, yloc, zloc), terrain, name,
+                                        town=town), HEX_EXITS)
+        
     # Methods handling definitions
     def update_item_definitions(self, items):
         pass
