@@ -16,6 +16,7 @@ Modules in :ref:`atlantis.wxgui` package:
 
 .. autosummary::
    atlantis.wxgui.hexmap
+   atlantis.wxgui.hexmapdata
  
 Contents of :ref:`atlantis.wxgui` package:
 
@@ -23,3 +24,4 @@ Contents of :ref:`atlantis.wxgui` package:
    :maxdepth: 2
    
    hexmap
+   hexmapdata
