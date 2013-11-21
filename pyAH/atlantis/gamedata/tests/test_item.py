@@ -1,4 +1,4 @@
-"""Unit tests for :mod:`atlantis.gamedata.item`."""
+"""Unit tests for module atlantis.gamedata.item."""
 
 from atlantis.gamedata.item import Item, ItemAmount, ItemMarket
 
@@ -8,10 +8,10 @@ import json
 import unittest
 
 class TestItem(unittest.TestCase):
-    """Test class :class:`atlantis.gamedata.item.Item`."""
+    """Test Item class."""
     
     def test_constructor(self):
-        """Test :class:`~atlantis.gamedata.item.Item` constructor.
+        """Test Item constructor.
         
         Test both forms of constructors, with ``name`` and ``names`` as
         parameters.
@@ -31,8 +31,7 @@ class TestItem(unittest.TestCase):
         self.assertIsNone(it.names)
 
     def test_json_methods(self):
-        """Test implementation of 
-        :meth:`~atlantis.helpers.json.JsonSerializeble` interface."""
+        """Test implementation of JsonSerializable interface."""
         io = StringIO()
         
         it = Item('SWOR', name='sword')
@@ -44,11 +43,10 @@ class TestItem(unittest.TestCase):
         
 
 class TestItemAmount(unittest.TestCase):
-    """Test class :class:`atlantis.gamedata.item.ItemAmount`."""
+    """Test ItemAmount class."""
     
     def test_constructor(self):
-        """Test :class:`~atlantis.gamedata.item.ItemAmount`
-        constructor.
+        """Test ItemAmount constructor.
         
         Test both forms of constructors, with *name* and *names* as
         parameters, with and without the *amt* parameter.
@@ -70,10 +68,7 @@ class TestItemAmount(unittest.TestCase):
         self.assertIsNone(it.names)
 
     def test_json_methods(self):
-        """Test implementation of 
-        :meth:`~atlantis.helpers.json.JsonSerializeble` interface.
-        
-        """
+        """Test implementation of JsonSerializeble interface."""
         io = StringIO()
         
         it = ItemAmount('SWOR', amt=10, names='swords')
@@ -93,14 +88,13 @@ class TestItemAmount(unittest.TestCase):
         
 
 class TestItemMarket(unittest.TestCase):
-    """Test class :class:`atlantis.gamedata.item.ItemMarket`."""
+    """Test ItemMarket class."""
     
     def test_constructor(self):
-        """Test :class:`~atlantis.gamedata.item.ItemMarket`
-        constructor.
+        """Test ItemMarket constructor.
         
         Test both forms of constructors, with *name* and *names* as
-        paremeters.
+        parameters.
         
         """
         it = ItemMarket('HORS', 5, 64, names='horses')
@@ -112,10 +106,7 @@ class TestItemMarket(unittest.TestCase):
         self.assertIsNone(it.name)
 
     def test_json_methods(self):
-        """Test implementation of 
-        :meth:`~atlantis.helpers.json.JsonSerializeble` interface.
-        
-        """
+        """Test implementation of JsonSerializeble interface."""
         io = StringIO()
         
         it = ItemMarket('SWOR', 10, 72, names='swords')

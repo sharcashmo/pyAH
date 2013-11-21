@@ -12,7 +12,7 @@ class TestTerrainType(unittest.TestCase):
     """Test TerrainType class."""
 
     def test_json_methods(self):
-        """Test implementation of JsonSerializeble interface."""
+        """Test implementation of JsonSerializable interface."""
         io = StringIO()
         
         tt = TerrainType(

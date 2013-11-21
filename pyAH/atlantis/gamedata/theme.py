@@ -53,11 +53,10 @@ class Theme(JsonSerializable, RichComparable):
     def json_serialize(self):
         """Return a serializable version of :class:`Theme`.
         
-        This method overrides
-        :meth:`~atlantis.helpers.json.JsonSerializable.json_serialize`
-        of :class:`atlantis.helpers.json.JsonSerializable` interface.
-        
         :return: a *dict* representing the :class:`Theme` object.
+        
+        .. seealso::
+           :class:`atlantis.helpers.json.JsonSerializable`
         
         """
         return self._data 
@@ -65,15 +64,14 @@ class Theme(JsonSerializable, RichComparable):
     @staticmethod
     def json_deserialize(json_object):
         """Load :class:`Theme` from a deserialized json object.
-        
-        This method overrides
-        :meth:`~atlantis.helpers.json.JsonSerializable.json_deserialize`
-        of :class:`atlantis.helpers.json.JsonSerializable` interface.
 
         :param json_object: object returned by
             :func:`atlantis.helpers.json.load`.
         
         :return: the :class:`Theme` object from json data.
+        
+        .. seealso::
+           :class:`atlantis.helpers.json.JsonSerializable`
         
         """
         gc = Theme()

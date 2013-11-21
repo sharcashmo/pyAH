@@ -1,9 +1,26 @@
 """Handles Atlantis PBEM world rules.
 
-Most of these rules can be guessed from Atlantis game manual. Main goal
-of this module, however, is having a set of standard rules written from
-Atlantis PBEM source code, written in json files, and allowing players
-to edit this data to accommodate it to actual rules.
+:class:`AtlantisRules` includes all those immutable data that controls
+how Atlantis PBEM world behaves and is shown. :class:`AtlantisRules`
+doesn't include *real* objects, even if immutable (as the
+:class:`~atlantis.gamedata.map.Map`) but it will hold information about
+the different :class:`TerrainType`, :class:`ItemType`, :class:`RaceType`
+and so on.
+
+Most of this data can be guessed from Atlantis game manual, as the
+:class:`RaceType` in the game and which :class:`SkillType` can
+specialize each one. Some of this data is hidden, however: advanced
+:class:`ItemType` or magic :class:`SkillType` are discovered as the
+game advances.
+
+The goal of this module is having a set of standard rules written for
+each ruleset stored in json files. Players will be able to easily edit
+these json files to incorporate any change introduced by their
+gamemaster. The :class:`~atlantis.parsers.reportparser.ReportParser` is
+also able to automatically get this information from turn reports,
+either to fix any wrong data from ruleset files or incorporate advanced
+:class:`ItemType`, :class:`StructureType` or :class:`SkillType` as
+they are discovered.
 
 """
 
@@ -17,45 +34,52 @@ import os.path
 class TerrainType(JsonSerializable, RichComparable):
     """Handles different terrain types (swamps, woods, etc).
     
+    :class:`TerrainType` has the following public attributes:
+    
+    .. attribute:: name
+    
+       :class:`TerrainType` name.
+    
+    .. attribute:: riding_mounts
+    
+       Flags if riding mounts get combat bonus in :class:`TerrainType`.
+    
+    .. attribute:: flying_mounts
+    
+       Flags if flying mounts get combat bonus in :class:`TerrainType`.
+    
+    .. attribute:: products
+    
+       List of products available in :class:`TerrainType`, as a
+       dictionary with *chance*, *amount* and *product* (item
+       abbreviature).
+    
+    .. attribute:: normal_races
+    
+       List of races that can be found at :class:`TerrainType` as item
+       abbr.
+    
+    .. attribute:: coastal_races
+    
+       List of additional races that can be found at coastal
+       :class:`TerrainType` as item abbr.
+    
     """
-    name = None
-    """Terrain type name."""
     
-    riding_mounts = False
-    """Flag if riding mounts get combat bonus."""
-    
-    flying_mounts = False
-    """Flag if flying mounts get combat bonus."""
-    
-    products = None
-    """List of products available, as a dictionary with *chance*,
-    *amount* and *product* (item abbreviature)."""
-    
-    normal_races = None
-    """List of races that can be found in this terrain as item abbr."""
-    
-    coastal_races = None
-    """List of races that can be found in this terrain when it's
-    coastal, as item abbr."""
-    
-    def __init__(self,
-                  name=None, riding_mounts=False,
-                  flying_mounts=False, products=None,
-                  normal_races=None, coastal_races=None):
+    def __init__(self,  name=None, riding_mounts=False, flying_mounts=False,
+                 products=None, normal_races=None, coastal_races=None):
         """Default constructor.
         
-        This is the default constructor used when we want to
-        instantiate :class:`TerrainType` from its former data.
-        
-        :param name: terrain type name.
+        :param name: :class:`TerrainType` name.
         :param riding_mounts: flag if riding mounts give combat bonus.
         :param flying_mounts: flag if flying mounts give combat bonus.
         :param products: list of products available, as a dictionary
             with *chance*, *amount* and *product* (item abbreviature).
         :param normal_races: list of races that can be found in this
-            terrain type as item abbreviatures.
+            :class:`TerrainType` as item abbreviatures.
         :param coastal_races: list of races that can be found in this
-            terrain type when it's coastal, as item abbreviatures.
+            :class:`TerrainType` when it's coastal, as item
+            abbreviatures.
         
         """
         self.name = name
@@ -71,7 +95,7 @@ class TerrainType(JsonSerializable, RichComparable):
         :return: a *dict* representing the :class:`TerrainType` object.
         
         .. seealso::
-           :meth:`JsonSerializable.json_serialize`
+           :class:`atlantis.helpers.json.JsonSerializable`
         
         """
         return {'name': self.name,
@@ -90,7 +114,7 @@ class TerrainType(JsonSerializable, RichComparable):
         :return: the :class:`TerrainType` object from json data.
         
         .. seealso::
-           :meth:`JsonSerializable.json_deserialize`
+           :class:`atlantis.helpers.json.JsonSerializable`
         
         """
         return TerrainType(**json_object)
@@ -103,9 +127,10 @@ class AtlantisRules(JsonSerializable, RichComparable):
     usually can be guessed from *rules* web page.
     
     Some of this information can be completed by turn reports. Mainly
-    discovered skills, items and objects reports will complete
-    rules information. Other information can be terrain types stats
-    (movement cost, available products, etc).
+    discovered :class:`SkillType`, :class:`ItemType` and
+    :class:`StructureType` reports will complete rules information.
+    Other information can be :class:`TerrainType` stats (movement cost,
+    available products, etc).
     
     :class:`AtlantisRules` has the following public attributes:
     
@@ -120,7 +145,7 @@ class AtlantisRules(JsonSerializable, RichComparable):
     """
     
     def __init__(self, json_data=None):
-        """:class:`AtlantisRules` constructor.
+        """Default constructor.
         
         The constructor can be used as an empty constructor, or may
         receive data from :meth:`~AtlantisRules.json_deserialize`.
@@ -146,7 +171,7 @@ class AtlantisRules(JsonSerializable, RichComparable):
             object.
         
         .. seealso::
-           :meth:`JsonSerializable.json_serialize`
+           :class:`atlantis.helpers.json.JsonSerializable`
         
         """
         json_object = dict()
@@ -169,7 +194,7 @@ class AtlantisRules(JsonSerializable, RichComparable):
         :return: the :class:`AtlantisRules` object from json data.
         
         .. seealso::
-           :meth:`JsonSerializable.json_deserialize`
+           :class:`atlantis.helpers.json.JsonSerializable`
         
         """
         return AtlantisRules(json_data=json_object)
@@ -201,15 +226,4 @@ class AtlantisRules(JsonSerializable, RichComparable):
         return ar
         
 if __name__ == '__main__':
-    import json
-    
-    ar = AtlantisRules.read_folder('../../rulesets/havilah_1.0.0')
-    for t in ar.terrain_types:
-        print(t.name, t.products, t.normal_races)
-    print(ar.strings)
-    
-    with open('../../rulesets/havilah_1.0.0.json') as f:
-        ar = AtlantisRules.json_deserialize(json.load(f))
-        print(len(ar.terrain_types))
-        for t in ar.terrain_types.values():
-            print(t.name, t.products, t.normal_races)
+    pass

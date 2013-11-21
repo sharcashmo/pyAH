@@ -1,4 +1,4 @@
-"""Unit tests for :mod:`atlantis.gamedata.region`."""
+"""Unit tests for atlantis.gamedata.region module."""
 
 from atlantis.gamedata.region import Region
 from atlantis.gamedata.item import ItemAmount, ItemMarket
@@ -9,10 +9,10 @@ import json
 import unittest
 
 class TestRegion(unittest.TestCase):
-    """Test class :class:`atlantis.gamedata.region.Region`."""
+    """Test Region class."""
     
     def test_constructor(self):
-        """Test :class:`~atlantis.gamedata.region.Region` constructor."""
+        """Test Region constructor."""
         region = Region((21, 93, None), 'plain', 'Isshire',
                         2392, 'vikings', 11016,
                         {'name': 'Durshire', 'type': 'town'})
@@ -35,9 +35,7 @@ class TestRegion(unittest.TestCase):
         self.assertEqual(region.town, {'name': 'Durshire', 'type': 'town'})
     
     def test_append_report_description(self):
-        """Test
-        :meth:`~atlantis.gamedata.region.Region.append_report_description`.
-        """
+        """Test Region.append_report_description method."""
         region = Region((21, 93, None), 'plain', 'Isshire',
                         2392, 'vikings', 11016,
                         {'name': 'Durshire', 'type': 'town'})
@@ -61,7 +59,7 @@ class TestRegion(unittest.TestCase):
         self.assertEqual(region.report, lines)
     
     def test_set_weather(self):
-        """Test :meth:`~atlantis.gamedata.region.Region.set_weather`."""
+        """Test Region.set_weather method."""
         region = Region((21, 93, None), 'plain', 'Isshire',
                         2392, 'vikings', 11016,
                         {'name': 'Durshire', 'type': 'town'})
@@ -72,7 +70,7 @@ class TestRegion(unittest.TestCase):
                           'clearskies': True, 'blizzard': False})
     
     def test_set_wages(self):
-        """Test :meth:`~atlantis.gamedata.region.Region.set_wages`."""
+        """Test Region.set_wages method."""
         region = Region((21, 93, None), 'plain', 'Isshire',
                         2392, 'vikings', 11016,
                         {'name': 'Durshire', 'type': 'town'})
@@ -81,7 +79,7 @@ class TestRegion(unittest.TestCase):
         self.assertEqual(region.wages, {'productivity': 15.6, 'amount': 3672})
     
     def test_set_market(self):
-        """Test :meth:`~atlantis.gamedata.region.Region.set_market`."""
+        """Test Region.set_market method."""
         region = Region((21, 93, None), 'plain', 'Isshire',
                         2392, 'vikings', 11016,
                         {'name': 'Durshire', 'type': 'town'})
@@ -101,8 +99,7 @@ class TestRegion(unittest.TestCase):
                              ItemMarket('SWOR', 1, 101, name='sword')]})
     
     def test_set_entertainment(self):
-        """Test
-        :meth:`~atlantis.gamedata.region.Region.set_entertainment`."""
+        """Test Region.set_entertainment method."""
         region = Region((21, 93, None), 'plain', 'Isshire',
                         2392, 'vikings', 11016,
                         {'name': 'Durshire', 'type': 'town'})
@@ -111,7 +108,7 @@ class TestRegion(unittest.TestCase):
         self.assertEqual(region.entertainment, 649)
     
     def test_set_products(self):
-        """Test :meth:`~atlantis.gamedata.region.Region.set_products`."""
+        """Test Region.set_products method."""
         region = Region((21, 93, None), 'plain', 'Isshire',
                         2392, 'vikings', 11016,
                         {'name': 'Durshire', 'type': 'town'})
@@ -121,7 +118,7 @@ class TestRegion(unittest.TestCase):
                          [ItemAmount('LIVE', 66, names='livestock')])
     
     def test_set_exit(self):
-        """Test :meth:`~atlantis.gamedasta.region.Region.set_exit`."""
+        """Test Region.set_exit method."""
         region = Region((21, 93, None), 'plain', 'Isshire',
                         2392, 'vikings', 11016,
                         {'name': 'Durshire', 'type': 'town'})
@@ -130,8 +127,7 @@ class TestRegion(unittest.TestCase):
         self.assertEqual(region.exits, {'north': (21, 91, None)})
     
     def test_set_gate(self):
-        """Test
-        :meth:`~atlantis.gamedata.region.Region.set_gate`."""
+        """Test Region.set_gate method."""
         region = Region((21, 93, None), 'plain', 'Isshire',
                         2392, 'vikings', 11016,
                         {'name': 'Durshire', 'type': 'town'})
@@ -140,8 +136,7 @@ class TestRegion(unittest.TestCase):
         self.assertEqual(region.gate, {'number': 12, 'is_open': True})
 
     def test_json_methods(self):
-        """Test implementation of 
-        :meth:`~atlantis.helpers.json.JsonSerializeble` interface."""
+        """Test implementation of JsonSerializable interface."""
         io = StringIO()
         
         region = Region((21, 93, None), 'plain', 'Isshire',
