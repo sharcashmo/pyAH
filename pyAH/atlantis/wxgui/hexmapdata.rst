@@ -19,8 +19,8 @@ Public classes in :mod:`atlantis.wxgui.hexmapdata` module:
    :members:
    :special-members: __init__
  
-:class:`~atlantis.wxgui.hexmapdata.HexMapData`
-++++++++++++++++++++++++++++++++++++++++++++++
+:class:`~atlantis.wxgui.hexmapdata.MapData`
++++++++++++++++++++++++++++++++++++++++++++
 
 .. autoclass:: atlantis.wxgui.hexmapdata.MapData
    :members:
