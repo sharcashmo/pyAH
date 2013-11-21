@@ -107,10 +107,17 @@ class AtlantisRules(JsonSerializable, RichComparable):
     rules information. Other information can be terrain types stats
     (movement cost, available products, etc).
     
-    """
+    :class:`AtlantisRules` has the following public attributes:
     
-    terrain_types = None
-    """List of :class:`TerrainType` definitions."""
+    .. attribute:: terrain_types
+    
+       A dictionary TBC.
+    
+    .. attribute:: strings
+    
+       A dictionary TBC.
+    
+    """
     
     def __init__(self, json_data=None):
         """:class:`AtlantisRules` constructor.
@@ -128,6 +135,9 @@ class AtlantisRules(JsonSerializable, RichComparable):
                          for ob in json_data['terrain_types']])
             if 'strings' in json_data.keys():
                 self.strings = json_data['strings']
+        else:
+            self.terrain_types = dict()
+            self.strings = dict()
     
     def json_serialize(self):
         """Return a serializable version of :class:`AtlantisRules`.
