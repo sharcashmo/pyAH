@@ -1,4 +1,4 @@
-"""Unit tests for :mod:`atlantis.gamedata.rules`."""
+"""Unit tests for module atlantis.gamedata.rules."""
 
 from atlantis.gamedata.rules import TerrainType
 from atlantis.gamedata.rules import AtlantisRules
@@ -9,11 +9,10 @@ from io import StringIO
 import unittest
 
 class TestTerrainType(unittest.TestCase):
-    """Test class :class:`atlantis.gamedata.rules.TerrainType`."""
+    """Test TerrainType class."""
 
     def test_json_methods(self):
-        """Test implementation of 
-        :meth:`~atlantis.helpers.json.JsonSerializeble` interface."""
+        """Test implementation of JsonSerializeble interface."""
         io = StringIO()
         
         tt = TerrainType(
@@ -31,14 +30,31 @@ class TestTerrainType(unittest.TestCase):
         self.assertEqual(tt, tt_new)
 
 class TestAtlantisRules(unittest.TestCase):
-    """Test class :class:`atlantis.gamedata.rules.AtlantisRules`."""
+    """Test AtlantisRules class."""
 
     def test_json_methods(self):
-        """Test implementation of 
-        :meth:`~atlantis.helpers.json.JsonSerializeble` interface."""
+        """Test implementation of JsonSerializeble interface."""
         io = StringIO()
-        with open('../../../rulesets/havilah_1.0.0.json') as f:
-            ar = AtlantisRules.json_deserialize(json.load(f))
+        
+        tt = TerrainType(
+                name='forest', riding_mounts=False, flying_mounts=True,
+                products=[{'product': 'wood', 'chance': 100, 'amount': 20},
+                          {'product': 'fur', 'chance': 100, 'amount': 10},
+                          {'product': 'herb', 'chance': 100, 'amount': 10},
+                          {'product': 'irwd', 'chance': 25, 'amount': 5},
+                          {'product': 'yew', 'chance': 25, 'amount': 5}],
+                normal_races=['viki', 'welf'], coastal_races=['self'])
+        
+        str_ = {'months': ['january', 'february', 'march', 'april', 'may',
+                           'june', 'july', 'august', 'september', 'october',
+                           'november', 'december'],
+                'directions': {'n': 'north', 'ne': 'northeast',
+                               'se': 'southeast', 's': 'south',
+                               'sw': 'southwest', 'nw': 'northwest'}}
+        
+        ar = AtlantisRules()
+        ar.terrain_types['forest'] = tt
+        ar.strings = str_
         
         json.dump(ar, io, default=AtlantisRules.json_serialize)
         io.seek(0)
