@@ -9,27 +9,27 @@ Public classes in :mod:`atlantis.gamedata.item` module:
 .. autosummary::
    :nosignatures:
    
-   ItemRef
+   Item
    ItemAmount
    ItemMarket
  
-:class:`~atlantis.gamedata.item.ItemRef`
-++++++++++++++++++++++++++++++++++++++++
+:class:`~atlantis.gamedata.item.Item`
++++++++++++++++++++++++++++++++++++++
 
-.. autoclass:: atlantis.gamedata.item.ItemRef
+.. autoclass:: atlantis.gamedata.item.Item()
    :members:
    :special-members: __init__
  
 :class:`~atlantis.gamedata.item.ItemAmount`
 +++++++++++++++++++++++++++++++++++++++++++
 
-.. autoclass:: atlantis.gamedata.item.ItemAmount
+.. autoclass:: atlantis.gamedata.item.ItemAmount()
    :members:
    :special-members: __init__
  
 :class:`~atlantis.gamedata.item.ItemMarket`
 +++++++++++++++++++++++++++++++++++++++++++
 
-.. autoclass:: atlantis.gamedata.item.ItemMarket
+.. autoclass:: atlantis.gamedata.item.ItemMarket()
    :members:
    :special-members: __init__

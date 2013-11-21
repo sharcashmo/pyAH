@@ -24,7 +24,7 @@ Public attributes in :mod:`atlantis.parsers.reportparser` module:
 
 """
 
-from atlantis.gamedata.item import ItemRef, ItemAmount, ItemMarket
+from atlantis.gamedata.item import Item, ItemAmount, ItemMarket
 
 import re
 

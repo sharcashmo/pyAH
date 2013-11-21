@@ -4,7 +4,7 @@ from atlantis.parsers.reportparser import ReportReader
 from atlantis.parsers.reportparser import ReportParser
 from atlantis.parsers import reportparser  # @UnusedImport
 
-from atlantis.gamedata.item import ItemRef, ItemAmount, ItemMarket
+from atlantis.gamedata.item import Item, ItemAmount, ItemMarket
 
 try:
     from unittest.mock import patch  # @UnresolvedImport @UnusedImport

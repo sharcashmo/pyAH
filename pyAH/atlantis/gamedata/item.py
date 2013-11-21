@@ -12,7 +12,7 @@ Main class in :mod:`atlantis.gamedata.item` is :class:`ItemDef`, which
 holds and handle all data about an item type definition.
 
 In addition some more classes are defined to hold actual items in game,
-as they're :class:`ItemRef`, :class:`ItemAmount` and
+as they're :class:`Item`, :class:`ItemAmount` and
 :class:`ItemMarket`.
 
 """
@@ -21,7 +21,7 @@ as they're :class:`ItemRef`, :class:`ItemAmount` and
 from atlantis.helpers.json import JsonSerializable
 from atlantis.helpers.comparable import RichComparable # For testing
 
-class ItemRef(JsonSerializable, RichComparable):
+class Item(JsonSerializable, RichComparable):
     """Item reference.
     
     This class holds any reference to an item: an item is referenced by
@@ -29,7 +29,7 @@ class ItemRef(JsonSerializable, RichComparable):
     *abr* is always present, but only one of *name* or *names* will be
     given.
     
-    Public attributes of :class:`ItemRef` are:
+    Public attributes of :class:`Item` are:
     
     .. attribute:: abr
     
@@ -45,7 +45,7 @@ class ItemRef(JsonSerializable, RichComparable):
     
     """
     def __init__(self, abr, name=None, names=None):
-        """:class:`ItemRef` constructor.
+        """:class:`Item` constructor.
         
         :param abr: abbreviature of the item.
         :param name: singular name of the item.
@@ -57,9 +57,9 @@ class ItemRef(JsonSerializable, RichComparable):
         self.names = names
     
     def json_serialize(self):
-        """Return a serializable version of :class:`ItemRef`.
+        """Return a serializable version of :class:`Item`.
         
-        :return: a *dict* representing the :class:`ItemRef`
+        :return: a *dict* representing the :class:`Item`
             object.
         
         .. seealso::
@@ -70,28 +70,28 @@ class ItemRef(JsonSerializable, RichComparable):
     
     @staticmethod
     def json_deserialize(json_object):
-        """Load :class:`ItemRef` from a deserialized json object.
+        """Load :class:`Item` from a deserialized json object.
 
         :param json_object: object returned by :func:`json.load`.
         
-        :return: the :class:`ItemRef` object from json data.
+        :return: the :class:`Item` object from json data.
         
         .. seealso::
            :meth:`JsonSerializable.json_deserialize`
         
         """
-        return ItemRef(**json_object)
+        return Item(**json_object)
 
-class ItemAmount(ItemRef):
+class ItemAmount(Item):
     """Item amount.
     
     This class holds any reference to a number of items. This can
     appear in any entity description formed by a number of items, as
     units descriptions, region products, etc.
     
-    This class extends :class:`ItemRef` adding an amount attribute.
+    This class extends :class:`Item` adding an amount attribute.
     
-    Public attributes in addition to those defined in :class:`ItemRef`:
+    Public attributes in addition to those defined in :class:`Item`:
     
     .. attribute:: amt
     
@@ -107,7 +107,7 @@ class ItemAmount(ItemRef):
         :param names: plural name of the item.
         
         """
-        ItemRef.__init__(self, abr, name, names)
+        Item.__init__(self, abr, name, names)
         self.amt = amt
     
     def json_serialize(self):

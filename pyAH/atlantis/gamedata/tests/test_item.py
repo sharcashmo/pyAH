@@ -1,30 +1,30 @@
 """Unit tests for :mod:`atlantis.gamedata.item`."""
 
-from atlantis.gamedata.item import ItemRef, ItemAmount, ItemMarket
+from atlantis.gamedata.item import Item, ItemAmount, ItemMarket
 
 from io import StringIO
 
 import json
 import unittest
 
-class TestItemRef(unittest.TestCase):
-    """Test class :class:`atlantis.gamedata.item.ItemRef`."""
+class TestItem(unittest.TestCase):
+    """Test class :class:`atlantis.gamedata.item.Item`."""
     
     def test_constructor(self):
-        """Test :class:`~atlantis.gamedata.item.ItemRef` constructor.
+        """Test :class:`~atlantis.gamedata.item.Item` constructor.
         
-        Test both forms of constructors, with *name* and *names* as
+        Test both forms of constructors, with ``name`` and ``names`` as
         parameters.
         
         """
-        it = ItemRef('HORS', names='horses')
+        it = Item('HORS', names='horses')
         
         self.assertEqual(it.abr, 'HORS')
         self.assertEqual(it.names, 'horses')
         self.assertIsNone(it.name)
         
         
-        it = ItemRef('HORS', name='horse')
+        it = Item('HORS', name='horse')
         
         self.assertEqual(it.abr, 'HORS')
         self.assertEqual(it.name, 'horse')
@@ -35,10 +35,10 @@ class TestItemRef(unittest.TestCase):
         :meth:`~atlantis.helpers.json.JsonSerializeble` interface."""
         io = StringIO()
         
-        it = ItemRef('SWOR', name='sword')
-        json.dump(it, io, default=ItemRef.json_serialize)
+        it = Item('SWOR', name='sword')
+        json.dump(it, io, default=Item.json_serialize)
         io.seek(0)
-        it_new = ItemRef.json_deserialize(json.load(io))
+        it_new = Item.json_deserialize(json.load(io))
         
         self.assertEqual(it, it_new)
         
