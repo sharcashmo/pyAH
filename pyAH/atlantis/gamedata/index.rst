@@ -13,9 +13,10 @@ Modules in :ref:`atlantis.gamedata` package:
 
 .. autosummary::
    atlantis.gamedata.gamedata
-   atlantis.gamedata.item
-   atlantis.gamedata.region
    atlantis.gamedata.map
+   atlantis.gamedata.region
+   atlantis.gamedata.structure
+   atlantis.gamedata.item
    atlantis.gamedata.rules
    atlantis.gamedata.theme
  
@@ -25,8 +26,9 @@ Contents of :ref:`atlantis.gamedata` package:
    :maxdepth: 2
    
    gamedata
-   item
-   region
    map
+   region
+   structure
+   item
    rules
    theme
