@@ -8,6 +8,7 @@ hold all data read from Atlantis PBEM reports."""
 from atlantis.parsers.reportparser import ReportConsumer
 from atlantis.gamedata.map import Map, HEX_EXITS
 from atlantis.gamedata.region import Region
+from atlantis.gamedata.structure import Structure
 
 class GameData(ReportConsumer):
     """This class hold all data of an Atlantis PBEM game.
@@ -29,6 +30,9 @@ class GameData(ReportConsumer):
     # Current region
     _region = None
     _descr_in_region = False
+    
+    # Current structure
+    _structure = None
     
     # Last line read
     _line = None
@@ -80,11 +84,12 @@ class GameData(ReportConsumer):
             ``town`` and ``city``.
         
         """
-        
+            
         self._region = Region((xloc, yloc, zloc), terrain, name,
                               population, racenames, wealth, town)
         self._region.append_report_description(self._line)
         self._descr_in_region = True
+        self._structure = None
         self.map.add_region_info(self._region)
     
     def region_weather(self, weather, nxtweather,
@@ -207,6 +212,70 @@ class GameData(ReportConsumer):
         
         """
         self._region.set_gate(gate, gateopen)
+    
+    def region_structure(self, num, name, structure_type, items=None,
+                           incomplete=False, about_to_decay=False,
+                           needs_maintenance=False, inner_location=False,
+                           has_runes=False, can_enter=True):
+        """Handle a structure in a region report.
+        
+        A structure is a complex entity in Atlantis. Structures can
+        hold player or monster units inside, open paths to other map
+        levels, improve resource production, provide protection to
+        soldiers inside or, in case of ships, provide sailing or even
+        flying transportation.
+        
+        When a region report is finished with their products listing
+        it's time for units and structures. First all units outside
+        structures are listed, then each object, followed by their
+        stacked units.
+        
+        :param num: unique number for the structure in the hex.
+            Structures will be listed ordered by its number, and it's
+            the direction unit must issue in order to enter inside it.
+        :param name: name of the structure. Note that this is the name
+            given by the owner player to the structure, not the name of
+            the structure type.
+        :param structure_type: *name* of the structure type.
+            This *name* is the generic structure type (like **Mine** or
+            **Castle**).
+        :param items: list of
+            :class:`~atlantis.gamedata.item.ItemAmount` elements.
+            ``items`` is only set when the structure is a fleet of
+            ships, otherwise is set to *None*. Defaults to *None*.
+        :param incomplete: amount of work needed to complete the
+            structure. Defaults to zero.
+        :param about_to_decay: flags if the structure is *about to
+            decay*. A structure is *about to decay* if there's a chance
+            the structure is completely ruined the next turn if not
+            repaired. Defaults to *False*.
+        :param needs_maintenance: glags if the structure *needs
+            maintenance*. A structure *needs maintenance* if it's
+            damaged but not so much that there's a chance it will be
+            completely ruined the next turn if not repaired. Defaults to
+            *False*.
+        :param inner_location: *True* if the structure has an inner
+            location, *False* otherwise. Defaults to *False*.
+        :param has_runes: *True* if the structure has engraved runes of
+            guard, *False* otherwise. Defaults to *False*.
+        :param can_enter: *True* if player units can enter the
+            structure, *False* otherwise. Defaults to *True*.
+                
+        """
+        
+        if self._descr_in_region:
+            self._region.pop_report_description()
+            self._descr_in_region = False
+            
+        structure = Structure(num, name, structure_type, items,
+                              incomplete, about_to_decay,
+                              needs_maintenance, inner_location,
+                              has_runes, can_enter)
+        structure.append_report_description(self._line)
+        
+        self._structure = structure
+        self._region.append_structure(structure)
+        print('Appended', structure.name, 'to hex', self._region.location)
         
     # Methods handling definitions
     def update_item_definitions(self, items):
