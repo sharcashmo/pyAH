@@ -44,7 +44,7 @@ class Item(JsonSerializable, RichComparable):
        Plural name of the item, as ``horses``.
     
     """
-    def __init__(self, abr, name=None, names=None):
+    def __init__(self, abr=None, name=None, names=None):
         """:class:`Item` constructor.
         
         :param abr: abbreviature of the item.
@@ -63,7 +63,7 @@ class Item(JsonSerializable, RichComparable):
             object.
         
         .. seealso::
-           :meth:`JsonSerializable.json_serialize`
+           :class:`atlantis.helpers.json.JsonSerializable`
         
         """
         return {'abr': self.abr, 'name': self.name, 'names': self.names}
@@ -77,7 +77,7 @@ class Item(JsonSerializable, RichComparable):
         :return: the :class:`Item` object from json data.
         
         .. seealso::
-           :meth:`JsonSerializable.json_deserialize`
+           :class:`atlantis.helpers.json.JsonSerializable`
         
         """
         return Item(**json_object)
@@ -98,7 +98,7 @@ class ItemAmount(Item):
        Number of items.
     
     """
-    def __init__(self, abr, amt=1, name=None, names=None):
+    def __init__(self, abr=None, amt=1, name=None, names=None):
         """:class:`ItemAmount` constructor.
         
         :param abr: abbreviature of the item.
@@ -117,7 +117,7 @@ class ItemAmount(Item):
             object.
         
         .. seealso::
-           :meth:`JsonSerializable.json_serialize`
+           :class:`atlantis.helpers.json.JsonSerializable`
         
         """
         return {'abr': self.abr, 'name': self.name, 'names': self.names,
@@ -132,7 +132,7 @@ class ItemAmount(Item):
         :return: the :class:`ItemAmount` object from json data.
         
         .. seealso::
-           :meth:`JsonSerializable.json_deserialize`
+           :class:`atlantis.helpers.json.JsonSerializable`
         
         """
         return ItemAmount(**json_object)
@@ -171,7 +171,7 @@ class ItemMarket(ItemAmount):
             object.
         
         .. seealso::
-           :meth:`JsonSerializable.json_serialize`
+           :class:`atlantis.helpers.json.JsonSerializable`
         
         """
         return {'abr': self.abr, 'name': self.name, 'names': self.names,
@@ -186,7 +186,7 @@ class ItemMarket(ItemAmount):
         :return: the :class:`ItemMarket` object from json data.
         
         .. seealso::
-           :meth:`JsonSerializable.json_deserialize`
+           :class:`atlantis.helpers.json.JsonSerializable`
         
         """
         return ItemMarket(**json_object)

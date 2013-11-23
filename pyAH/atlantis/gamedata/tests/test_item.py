@@ -14,21 +14,25 @@ class TestItem(unittest.TestCase):
         """Test Item constructor.
         
         Test both forms of constructors, with ``name`` and ``names`` as
-        parameters.
+        parameters. Added a new test without ``abr`` used for fleets,
+        where ``names`` or ``name`` is given, but no ``abr``.
         
         """
         it = Item('HORS', names='horses')
-        
         self.assertEqual(it.abr, 'HORS')
         self.assertEqual(it.names, 'horses')
         self.assertIsNone(it.name)
         
         
         it = Item('HORS', name='horse')
-        
         self.assertEqual(it.abr, 'HORS')
         self.assertEqual(it.name, 'horse')
         self.assertIsNone(it.names)
+        
+        it = Item(names='Galleons')
+        self.assertEqual(it.names, 'Galleons')
+        self.assertIsNone(it.names)
+        self.assertIsNone(it.abr)
 
     def test_json_methods(self):
         """Test implementation of JsonSerializable interface."""
@@ -48,24 +52,29 @@ class TestItemAmount(unittest.TestCase):
     def test_constructor(self):
         """Test ItemAmount constructor.
         
-        Test both forms of constructors, with *name* and *names* as
-        parameters, with and without the *amt* parameter.
+        Test both forms of constructors, with ``name`` and ``names`` as
+        parameters, with and without the ``amt`` parameter. Added a new
+        test without ``abr`` used for fleets, where ``names`` or
+        ``name`` is given, but no ``abr``.
         
         """
         it = ItemAmount('HORS', amt=5, names='horses')
-        
         self.assertEqual(it.abr, 'HORS')
         self.assertEqual(it.amt, 5)
         self.assertEqual(it.names, 'horses')
         self.assertIsNone(it.name)
         
-        
         it = ItemAmount('HORS', name='horse')
-        
         self.assertEqual(it.abr, 'HORS')
         self.assertEqual(it.amt, 1)
         self.assertEqual(it.name, 'horse')
         self.assertIsNone(it.names)
+        
+        it = ItemAmount(amt=2, names='Galleons')
+        self.assertEqual(it.amt, 2)
+        self.assertEqual(it.names, 'Galleons')
+        self.assertIsNone(it.abr)
+        self.assertIsNone(it.name)
 
     def test_json_methods(self):
         """Test implementation of JsonSerializeble interface."""
@@ -93,12 +102,11 @@ class TestItemMarket(unittest.TestCase):
     def test_constructor(self):
         """Test ItemMarket constructor.
         
-        Test both forms of constructors, with *name* and *names* as
+        Test both forms of constructors, with ``name`` and ``names`` as
         parameters.
         
         """
         it = ItemMarket('HORS', 5, 64, names='horses')
-        
         self.assertEqual(it.abr, 'HORS')
         self.assertEqual(it.amt, 5)
         self.assertEqual(it.price, 64)
