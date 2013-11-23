@@ -1686,8 +1686,8 @@ class TestReportParser(unittest.TestCase):
             consumer_mock.reset_mock()
             parser.parse_region(products)
             consumer_mock().region_products.assert_called_with(
-                    products=[{'abr': 'LIVE', 'names': 'livestock', 'amt': 56},
-                              {'abr': 'HORS', 'names': 'horses', 'amt': 37}])
+                    products=[ItemAmount(abr='LIVE', names='livestock', amt=56),
+                              ItemAmount(abr='HORS', names='horses', amt=37)])
             
             # Exits
             exits = '  Southeast : swamp (19,93) in Slamer.'
@@ -1723,41 +1723,42 @@ class TestReportParser(unittest.TestCase):
             consumer_mock.reset_mock()
             parser.parse_region(objects)
             consumer_mock().region_structure.assert_called_with(
-                    name='Pinta', num=102, ob={'name': 'Galleon'})
+                    name='Pinta', num=102, structure_type='Galleon')
             
             objects = '+ Fleet [104] : Fleet, 1 Galleon, 3 Longships'
             consumer_mock.reset_mock()
             parser.parse_region(objects)
             consumer_mock().region_structure.assert_called_with(
-                    name='Fleet', num=104, ob='Fleet',
-                    items=[{'num': 1, 'name': 'Galleon'},
-                           {'num': 3, 'names': 'Longships'}])
+                    name='Fleet', num=104, structure_type='Fleet',
+                    items=[ItemAmount(amt=1, name='Galleon'),
+                           ItemAmount(amt=3, names='Longships')])
             
             objects = '+ Galleon [102] : Fleet, 2 Galleons'
             consumer_mock.reset_mock()
             parser.parse_region(objects)
             consumer_mock().region_structure.assert_called_with(
-                    name='Galleon', num=102, ob='Fleet',
-                    items=[{'num': 2, 'names': 'Galleons'}])
+                    name='Galleon', num=102, structure_type='Fleet',
+                    items=[ItemAmount(amt=2, names='Galleons')])
             
             objects = '+ Explendorosa [3] : Timber Yard, needs 3.'
             consumer_mock.reset_mock()
             parser.parse_region(objects)
             consumer_mock().region_structure.assert_called_with(
-                    name='Explendorosa', num=3, ob={'name': 'Timber Yard'},
+                    name='Explendorosa', num=3, structure_type='Timber Yard',
                     incomplete=3)
             
             objects = '+ Shaft [1] : Shaft, contains an inner location.'
             consumer_mock.reset_mock()
             parser.parse_region(objects)
             consumer_mock().region_structure.assert_called_with(
-                    name='Shaft', num=1, ob={'name': 'Shaft'}, inner=True)
+                    name='Shaft', num=1, structure_type='Shaft',
+                    inner_location=True)
             
             objects = '+ Ruin [1] : Ruin, closed to player units.'
             consumer_mock.reset_mock()
             parser.parse_region(objects)
             consumer_mock().region_structure.assert_called_with(
-                    name='Ruin', num=1, ob={'name': 'Ruin'}, canenter=False)
+                    name='Ruin', num=1, structure_type='Ruin', can_enter=False)
             
             # Units
             unit = '* Scout (1710), Mathoyoh (13), avoiding, behind, ' \

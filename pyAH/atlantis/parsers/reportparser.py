@@ -1489,9 +1489,10 @@ class ReportConsumer:
         """
         raise NotImplementedError('ReportConsumer method must be overriden')
     
-    def region_structure(self, num, name, ob, items=None,
-                           incomplete=False, decay=False, maintenance=False,
-                           inner=False, runes=False, canenter=True):
+    def region_structure(self, num, name, structure_type, items=None,
+                           incomplete=False, about_to_decay=False,
+                           needs_maintenance=False, inner_location=False,
+                           has_runes=False, can_enter=True):
         """Handle a structure in a region report.
         
         A structure is a complex entity in Atlantis. Structures can
@@ -1505,51 +1506,41 @@ class ReportConsumer:
         structures are listed, then each object, followed by their
         stacked units.
         
-        Structure is defined by the following parameters:
-            num
-                Unique number for the structure in the hex. Structures
-                will be listed ordered by its number, and it's the
-                direction unit must issue in order to enter inside it.
-            name
-                Name of the structure. Note that this is the name given
-                by the owner player to the structure, not the name of
-                the structure type.
-            ob
-                Structure type. This parameter is a dictionary with
-                only the *name* value of the structure type. This
-                *name* is the generic structure type (like **Mine** or
-                **Castle**).
-            items
-                List of items, only given in case the structure is a
-                fleet of ships. In this case each element in the list
-                is a dictionary with *num* and *name*, *names* of the
-                ship items building the fleet. Defaults to *None*.
-            incomplete
-                Amount of work needed to complete the structure.
-                Defaults to zero.
-            decay
-                When decay is activated it is *about to decay* when it
-                could be completely ruined next month if it's not
-                repaired. When this happens this flag is *True*.
-                Defaults to *False*.
-            maintenance
-                When decay is activated it *needs maintenance* when the
-                structure is damaged and needs to be repaired but it's
-                not *about to decay* next month. Defaults to *False*.
-            inner
-                Some structures have inner locations, a shafts. Units
-                can move *in* such structures. This structures have
-                their inner flag set to *True*. Defaults to *False*.
-            runes
-                *True* if the structure has engraved runes of guard,
-                *False* otherwise. Defaults to *False*.
-            canenter
-                *True* if player units can enter the structure, *False*
-                otherwise. Defaults to *True*.
+        :param num: unique number for the structure in the hex.
+            Structures will be listed ordered by its number, and it's
+            the direction unit must issue in order to enter inside it.
+        :param name: name of the structure. Note that this is the name
+            given by the owner player to the structure, not the name of
+            the structure type.
+        :param structure_type: ``name`` of the structure type.
+            This *name* is the generic structure type (like **Mine** or
+            **Castle**).
+        :param items: list of
+            :class:`~atlantis.gamedata.item.ItemAmount` elements.
+            ``items`` is only set when the structure is a fleet of
+            ships, otherwise is set to *None*. Defaults to *None*.
+        :param incomplete: amount of work needed to complete the
+            structure. Defaults to *False*.
+        :param about_to_decay: flags if the structure is *about to
+            decay*. A structure is *about to decay* if there's a chance
+            the structure is completely ruined the next turn if not
+            repaired. Defaults to *False*.
+        :param needs_maintenance: glags if the structure *needs
+            maintenance*. A structure *needs maintenance* if it's
+            damaged but not so much that there's a chance it will be
+            completely ruined the next turn if not repaired. Defaults to
+            *False*.
+        :param inner_location: *True* if the structure has an inner
+            location, *False* otherwise. Defaults to *False*.
+        :param has_runes: *True* if the structure has engraved runes of
+            guard, *False* otherwise. Defaults to *False*.
+        :param can_enter: *True* if player units can enter the
+            structure, *False* otherwise. Defaults to *True*.
+            
+        :raise: :class:`NotImplementedError` if not overriden.
                 
         """
-        print('region_structure', num, name, ob, items, incomplete, decay,
-              maintenance, inner, runes, canenter)
+        raise NotImplementedError('ReportConsumer method must be overriden')
     
     def region_unit(self, num, name, items, tab=False, guard=None,
                       faction=None, attitude='neutral', behind=False,
@@ -3254,7 +3245,7 @@ class ReportParser:
         if result and result.group('products') != 'none':
             pr = []
             for p in result.group('products').split(', '):
-                pr.append(ReportParser._parse_item_str(p))
+                pr.append(ItemAmount(**ReportParser._parse_item_str(p)))
             self._consumer.region_products(products=pr)
             return
             
@@ -3298,31 +3289,31 @@ class ReportParser:
                               ReportParser._re_str_region_object_canenter, o)
             if result:
                 o = result.group('object').strip()
-                params['canenter'] = False
+                params['can_enter'] = False
             
             result = re.match(r'(?P<object>.+)' +
                               ReportParser._re_str_region_object_runes, o)
             if result:
                 o = result.group('object').strip()
-                params['runes'] = True
+                params['has_runes'] = True
             
             result = re.match(r'(?P<object>.+)' +
                               ReportParser._re_str_region_object_inner, o)
             if result:
                 o = result.group('object').strip()
-                params['inner'] = True
+                params['inner_location'] = True
             
             result = re.match(r'(?P<object>.+)' +
                               ReportParser._re_str_region_object_maintenance, o)
             if result:
                 o = result.group('object').strip()
-                params['maintenance'] = True
+                params['needs_maintenance'] = True
             
             result = re.match(r'(?P<object>.+)' +
                               ReportParser._re_str_region_object_decay, o)
             if result:
                 o = result.group('object').strip()
-                params['decay'] = True
+                params['about_to_decay'] = True
             
             result = re.match(r'(?P<object>.+)' +
                               ReportParser._re_str_region_object_incomplete, o)
@@ -3331,19 +3322,21 @@ class ReportParser:
                 params['incomplete'] = int(result.group('incomplete'))
             
             if ',' in o:
-                params['ob'], o = o.split(', ', 1)
+                params['structure_type'], o = o.split(', ', 1)
                 params['items'] = []
                 for i in o.split(', '):
                     result = re.match('(?P<num>\d+) (?P<name>.+)', i)
                     n = int(result.group('num'))
                     if n == 1:
-                        params['items'].append({'num': n,
-                                                'name': result.group('name')})
+                        params['items'].append(
+                            ItemAmount(amt=n, name=result.group('name'))
+                        )
                     else:
-                        params['items'].append({'num': n,
-                                                'names': result.group('name')})
+                        params['items'].append(
+                            ItemAmount(amt=n, names=result.group('name'))
+                        )
             else:
-                params['ob'] = {'name': o}
+                params['structure_type'] = o
             
             self._consumer.region_structure(**params)
             return
