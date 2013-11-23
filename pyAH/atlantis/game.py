@@ -25,6 +25,15 @@ if __name__ == '__main__':
         
         def OnSelectHex(self, event):
             print(event.hexagon)
+#             print(self.mapwindow._map_data._map_data.get_region(event.hexagon + (self.mapwindow._map_data._current_level,)))
+            print(event.hexagon + (self.mapwindow._map_data._current_level,))
+            map_hex = self.mapwindow._map_data._map_data.get_region(event.hexagon + (self.mapwindow._map_data._current_level,))
+            print(map_hex.region.__dict__)
+            try:
+                for s in map_hex.region.structures.values():
+                    print(s.num, s.name)
+            except AttributeError:
+                print('None')
 
     app = wx.App()
     frame = TestFrame(None)
@@ -37,7 +46,15 @@ if __name__ == '__main__':
     
     rules_folder = openDirDialog.GetPath()
     ar = AtlantisRules.read_folder(rules_folder)
-    th = Theme.read_folder(rules_folder)
+    
+    openDirDialog = wx.DirDialog(None, 'Choose theme folder', '/home/david/Data/Atlantis/pyAH/themes',
+                                 wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST)
+    
+    if openDirDialog.ShowModal() == wx.ID_CANCEL:
+        sys.exit()
+    
+    theme_folder = openDirDialog.GetPath()
+    th = Theme.read_folder(theme_folder)
     
     openFileDialog = wx.FileDialog(None, 'Choose report file', '/home/david/Data/Atlantis/games/havilah', '',
                                    'Report files (*.rep)|*.rep',
