@@ -31,8 +31,8 @@ class TestItem(unittest.TestCase):
         
         it = Item(names='Galleons')
         self.assertEqual(it.names, 'Galleons')
-        self.assertIsNone(it.names)
         self.assertIsNone(it.abr)
+        self.assertIsNone(it.name)
 
     def test_json_methods(self):
         """Test implementation of JsonSerializable interface."""
