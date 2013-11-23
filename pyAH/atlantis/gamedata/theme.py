@@ -48,7 +48,7 @@ class Theme(JsonSerializable, RichComparable):
         :return: a string with the complete art folder.
         
         """
-        return os.path.join(self._base_folder, 'art')
+        return self._base_folder
     
     def json_serialize(self):
         """Return a serializable version of :class:`Theme`.
