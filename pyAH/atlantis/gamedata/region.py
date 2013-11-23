@@ -1,23 +1,49 @@
 """Handles Atlantis PBEM regions.
 
-*Regions* (hexes) are one the main entities in Atlantis PBEM. All game
-action takes place in an hexagonal map made of :class:`Region`
-elements. Each of these *regions* has a list of :class:`Structure`
-*structures*, and each of these *structures* has a list of
-:class:`Unit` *units* inside.
+:class:`Region` represents the minimum amount of land manageable in
+Atlantis. :class:`~atlantis.gamedata.structure.Structure` are placed
+in :class:`Region`, and :class:`~atlantis.gamedate.unit.Unit` move
+between :class:`Region` through Atlantis world. :class:`Region` are
+also the main economical entities in Atlantis: money is raised by taxing
+:class:`Region`, and resources and items are produced for resources
+available in these :class:`Region`.
 
-*Regions* represent the main point where players interact with
-surrounding world. They provide the players of money throught taxing
-or Region's markets, control movement, are battle fields, etc.
+In the Atlantis objects hierarchy :class:`Region` is between
+:class:`~atlantis.gamedata.map.Map` (actually,
+:class:`~atlantis.gamedata.map.MapLevel`) and
+:class:`~atlantis.gamedata.structure.Structure`.
+:class:`~atlantis.gamedata.unit.Unit` can also stack directly on
+:class:`Region`, despite such units are considered to be in a special
+:class:`~atlantis.gamedata.structure.Structure` in Atlantis sourcecode.
 
-Main class in :mod:`atlantis.gamedata.region` is :class:`Region`, which
-holds and handle all data about these terrain hexes. It implements
-:class:`~atlantis.helper.json.JsonSerializable` and
-:class:`~atlantis.helper.comparable.RichComparable` interfaces.
+So :class:`~atlantis.gamedata.map.Map` is made of a list of
+:class:`Region`, and :class:`Region` have a list of
+:class:`~atlantis.gamedata.structure.Structure` built in it, and
+:class:`~atlantis.gamedata.unit.Unit` stacking directly on it.
+
+In addition, as the main economical entity in Atlantis, :class:`Region`
+has tons of ecnomical data: it has *markets* where items are sold and
+bought, and *men* are recruited; *taxable* inhabitants, which will be
+factions' main money resource; *entertainment* and *wages* available;
+and *products* that can be extracted from the :class:`Region`.
+
+Also, as the main strategic terrain in Atlantis, :class:`Region` have
+*exit* routes, and *terrain* type that affect *production* but also
+*movement* and even tactic effects on troops, as allowing riders to get
+advantage of their riding skill.
+
+:class:`Region` also implements
+:class:`~atlantis.helpers.json.JsonSerializable` and
+:class:`~atlantis.helpers.comparable.RichComparable` interfaces.
+
+Further details about Atlantis PBEM objects hierarchy can be found at
+:ref:`atlantis.gamedata` package documentation.
 
 """
 
 from atlantis.gamedata.item import ItemAmount, ItemMarket
+
+from atlantis.gamedata.structure import Structure
 
 from atlantis.helpers.json import JsonSerializable
 from atlantis.helpers.comparable import RichComparable # For testing
@@ -29,27 +55,27 @@ class Region(JsonSerializable, RichComparable):
     
     .. attribute:: report
     
-       List of report lines describing the region.
+       List of report lines describing the :class:`Region`.
     
     .. attribute:: location
     
-       Region location, as a three elements tuple.
+       :class:`Region` location, as a three elements tuple.
     
     .. attribute:: terrain
     
-       Terrain type of the region.
+       Terrain type of :class:`Region`.
        
     .. attribute:: name
     
-       Name of the region.
+       Name of :class:`Region`.
     
     .. attribute:: population
     
-       Inhabitants in the region.
+       Inhabitants in :class:`Region`.
     
     .. attribute:: racenames
     
-       Name (plural) of the race living in the region.
+       Name (plural) of the race living in :class:`Region`.
     
     .. attribute:: wealth
     
@@ -69,31 +95,31 @@ class Region(JsonSerializable, RichComparable):
     
     .. attribute:: wages
     
-       Wages available in the region. It's a dictionary with
+       Wages available in :class:`Region`. It's a dictionary with
        *productivity* and *amount* values. The first is the amount
        received per man and month by work, while the latter is the
-       maximum total amount available in the region.
+       maximum total amount available in :class:`Region`.
        
     .. attribute:: market
     
-       Available products in region market. This attribute is a
+       Available products in :class:`Region` market. This attribute is a
        dictionary with at most two keys, *sell* and *buy*. Values are a
        list of :class:`~atlantis.gamedata.item.ItemMarket` objects.
     
     .. attribute:: entertainment
     
-       Entertainment available in the region.
+       Entertainment available in :class:`Region`.
     
     .. attribute:: products
     
-       Available production in region. This attribute is a list of
-       :class:`~atlantis.gamedata.item.ItemAmount` objects.
+       Available production in :class:`Region`. This attribute is a list
+       of :class:`~atlantis.gamedata.item.ItemAmount` objects.
     
     .. attribute:: exits
     
-        Available exits from the region. This attribute is dictionary
-        with the exit directions are the keys and destination locations
-        the values.
+        Available exits from :class:`Region`. This attribute is a
+        dictionary with the exit directions are the keys and destination
+        locations values.
         
         Directions are defined in :class:`~atlantis.gamedasta.rules`
         but usually are ``north``, ``northeast``, ``southeast``,
@@ -101,9 +127,14 @@ class Region(JsonSerializable, RichComparable):
         
     .. attribute:: gate
     
-        If a gate exists in the region it is a dictionary with two
+        If a gate exists in :class:`Region` it is a dictionary with two
         keys, *number* which stores gate number, and *is_open* that is
         *True* if the gate is open and *False* if it's closed.
+    
+    .. attribute:: structures
+    
+        List of :class:`~atlantis.gamedata.structure.Structure` objects
+        existing in :class:`Region`.
        
     """
     
@@ -145,6 +176,14 @@ class Region(JsonSerializable, RichComparable):
         
         """
         self.report.append(line)
+    
+    def pop_report_description(self):
+        """Retrieve last line and remove it from item description.
+        
+        :return: last line in the report description.
+        
+        """
+        return self.report.pop()
     
     def set_weather(self, weather, nxtweather,
                       clearskies=False, blizzard=False):
@@ -226,6 +265,19 @@ class Region(JsonSerializable, RichComparable):
         """
         self.gate = {'number': number, 'is_open': is_open}
     
+    def append_structure(self, structure):
+        """Append a :class:`~atlantis.gamedata.structure.Structure`.
+        
+        :param structure:
+            :class:`~atlantis.gamedata.structure.Structure` to be
+            appended to :class:`Region`.
+        
+        """
+        try:
+            self.structures[structure.num] = structure
+        except AttributeError:
+            self.structures = {structure.num: structure}
+    
     # JsonSerializable methods
     def json_serialize(self):
         """Return a serializable version of :class:`Region`.
@@ -278,6 +330,11 @@ class Region(JsonSerializable, RichComparable):
             json_object['gate'] = self.gate
         except AttributeError:
             pass
+        try:
+            json_object['structures'] = [s.json_serialize() \
+                                         for s in self.structures.values()]
+        except AttributeError:
+            pass
                 
         return json_object
     
@@ -318,6 +375,10 @@ class Region(JsonSerializable, RichComparable):
                             for k, loc in json_object['exits'].items()])
         if 'gate' in json_object.keys():
             r.gate = json_object['gate']
+        if 'structures' in json_object.keys():
+            structures = [Structure.json_deserialize(s) \
+                          for s in json_object['structures']]
+            r.structures = dict([(s.num, s) for s in structures])
             
         return r
     

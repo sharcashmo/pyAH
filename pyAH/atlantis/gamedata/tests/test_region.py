@@ -2,6 +2,7 @@
 
 from atlantis.gamedata.region import Region
 from atlantis.gamedata.item import ItemAmount, ItemMarket
+from atlantis.gamedata.structure import Structure
 
 from io import StringIO
 
@@ -36,6 +37,30 @@ class TestRegion(unittest.TestCase):
     
     def test_append_report_description(self):
         """Test Region.append_report_description method."""
+        region = Region((21, 93, None), 'plain', 'Isshire',
+                        2392, 'vikings', 11016,
+                        {'name': 'Durshire', 'type': 'town'})
+        
+        lines = ['plain (21,93) in Isshire, contains Durshire [town], 9836 '
+                 'peasants (vikings), $11016.',
+                 '------------------------------------------------------------',
+                 '  The weather was clear last month; it will be clear next '
+                 'month.',
+                 '  Wages: $15.6 (Max: $3672).',
+                 '  Wanted: 171 grain [GRAI] at $24, 109 livestock [LIVE] at '
+                 '$24, 139 fish [FISH] at $23, 4 leather armor [LARM] at $90, '
+                 'sword [SWOR] at $101.',
+                 '  For Sale: 393 vikings [VIKI] at $62, 78 leaders [LEAD] at '
+                 '$124.',
+                 '  Entertainment available: $649.']
+        
+        for l in lines:
+            region.append_report_description(l)
+        
+        self.assertEqual(region.report, lines)
+    
+    def test_pop_report_description(self):
+        """Test Region.pop_report_description method."""
         region = Region((21, 93, None), 'plain', 'Isshire',
                         2392, 'vikings', 11016,
                         {'name': 'Durshire', 'type': 'town'})
@@ -134,6 +159,17 @@ class TestRegion(unittest.TestCase):
         region.set_gate(12, True)
         
         self.assertEqual(region.gate, {'number': 12, 'is_open': True})
+    
+    def test_append_structure(self):
+        """Test Region.append_structure method."""
+        region = Region((21, 93, None), 'plain', 'Isshire',
+                        2392, 'vikings', 11016,
+                        {'name': 'Durshire', 'type': 'town'})
+        structure = Structure(1, 'Mine', 'Mine')
+        region.append_structure(structure)
+        
+        self.assertEqual(region.structures, {1: structure})
+        
 
     def test_json_methods(self):
         """Test implementation of JsonSerializable interface."""
@@ -180,6 +216,7 @@ class TestRegion(unittest.TestCase):
         region.append_report_description('Exits:')
         region.append_report_description("  North : forest (19,91) in Ny'intu.")
         region.set_exit('north', (19, 91, None))
+        region.append_structure(Structure(1, 'Building', 'Mine'))
         
         io.seek(0)
         io.truncate()
