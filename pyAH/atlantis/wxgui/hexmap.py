@@ -60,6 +60,8 @@ import wx
 import wx.lib.newevent
 import math
 
+from atlantis.wxgui import resources
+
 HexSelected, EVT_HEX_SELECTED = wx.lib.newevent.NewCommandEvent()
 
 ZOOM_VALUES = 6
@@ -200,12 +202,16 @@ class HexMapWindow(wx.ScrolledCanvas):
         
         self._select_pen = wx.Pen(wx.RED, 3, wx.PENSTYLE_SOLID)
         self._thin_pen = wx.GREY_PEN
+        self._start_position = None
+        self._dragging = False
 
         self.Bind(wx.EVT_PAINT, self._OnPaint)
         self.Bind(wx.EVT_SIZE, self._OnSize)
         self.Bind(wx.EVT_SCROLLWIN, self._OnScroll)
-#        self.Bind(wx.EVT_MOTION, self._OnMouseMove)
+        self.Bind(wx.EVT_MOTION, self._OnMouseMove)
+        self.Bind(wx.EVT_LEFT_DOWN, self._OnMouseStartDrag)
         self.Bind(wx.EVT_LEFT_UP, self._OnMouseClick)
+        self.Bind(wx.EVT_MOUSEWHEEL, self._OnMouseWheel)
         
         self.set_zoom(ZOOM_200)
         
@@ -231,7 +237,7 @@ class HexMapWindow(wx.ScrolledCanvas):
         self._redraw()
     
     # Zoom    
-    def set_zoom(self, zoom):
+    def set_zoom(self, zoom, centered_pos=None, centered_hex=None):
         """Set map zoom.
         
         :param zoom: zoom value. It must be one value from ``ZOOM_OUT``
@@ -260,6 +266,9 @@ class HexMapWindow(wx.ScrolledCanvas):
                                     self._map_height + 2 * self._padding)
                 self.SetScrollRate(self._hex_long_side, self._hex_long_side)
                 
+                if centered_pos and centered_hex:
+                    self._center_at(centered_pos, centered_hex)
+                
                 self._redraw()
         else:
             raise IndexError('Zoom out of range')
@@ -278,19 +287,58 @@ class HexMapWindow(wx.ScrolledCanvas):
     
     def _OnMouseClick(self, event):
         """Handle mouse clicks."""
-        target_hex = self._event_position_to_hex(event)
-        if not self._current_hex or target_hex != self._current_hex:
-            self._current_hex = target_hex
-            self._redraw()
-            event = HexSelected(self.GetId())
-            event.hexagon = target_hex
-            wx.QueueEvent(self, event)
+        print('click')
+        if self._dragging:
+            self._dragging = False
+            self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
+        else:
+            target_hex = self._event_position_to_hex(event)
+            if not self._current_hex or target_hex != self._current_hex:
+                self._current_hex = target_hex
+                self._redraw()
+                event = HexSelected(self.GetId())
+                event.hexagon = target_hex
+                wx.QueueEvent(self, event)
+    
+    def _OnMouseStartDrag(self, event):
+        """Start dragging the mouse.
+        
+        Drag will only start once the mouse is moved while button is
+        not released.
+        
+        """
+        print('start drag')
+        self._start_position = event.GetPosition()
+        self._start_view = self.GetViewStart()
         
     def _OnMouseMove(self, event):
-        target_hex = self._event_position_to_hex(event)
-        if not self._current_hex or target_hex != self._current_hex:
-            self._current_hex = target_hex
+        if event.Dragging():
+            if not self._dragging:
+                self.SetCursor(resources.get_drag_cursor())
+                self._dragging = True
+            x0, y0 = self._start_position
+            x1, y1 = event.GetPosition()
+            dx = x1 - x0
+            dy = y1 - y0
+            sx, sy = self._start_view
+            print('start', sx, sy)
+            print('end', sx-dx, sy-dy)
+            print('end?', sx+dx, sy+dy)
+            self.Scroll(sx - dx/self._hex_long_side, sy - dy/self._hex_long_side)
             self._redraw()
+            
+    def _OnMouseWheel(self, event):
+        rotation = event.GetWheelRotation()
+        centered_hex = self._event_position_to_hex(event)
+        centered_pos = event.GetPosition()
+        
+        if rotation > 0:
+            if self._zoom < ZOOM_IN:
+                self.set_zoom(self._zoom + 1, centered_pos, centered_hex)
+        else:
+            if self._zoom > ZOOM_OUT:
+                self.set_zoom(self._zoom - 1, centered_pos, centered_hex)
+        
             
     # Miscellaneus methods with hex math
     def _hex_position(self, hexagon):
@@ -379,6 +427,19 @@ class HexMapWindow(wx.ScrolledCanvas):
             return None
     
     # Drawing methods. These do all the hard work.
+    def _center_at(self, pos, hexagon):
+        """Scroll and center view to ``hexagon``.
+        
+        :param pos: position in the view where the hexagon must be at.
+        :param hexagon: hexagon position as an (x, y) tuple.
+        
+        """
+        x, y = self._hex_position(hexagon)
+        sx, sy = pos
+        
+        self.Scroll((x - sx) / self._hex_long_side,
+                    (y - sy) / self._hex_long_side)
+        
     def _redraw(self):
         """Redraw current window.
         
@@ -426,37 +487,3 @@ class HexMapWindow(wx.ScrolledCanvas):
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.DrawPolygon(self._hexagon, xoffset=xoffset, yoffset=yoffset)
 
-if __name__ == '__main__':
-    class TestFrame(wx.Frame):
-        def __init__(self, parent=None):
-            wx.Frame.__init__(self, parent, size=(500, 500),
-                              title='Test frame', style=wx.DEFAULT_FRAME_STYLE)
-            self.mapwindow = HexMapWindow(self)
-            
-            self.Bind(EVT_HEX_SELECTED, self.OnSelectHex, source=self.mapwindow)
-        
-        def OnSelectHex(self, event):
-            print(event.hexagon)
-
-    app = wx.App()
-    frame = TestFrame(None)
-    
-    frame.mapwindow.add_terrain_type('ocean', wx.BLUE_BRUSH)
-    frame.mapwindow.add_terrain_type('forest', wx.GREEN_BRUSH)
-    frame.mapwindow.add_terrain_type('mountain', wx.RED_BRUSH)
-    frame.mapwindow.add_terrain_type('plain', wx.YELLOW_BRUSH)
-    
-    import random
-    map_data = []
-    for i in range(8):
-        for j in range(i % 2, 8, 2):
-            hmd = HexMapData((i, j),
-                             random.choice(('ocean', 'forest',
-                                            'mountain', 'plain')),
-                             None, None)
-            map_data.append(hmd)
-    
-    frame.mapwindow.set_map_data(map_data)
-
-    frame.Show()
-    app.MainLoop()
