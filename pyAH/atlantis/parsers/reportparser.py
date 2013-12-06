@@ -2579,8 +2579,8 @@ class ReportParser:
         result = re.match(ReportParser._re_str_battle_round_special_deflected,
                           l)
         if result:
-            params = {'unit': {'num': int(result.group('num')),
-                               'name': result.group('name')},
+            params = {'soldier': {'num': int(result.group('num')),
+                                  'name': result.group('name')},
                       'spelldesc': result.group('spelldesc'),
                       'deflected': True}
             self._consumer.battle_round_special(**params)
@@ -2589,8 +2589,8 @@ class ReportParser:
         # Battle round -> 3. special, hit
         result = re.match(ReportParser._re_str_battle_round_special, l)
         if result:
-            params = {'unit': {'num': int(result.group('num')),
-                               'name': result.group('name')},
+            params = {'soldier': {'num': int(result.group('num')),
+                                  'name': result.group('name')},
                       'spelldesc': result.group('spelldesc').strip(),
                       'spelldesc2': result.group('spelldesc2').strip(),
                       'tot': int(result.group('tot')),
@@ -2601,8 +2601,8 @@ class ReportParser:
         # Battle round -> 4. regenerate
         result = re.match(ReportParser._re_str_battle_round_regenerate, l)
         if result:
-            params = {'unit': {'num': int(result.group('num')),
-                               'name': result.group('name')},
+            params = {'soldier': {'num': int(result.group('num')),
+                                  'name': result.group('name')},
                       'regenerate': result.group('regenerate'),
                       'hits': int(result.group('hits')),
                       'maxhits': int(result.group('maxhits'))}

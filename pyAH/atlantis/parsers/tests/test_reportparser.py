@@ -263,7 +263,7 @@ class TestReportParser(unittest.TestCase):
             consumer_mock.reset_mock()
             parser.parse_battle(b)    
             consumer_mock().battle_round_special.assert_called_with(
-                    unit={'num': 397, 'name': 'Mage eart'},
+                    soldier={'num': 397, 'name': 'Mage eart'},
                     spelldesc='shoots a Fireball', deflected=True)
             
             # Special attack, hits
@@ -272,7 +272,7 @@ class TestReportParser(unittest.TestCase):
             consumer_mock.reset_mock()
             parser.parse_battle(b)    
             consumer_mock().battle_round_special.assert_called_with(
-                    unit={'num': 314, 'name': 'Other mage'},
+                    soldier={'num': 314, 'name': 'Other mage'},
                     spelldesc='strikes fear into enemy mounts',
                     spelldesc2='causing', tot=8, spelltarget='mounts to panic')
             
@@ -281,21 +281,21 @@ class TestReportParser(unittest.TestCase):
             consumer_mock.reset_mock()
             parser.parse_battle(b)    
             consumer_mock().battle_round_regenerate.assert_called_with(
-                    unit={'num': 666, 'name': 'Big monster'},
+                    soldier={'num': 666, 'name': 'Big monster'},
                     regenerate='regenerate', hits=272, maxhits=300, damage=8)
             
             b = 'Big monster (666) takes 8 hits bringing it to 252/300.'
             consumer_mock.reset_mock()
             parser.parse_battle(b)    
             consumer_mock().battle_round_regenerate.assert_called_with(
-                    unit={'num': 666, 'name': 'Big monster'},
+                    soldier={'num': 666, 'name': 'Big monster'},
                     regenerate='take', hits=252, maxhits=300, damage=8)
             
             b = 'Big monster (666) takes no hits leaving it at 122/300.'
             consumer_mock.reset_mock()
             parser.parse_battle(b)    
             consumer_mock().battle_round_regenerate.assert_called_with(
-                    unit={'num': 666, 'name': 'Big monster'},
+                    soldier={'num': 666, 'name': 'Big monster'},
                     regenerate='take', hits=122, maxhits=300, damage=0)
             
             # Loses
