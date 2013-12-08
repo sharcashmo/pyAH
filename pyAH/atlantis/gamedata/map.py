@@ -314,6 +314,7 @@ class MapLevel(JsonSerializable, RichComparable):
             level_deep = 0
         
         self.level_type = (level_type, level_deep)
+        self._hex_rect = None
         
     def __iter__(self):
         """Iterate level hexes."""
@@ -333,11 +334,11 @@ class MapLevel(JsonSerializable, RichComparable):
             
         """
         
-        lvl = map_hex.region.location[2]
+        x, y, lvl = map_hex.region.location
         if not lvl:
             lvl = 'surface'
         if lvl == self.name:
-            self.hexes[tuple(map_hex.region.location[:2])] = map_hex
+            self.hexes[(x, y)] = map_hex
         else:
             raise KeyError('region level {} does not match level name {}'.
                            format(lvl, self.name))
@@ -382,6 +383,69 @@ class MapLevel(JsonSerializable, RichComparable):
         
         """
         return self.level_type[1]
+    
+    def get_rect(self):
+        """Get map level rect.
+        
+        Return a four elements tuple determining the rectangle which
+        encloses all known regions in the level. First two elements are
+        the upper left corner (x, y), and the last two elements the
+        lower right corner (x, y).
+        
+        The enclosing rectangle is computed following Atlantis PBEM.
+        Particularly, it takes in account that surface sizes are always
+        multiple of eight, underworld multiple of four, underdeep and
+        nexus multiple of two, and abyss is always four hexes width and
+        height.
+        
+        :return: the four elements tuple which determines level rect.
+        
+        """
+        x = [k[0] for k in self.hexes.keys()]
+        x0, x1 = min(x), max(x)
+        y = [k[1] for k in self.hexes.keys()]
+        y0, y1 = min(y), max(y)
+        
+        if self.level_type[0] == LEVEL_NEXUS:
+            if x1 == 0 and y1 == 0:
+                return (0, 0, 0, 0)
+            else:
+                scale = 2
+        elif self.level_type[0] == LEVEL_ABYSS:
+            return (0, 0, 3, 3)
+        else:
+            scale = 2 ** (4 - self.level_type[0])
+        
+        x0 -= x0 % scale 
+        y0 -= y0 % scale
+        
+        x1 += scale - x1 % scale - 1
+        y1 += scale - y1 % scale - 1
+        
+        return (x0, y0, x1, y1)
+    
+    def wraps_horizontally(self):
+        """Check if the level wraps horizontally.
+        
+        :return: *True* if the level wraps horizontally, *False*
+            otherwise.
+        
+        """
+        if self.level_type[0] in (LEVEL_SURFACE,
+                                  LEVEL_UNDERWORLD, LEVEL_UNDERDEEP):
+            return True
+        else:
+            return False
+    
+    def wraps_vertically(self):
+        """Check if the level wraps vertically.
+        
+        :return: *True* if the level wraps vertically, *False*
+            otherwise.
+        
+        """
+        return False
+        
     
     # JsonSerializable methods
     def json_serialize(self):

@@ -183,6 +183,43 @@ class TestMapLevel(unittest.TestCase):
         
         lvl = MapLevel('very very very deep underworld')
         self.assertEqual(lvl.get_depth(), 4)
+    
+    def test_get_rect(self):
+        """Test MapLevel.get_rect method."""
+        
+        lvl = MapLevel('surface')
+        self.assertEqual(lvl.name, 'surface')
+        self.assertEqual(lvl.hexes, dict())
+        
+        r = Region((21, 93, None), 'plain', 'Isshire', 9836, 'vikings', 11016,
+                   {'name': 'Durshire', 'type': 'town'})
+        mh = MapHex(r, HEX_CURRENT)
+        lvl.set_region(mh)
+        
+        r2 = Region((18, 104, None), 'plain', 'Isshire', 2836, 'sea elves',
+                    3016, None)
+        mh2 = MapHex(r2, HEX_CURRENT)
+        lvl.set_region(mh2)
+        
+        self.assertEqual(lvl.get_rect(), (16, 88, 23, 111))
+    
+    def test_wraps_horizontally(self):
+        """Test MapLevel.wraps_horizontally method."""
+        
+        lvl = MapLevel('surface')
+        self.assertTrue(lvl.wraps_horizontally())
+        
+        lvl = MapLevel('nexus')
+        self.assertFalse(lvl.wraps_horizontally())
+    
+    def test_wraps_vertically(self):
+        """Test MapLevel.wraps_vertically method."""
+        
+        lvl = MapLevel('surface')
+        self.assertFalse(lvl.wraps_vertically())
+        
+        lvl = MapLevel('nexus')
+        self.assertFalse(lvl.wraps_vertically())
 
     def test_json_methods(self):
         """Test implementation of JsonSerializable interface."""
