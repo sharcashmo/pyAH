@@ -22,6 +22,35 @@ either to fix any wrong data from ruleset files or incorporate advanced
 :class:`ItemType`, :class:`StructureType` or :class:`SkillType` as
 they are discovered.
 
+:mod:`atlantis.gamedata.rules` defines the following constant
+attributes:
+
+Directions:
+
+.. attribute:: DIR_NORTH
+
+   north direction.
+
+.. attribute:: DIR_NORTHEAST
+
+   northeast direction.
+
+.. attribute:: DIR_SOUTHEAST
+
+   southeast direction.
+
+.. attribute:: DIR_SOUTH
+
+   south direction.
+
+.. attribute:: DIR_SOUTHWEST
+
+   southwest direction.
+
+.. attribute:: DIR_NORTHWEST
+
+   northwest direction.
+   
 """
 
 from atlantis.helpers.json import json_load_list
@@ -30,6 +59,9 @@ from atlantis.helpers.json import JsonSerializable
 from atlantis.helpers.comparable import RichComparable # For testing
 
 import os.path
+
+DIR_NORTH, DIR_NORTHEAST, DIR_SOUTHEAST, \
+    DIR_SOUTH, DIR_SOUTHWEST, DIR_NORTHWEST = range(6)
     
 class TerrainType(JsonSerializable, RichComparable):
     """Handles different terrain types (swamps, woods, etc).
@@ -163,6 +195,25 @@ class AtlantisRules(JsonSerializable, RichComparable):
         else:
             self.terrain_types = dict()
             self.strings = dict()
+    
+    def get_direction(self, dir_str):
+        """Return the direction represented by a string.
+        
+        Converts a string to the direction it represents.
+        
+        :param dir_str: direction string.
+        
+        :return: direction value. It will be a value from ``DIR_NORTH``
+            to ``DIR_NORTHWEST``.
+        
+        :raise: KeyError if the string is not a valid direction.
+        
+        """
+        for i in range(6):
+            if dir_str.lower() in self.strings['directions'][i]:
+                return i
+        else:
+            raise KeyError('{}: bad direction'.format(dir_str))
     
     def json_serialize(self):
         """Return a serializable version of :class:`AtlantisRules`.

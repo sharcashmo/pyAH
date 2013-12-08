@@ -2,6 +2,7 @@
 
 from atlantis.gamedata.rules import TerrainType
 from atlantis.gamedata.rules import AtlantisRules
+from atlantis.gamedata.rules import DIR_NORTH, DIR_NORTHWEST
 
 import json
 
@@ -31,6 +32,20 @@ class TestTerrainType(unittest.TestCase):
 
 class TestAtlantisRules(unittest.TestCase):
     """Test AtlantisRules class."""
+    
+    def test_get_direction(self):
+        """Test AtlantisRules.get_direction method"""
+        ar = AtlantisRules()
+        ar.strings['directions'] = [['n', 'north'],
+                                    ['ne', 'northeast'],
+                                    ['se', 'southeast'],
+                                    ['s', 'south'],
+                                    ['sw', 'southwest'],
+                                    ['nw', 'northwest']]
+        
+        self.assertEqual(ar.get_direction('n'), DIR_NORTH)
+        self.assertEqual(ar.get_direction('northwest'), DIR_NORTHWEST)
+        self.assertRaises(KeyError, ar.get_direction, 'baddirection')
 
     def test_json_methods(self):
         """Test implementation of JsonSerializeble interface."""
@@ -48,9 +63,12 @@ class TestAtlantisRules(unittest.TestCase):
         str_ = {'months': ['january', 'february', 'march', 'april', 'may',
                            'june', 'july', 'august', 'september', 'october',
                            'november', 'december'],
-                'directions': {'n': 'north', 'ne': 'northeast',
-                               'se': 'southeast', 's': 'south',
-                               'sw': 'southwest', 'nw': 'northwest'}}
+                'directions': [['n', 'north'],
+                               ['ne', 'northeast'],
+                               ['se', 'southeast'],
+                               ['s', 'south'],
+                               ['sw', 'southwest'],
+                               ['nw', 'northwest']]}
         
         ar = AtlantisRules()
         ar.terrain_types['forest'] = tt
