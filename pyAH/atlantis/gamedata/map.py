@@ -96,6 +96,8 @@ classes are :class:`~atlantis.gamedata.map.MapLevel` and
 """
 
 from atlantis.gamedata.region import Region
+from atlantis.gamedata.rules import DIR_NORTH, DIR_NORTHEAST, DIR_SOUTHEAST, \
+    DIR_SOUTH, DIR_SOUTHWEST, DIR_NORTHWEST
 
 from atlantis.helpers.json import JsonSerializable
 from atlantis.helpers.comparable import RichComparable # For testing
@@ -431,11 +433,20 @@ class MapLevel(JsonSerializable, RichComparable):
             otherwise.
         
         """
-        if self.level_type[0] in (LEVEL_SURFACE,
-                                  LEVEL_UNDERWORLD, LEVEL_UNDERDEEP):
-            return True
-        else:
-            return False
+        x0, y0, x1, y1 = self.get_rect()
+        if x0 == 0:
+            left_border = [h.region for k, h in self.hexes.items() if h.status in (HEX_CURRENT, HEX_OLD) and k[0] == x0]
+            for r in left_border:
+                for direction in (DIR_NORTHWEST, DIR_SOUTHWEST):
+                    if direction in r.exits and r.exits[direction][0] == x1:
+                        return True
+        right_border = [h.region for k, h in self.hexes.items() if h.status in (HEX_CURRENT, HEX_OLD) and k[0] == x1]
+        for r in right_border:
+            for direction in (DIR_NORTHEAST, DIR_SOUTHEAST):
+                if direction in r.exits and r.exits[direction][0] == x0:
+                    return True
+        return False
+            
     
     def wraps_vertically(self):
         """Check if the level wraps vertically.

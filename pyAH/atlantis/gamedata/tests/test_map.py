@@ -4,6 +4,7 @@ from atlantis.gamedata.map import MapHex, MapLevel, Map, \
     HEX_CURRENT, HEX_OLD, HEX_EXITS, SEEN_CURRENT, \
     LEVEL_SURFACE, LEVEL_UNDERWORLD, LEVEL_UNDERDEEP
 from atlantis.gamedata.region import Region
+from atlantis.gamedata.rules import DIR_NORTHWEST
 
 from io import StringIO
 
@@ -207,9 +208,29 @@ class TestMapLevel(unittest.TestCase):
         """Test MapLevel.wraps_horizontally method."""
         
         lvl = MapLevel('surface')
+        r = Region((0, 14, None), 'plain', 'Isshire', 9836, 'vikings', 11016,
+                   {'name': 'Durshire', 'type': 'town'})
+        r.set_exit(DIR_NORTHWEST, (15, 13))
+        mh = MapHex(r, HEX_CURRENT)
+        lvl.set_region(mh)
+        
+        r2 = Region((15, 13, None), 'desert', 'Poljom')
+        mh2 = MapHex(r2, HEX_EXITS)
+        lvl.set_region(mh2)
+        
         self.assertTrue(lvl.wraps_horizontally())
         
-        lvl = MapLevel('nexus')
+        lvl = MapLevel('surface')
+        r = Region((10, 14, None), 'plain', 'Isshire', 9836, 'vikings', 11016,
+                   {'name': 'Durshire', 'type': 'town'})
+        r.set_exit(DIR_NORTHWEST, (9, 13))
+        mh = MapHex(r, HEX_CURRENT)
+        lvl.set_region(mh)
+        
+        r2 = Region((9, 13, None), 'desert', 'Poljom')
+        mh2 = MapHex(r2, HEX_EXITS)
+        lvl.set_region(mh2)
+        
         self.assertFalse(lvl.wraps_horizontally())
     
     def test_wraps_vertically(self):
