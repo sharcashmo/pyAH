@@ -64,6 +64,26 @@ constant values:
 .. attribute:: SEEN_CURRENT
 
    Used for ``when`` attributes when info is current.
+   
+.. attribute:: LEVEL_NEXUS
+
+   Level type for ``nexus`` levels. Only one ``nexus`` level exist.
+
+.. attribute:: LEVEL_SURFACE
+
+   Level type for ``surface`` levels. Only one ``surface`` level exists.
+
+.. attribute:: LEVEL_UNDERWORLD
+
+   Level type for ``underworld`` levels.
+
+.. attribute:: LEVEL_UNDERDEEP
+
+   Level type for ``underdeep`` levels.
+
+.. attribute:: LEVEL_ABYSS
+
+   Level type for ``abyss` levels. Only one ``abyss`` level exists.
     
 Main class defined in this module is
 :class:`~atlantis.gamedata.map.Map`, the class that holds data from
@@ -80,7 +100,12 @@ from atlantis.gamedata.region import Region
 from atlantis.helpers.json import JsonSerializable
 from atlantis.helpers.comparable import RichComparable # For testing
 
+import re
+
 HEX_EXITS, HEX_OLD, HEX_CURRENT = range(3)
+
+LEVEL_NEXUS, LEVEL_SURFACE, LEVEL_UNDERWORLD, LEVEL_UNDERDEEP, LEVEL_ABYSS = \
+    range(5)
 
 SEEN_CURRENT = (0, 0)
 
@@ -227,6 +252,9 @@ class MapLevel(JsonSerializable, RichComparable):
         ``underdeep``, ``deep underdeep``, ``very deep underdeep``,
         ``very very deep underdeep`` and so on.
     
+    #. abyss
+        abyss is a special level below underdeep.
+    
     :class:`~atlantis.gamedata.map.MapLevel` has the following public
     attributes:
     
@@ -237,6 +265,11 @@ class MapLevel(JsonSerializable, RichComparable):
     .. attribute:: hexes
     
        Dictionary of :class:`~atlantis.gamedata.map.MapHex` objects.
+    
+    .. attribute:: level_type
+    
+       Tuple with two values, level type (from ``nexus`` to ``abyss``)
+       and level depth.
        
     :class:`.MapLevel` defines an iterator on its hexes. So hexes on
     :class:`!MapLevel` instance lvl can be accessed by::
@@ -247,9 +280,40 @@ class MapLevel(JsonSerializable, RichComparable):
     """
     
     def __init__(self, name):
-        """Create an empty :class:`~atlantis.gamedata.map.MapLevel`."""
+        """Create an empty :class:`~atlantis.gamedata.map.MapLevel`.
+        
+        :param name: name of the level.
+        
+        :raise: :class:`KeyError` if *name* is not a valid level name.
+        
+        """
+        if not re.match(
+                r'(very )*(deep )?(underworld|underdeep)|nexus|surface|abyss',
+                name):
+            raise KeyError('{}: invalid level name'.format(name))
+            
         self.name = name
         self.hexes = dict()
+        
+        if name == 'nexus':
+            level_type = LEVEL_NEXUS
+            level_deep = 0
+        elif name == 'surface':
+            level_type = LEVEL_SURFACE
+            level_deep = 0
+        elif name.endswith('underworld'):
+            level_type = LEVEL_UNDERWORLD
+            dummy = name.split(' ')
+            level_deep = len(dummy) - 1
+        elif name.endswith('underdeep'):
+            level_type = LEVEL_UNDERDEEP
+            dummy = name.split(' ')
+            level_deep = len(dummy) - 1
+        else:
+            level_type = LEVEL_ABYSS
+            level_deep = 0
+        
+        self.level_type = (level_type, level_deep)
         
     def __iter__(self):
         """Iterate level hexes."""
@@ -263,6 +327,7 @@ class MapLevel(JsonSerializable, RichComparable):
         
         :param region: :class:`~atlantis.gamedata.map.MapHex` data
             to be added to the level.
+            
         :raise: :class:`KeyError` if region does not belong to this
             level. 
             
@@ -274,14 +339,15 @@ class MapLevel(JsonSerializable, RichComparable):
         if lvl == self.name:
             self.hexes[tuple(map_hex.region.location[:2])] = map_hex
         else:
-            raise KeyError('wrong level')
+            raise KeyError('region level {} does not match level name {}'.
+                           format(lvl, self.name))
             
     def get_region(self, location):
         """Get a region from the level.
         
         This methods searches the map for the hex at location.
         
-        :param location: Two elements tuple with the location of the
+        :param location: two elements tuple with the location of the
             region in the level.
         :return: the :class:`~atlantis.gamedata.map.MapHex` object, or
             *None* if the region is not in not in the map.
@@ -293,6 +359,29 @@ class MapLevel(JsonSerializable, RichComparable):
             return self.hexes[location]
         else:
             return None
+    
+    def get_type(self):
+        """Get level type.
+        
+        Return the level type.
+        
+        :return: level type. It will be one of ``LEVEL_NEXUS``,
+            ``LEVEL_SURFACE``, ``LEVEL_UNDERWORLD``, ``LEVEL_UNDERDEEP``
+            and ``LEVEL_ABYSS``.
+            
+        """
+        return self.level_type[0]
+
+    def get_depth(self):
+        """Get level depth.
+        
+        Return level depth, relative to its type. So first underworld
+        level will return a depth of 0, not 2.
+        
+        :return: depth of the level relative to its type.
+        
+        """
+        return self.level_type[1]
     
     # JsonSerializable methods
     def json_serialize(self):

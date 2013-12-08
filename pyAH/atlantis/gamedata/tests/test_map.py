@@ -1,7 +1,8 @@
 """Unit tests for atlantis.gamedata.map module."""
 
 from atlantis.gamedata.map import MapHex, MapLevel, Map, \
-    HEX_CURRENT, HEX_OLD, HEX_EXITS, SEEN_CURRENT
+    HEX_CURRENT, HEX_OLD, HEX_EXITS, SEEN_CURRENT, \
+    LEVEL_SURFACE, LEVEL_UNDERWORLD, LEVEL_UNDERDEEP
 from atlantis.gamedata.region import Region
 
 from io import StringIO
@@ -98,6 +99,15 @@ class TestMapLevel(unittest.TestCase):
         lvl = MapLevel('surface')
         self.assertEqual(lvl.name, 'surface')
         self.assertEqual(lvl.hexes, dict())
+        self.assertEqual(lvl.level_type, (LEVEL_SURFACE, 0))
+        
+        lvl = MapLevel('very very very deep underdeep')
+        self.assertEqual(lvl.name, 'very very very deep underdeep')
+        self.assertEqual(lvl.hexes, dict())
+        self.assertEqual(lvl.level_type, (LEVEL_UNDERDEEP, 4))
+        
+        self.assertRaises(KeyError, MapLevel, 'very very deep surface')
+        self.assertRaises(KeyError, MapLevel, 'bad level')
         
     def test_set_region(self):
         """Test MapLevel.set_region method."""
@@ -155,6 +165,24 @@ class TestMapLevel(unittest.TestCase):
         other_list = [mh2, mh]
         
         self.assertSameElements(my_list, other_list)
+    
+    def test_get_type(self):
+        """Test MapLevel.get_type method."""
+        
+        lvl = MapLevel('surface')
+        self.assertEqual(lvl.get_type(), LEVEL_SURFACE)
+        
+        lvl = MapLevel('very very very deep underworld')
+        self.assertEqual(lvl.get_type(), LEVEL_UNDERWORLD)
+    
+    def test_get_depth(self):
+        """Test MapLevel.get_depth method."""
+        
+        lvl = MapLevel('surface')
+        self.assertEqual(lvl.get_depth(), 0)
+        
+        lvl = MapLevel('very very very deep underworld')
+        self.assertEqual(lvl.get_depth(), 4)
 
     def test_json_methods(self):
         """Test implementation of JsonSerializable interface."""
