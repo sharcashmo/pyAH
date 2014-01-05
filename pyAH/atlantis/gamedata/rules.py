@@ -206,7 +206,8 @@ class AtlantisRules(JsonSerializable, RichComparable):
         :return: direction value. It will be a value from ``DIR_NORTH``
             to ``DIR_NORTHWEST``.
         
-        :raise: KeyError if the string is not a valid direction.
+        :raise: :class:`KeyError` if the string is not a valid
+            direction.
         
         """
         for i in range(6):
