@@ -42,7 +42,6 @@ Further details about Atlantis PBEM objects hierarchy can be found at
 """
 
 from atlantis.gamedata.item import ItemAmount, ItemMarket
-
 from atlantis.gamedata.structure import Structure
 
 from atlantis.helpers.json import JsonSerializable
@@ -246,9 +245,13 @@ class Region(JsonSerializable, RichComparable):
     def set_exit(self, direction, location):
         """Set an exit from the region.
         
-        :param direction: a string with the direction of the exit.
+        :param direction: direction of the exit, from ``DIR_NORTH`` to
+            ``DIR_NORTHWEST``, defined at
+            :mod:`atlantis.gamedata.rules`
         :param location: location the exit leads to as a three elements
             tuple.
+        
+        :raise: :class:`KeyError` if *direction* is not valid.
         
         """
         try:

@@ -3,6 +3,7 @@
 from atlantis.gamedata.region import Region
 from atlantis.gamedata.item import ItemAmount, ItemMarket
 from atlantis.gamedata.structure import Structure
+from atlantis.gamedata.rules import DIR_NORTH
 
 from io import StringIO
 
@@ -147,9 +148,9 @@ class TestRegion(unittest.TestCase):
         region = Region((21, 93, None), 'plain', 'Isshire',
                         2392, 'vikings', 11016,
                         {'name': 'Durshire', 'type': 'town'})
-        region.set_exit('north', (21,91, None))
+        region.set_exit(DIR_NORTH, (21,91, None))
         
-        self.assertEqual(region.exits, {'north': (21, 91, None)})
+        self.assertEqual(region.exits, {DIR_NORTH: (21, 91, None)})
     
     def test_set_gate(self):
         """Test Region.set_gate method."""
