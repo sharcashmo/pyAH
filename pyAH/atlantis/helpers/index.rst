@@ -12,6 +12,7 @@ Modules in :ref:`atlantis.helpers` package:
 
 .. autosummary::
    atlantis.helpers.comparable
+   atlantis.helpers.hex_math
    atlantis.helpers.json
  
 Contents of :ref:`atlantis.helpers` package:
@@ -20,4 +21,5 @@ Contents of :ref:`atlantis.helpers` package:
    :maxdepth: 2
    
    comparable
+   hex_math
    json
