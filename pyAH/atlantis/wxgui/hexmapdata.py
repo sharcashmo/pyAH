@@ -17,7 +17,7 @@ Classes defined here are :class:`MapDataHex`, which implements
 
 from atlantis.gamedata.map import HEX_EXITS
 
-from atlantis.wxgui.hexmap import HexMapDataHex, HexMapData
+from atlantis.wxgui.hexmap import HexMapDataLabel, HexMapDataHex, HexMapData
 
 import wx
 import os.path
@@ -55,11 +55,31 @@ class MapDataHex(HexMapDataHex):
         bitmaps = []
         if self._map_hex.region.town:
             bitmap = \
-                self._parent.get_town_bitmap( self._map_hex.region.town['type'])
+                self._parent.get_town_bitmap(self._map_hex.region.town['type'])
             if bitmap:
                 bitmaps.append(bitmap)
         
         return bitmaps
+    
+    
+    def get_labels(self):
+        """Return the labels to be drawn on the hexagon.
+        
+        :return: a list of :class:`HexMapDataLabel` objects.
+        
+        """
+        
+        labels = []
+        
+        if self._map_hex.region.town:
+            font_data = self._parent.get_town_label_data(
+                    self._map_hex.region.town['type'])
+            if font_data:
+                offset, font, colour = font_data 
+                labels.append(HexMapDataLabel(self._map_hex.region.town['name'],
+                                              offset, font, colour))
+        
+        return labels
             
         
     def get_location(self):
@@ -131,9 +151,18 @@ class MapData(HexMapData):
         if self._zoom is None or self._zoom != self._hex_math.get_zoom():
             self._town_bitmaps = dict()
             width, height = self._hex_math.get_hex_bounding_size()
+            scale = self._hex_math.get_scale()
             for town, image in self._town_images.items():
                 im = image.Scale(width, height, wx.IMAGE_QUALITY_HIGH)
                 self._town_bitmaps[town] = im.ConvertToBitmap()
+            
+            for town, label in self._town_labels.items():
+                self._town_labels[town]['offset'] = tuple(
+                        [ v * scale \
+                          for v in self._town_labels[town]['base_offset'] ])
+                self._town_labels[town]['font'] = wx.Font(
+                        wx.FontInfo(label['font_size'] * scale).
+                        FaceName(label['font_face']))
     
     def get_rect(self):
         """Get map rect.
@@ -201,9 +230,19 @@ class MapData(HexMapData):
                  for (terrain, colour) in self._colours.items()])
         
         self._town_images = dict(
-                [(town, wx.Image(os.path.join(theme.get_art_folder(), bname))) \
-                 for (town, bname) in theme._data['towns'].items()])
+                [(town, wx.Image(os.path.join(theme.get_art_folder(),
+                                              town_data['bitmap']))) \
+                 for (town, town_data) in theme._data['towns'].items()])
         self._town_bitmaps = None
+        
+        self._town_labels = dict()
+        for town, town_data in theme._data['towns'].items():
+            td = dict()
+            td['base_offset'] = tuple(town_data['offset'])
+            td['colour'] = wx.Colour(*town_data['colour'])
+            td['font_face'] = town_data['font']
+            td['font_size'] = town_data['size']
+            self._town_labels[town] = td
         
     
     def use_map(self, map_data):
@@ -309,6 +348,27 @@ class MapData(HexMapData):
         try:
             self._redim_bitmaps()
             return self._town_bitmaps[town]
+        except (KeyError, TypeError):
+            return None
+    
+    def get_town_label_data(self, town):
+        """Return data about town name label.
+        
+        :meth:`get_town_label_data` can return *None* if no label exists
+        for the town type, or current zoom level causes towns to not be
+        shown.
+        
+        :param town: town type. Valid values are ``village``, ``town``
+            and ``city``.
+        
+        :return: a three element tuple with ``offset``, a
+            :class:`wx.Font` object and a :class:`wx.Colour` object.
+        
+        """
+        try:
+            self._redim_bitmaps()
+            td = self._town_labels[town]
+            return (td['offset'], td['font'], td['colour'])
         except (KeyError, TypeError):
             return None
         

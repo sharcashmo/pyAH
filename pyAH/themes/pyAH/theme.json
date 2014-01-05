@@ -15,8 +15,26 @@
     "nexus": [0, 147, 217]
   },
   "towns": {
-    "village": "village.png",
-    "town": "town.png",
-    "city": "city.png"
+    "village": {
+      "bitmap": "village.png",
+      "offset": [0, -6],
+      "font": "Comic Sans MS",
+      "size": 6,
+      "colour": [0, 0, 0]
+    },
+    "town": {
+      "bitmap": "town.png",
+      "offset": [0, -6],
+      "font": "Comic Sans MS",
+      "size": 6,
+      "colour": [0, 0, 0]
+    },
+    "city": {
+      "bitmap": "city.png",
+      "offset": [0, -6],
+      "font": "Comic Sans MS",
+      "size": 6,
+      "colour": [0, 0, 0]
+    }
   }
 }

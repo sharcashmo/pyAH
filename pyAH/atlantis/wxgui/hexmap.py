@@ -38,6 +38,34 @@ from atlantis.helpers.hex_math import ZOOM_OUT, ZOOM_IN
 HexSelected, EVT_HEX_SELECTED = wx.lib.newevent.NewCommandEvent()
 
 
+class HexMapDataLabel():
+    """Placeholder for label data to be drawn by :class:`HexMapWindow`.
+    
+    Public attributes in :class:`HexMapDataLabel` are:
+    
+    .. attribute:: label
+       Label string.
+    
+    .. attribute:: offset
+       A tuple with x and y offsets from hexagon center.
+    
+    .. attribute:: font
+       :class:`wx.Font` object to be used when drawing the label.
+    
+    .. attribute:: colour
+       :class:`wx.Colour` object to be used when drawing the label.
+       
+    """
+    
+    def __init__(self, label, offset=(0,0), font=None, colour=None):
+        """Class constructor."""
+        
+        self.label = label
+        self.offset = offset
+        self.font = font
+        self.colour = colour
+        
+
 class HexMapDataHex():
     """Interface to hold data for an :class:`HexMapWindow` hex.
     
@@ -59,6 +87,14 @@ class HexMapDataHex():
         """Return the bitmaps to be drawn on the hexagon.
         
         :return: a list of :class:`wx.Bitmap` objects.
+        
+        """
+        raise NotImplementedError('method must be defined')
+    
+    def get_labels(self):
+        """Return the labels to be drawn on the hexagon.
+        
+        :return: a list of :class:`HexMapDataLabel` objects.
         
         """
         raise NotImplementedError('method must be defined')
@@ -360,6 +396,8 @@ class HexMapWindow(wx.Window):
         if self._map_data:
             for h in self._map_data:
                 self._draw_hex(dc, h)
+            for h in self._map_data:
+                self._draw_hex_labels(dc, h)
         
         self._draw_selected_hex(dc)
         del dc
@@ -373,9 +411,26 @@ class HexMapWindow(wx.Window):
             dc.DrawPolygon(
                 self._hex_math.get_hex_polygon(),
                 xoffset=xoffset, yoffset=yoffset)
+
         for bm in hexagon.get_bitmaps():
             dc.DrawBitmap(bm, xoffset - bm.GetWidth() / 2,
                           yoffset - bm.GetHeight() / 2)
+            
+    def _draw_hex_labels(self, dc, hexagon):
+        xoffset, yoffset = self._hex_math.get_hex_position(
+                hexagon.get_location())
+        for label in hexagon.get_labels():
+            print(dc.GetFullTextExtent(label.label, label.font))
+            width, height = dc.GetFullTextExtent(label.label, label.font)[:2]
+            xlabel, ylabel = label.offset
+            if label.font:
+                dc.SetFont(label.font)
+            if label.colour:
+                dc.SetTextForeground(label.colour)
+            dc.DrawText(label.label,
+                        xoffset + xlabel - width / 2,
+                        yoffset + ylabel - height / 2)
+
     
     def _draw_selected_hex(self, dc):
         if not self._current_hex:
