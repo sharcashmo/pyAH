@@ -8,4 +8,9 @@ _resources_folder = os.path.join(_resources_folder, 'resources')
 
 def get_drag_cursor():
     """Return a :class:`wx.Cursor` to be used for dragging."""
-    return wx.Cursor(wx.Image(os.path.join(_resources_folder, 'drag_cursor.png')))
+    if wx.Platform == '__WXMSW__':
+        return wx.Cursor(
+            wx.Image(os.path.join(_resources_folder, 'drag_cursor.cur')))
+    else:
+        return wx.Cursor(
+            wx.Image(os.path.join(_resources_folder, 'drag_cursor.png')))
