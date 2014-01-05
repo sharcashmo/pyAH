@@ -214,6 +214,15 @@ class HexMath:
         width = self._hexagon[2][0] * 2 + 1
         height = self._hexagon[3][1] * 2 + 1
         return (width, height)
+
+    def get_scale(self):
+        """Get hexagon scale from 100% size.
+        
+        :return: scale relative to 100% size.
+        
+        """
+        
+        return _zoom_sizes[self._zoom] / _zoom_sizes[ZOOM_100]
     
     def point_in_hex(self, point, hexagon):
         """Check if a point is inside an hexagon.

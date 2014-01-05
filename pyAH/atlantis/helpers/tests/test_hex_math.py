@@ -1,7 +1,7 @@
 """Unit tests for :mod:`atlantis.helpers.hex_math`."""
 
 from atlantis.helpers.hex_math import HexMath
-from atlantis.helpers.hex_math import ZOOM_50, ZOOM_100, ZOOM_200
+from atlantis.helpers.hex_math import ZOOM_25, ZOOM_50, ZOOM_100, ZOOM_200
 
 import unittest
 
@@ -114,6 +114,17 @@ class TestHexMath(unittest.TestCase):
         hm = HexMath(6, (16, 16, 31, 31), ZOOM_100)
         
         self.assertEqual(hm.get_hex_bounding_size(), (49, 43))
+    
+    def test_get_scale(self):
+        """Test HexMath.get_scale method."""
+        
+        hm = HexMath(6, (16, 16, 31, 31), ZOOM_200)
+        
+        self.assertEqual(hm.get_scale(), 2)
+        
+        hm.set_zoom(ZOOM_25)
+        
+        self.assertEqual(hm.get_scale(), .25)
     
     def test_point_in_hex(self):
         """Test HexMath.point_in_hex method."""
