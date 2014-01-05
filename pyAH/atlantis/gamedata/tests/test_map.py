@@ -165,7 +165,7 @@ class TestMapLevel(unittest.TestCase):
         my_list = [h for h in lvl]
         other_list = [mh2, mh]
         
-        self.assertSameElements(my_list, other_list)
+        self.assertEqual(my_list, other_list)
     
     def test_get_type(self):
         """Test MapLevel.get_type method."""
