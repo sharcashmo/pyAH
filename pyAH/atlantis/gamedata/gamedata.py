@@ -37,8 +37,18 @@ class GameData(ReportConsumer):
     # Last line read
     _line = None
     
-    def __init__(self):
+    def __init__(self, rules):
+        """:class:`GameData` constructor.
+        
+        Creates a new :class:`GameData` instance.
+        
+        :param rules: a :class:`~atlantis.gamedata.rules.AtlantisRules`
+            object with the set of rules to be used
+            
+        """
+        
         self.map = Map()
+        self.rules = rules
     
     def line(self, line):
         """Handle a new line.
@@ -198,7 +208,8 @@ class GameData(ReportConsumer):
         
         """
         
-        self._region.set_exit(direction.lower(), (xloc, yloc, zloc))
+        self._region.set_exit(self.rules.get_direction(direction),
+                              (xloc, yloc, zloc))
         self.map.add_region_info(Region((xloc, yloc, zloc), terrain, name,
                                         town=town), HEX_EXITS)
     
