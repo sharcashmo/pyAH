@@ -1,76 +1,45 @@
-"""Handle tan hex map scrolled canvas.
+"""Handle an hex map scrolled canvas.
 
 Most important part of an Atlantis PBEM client is the map. Actually you
 could develop a Atlantis PBEM helper that does only show a map, while
 any other action can be done using a text editor.
 
-This module defines an :class:`~atlantis.wxgui.hexmap.HexMapWindow`
+This module defines an :class:`HexMapWindow`
 class that implements a `wxPython <http://www.wxpython.org>`_
-:class:`wx.ScrolledCanvas` that shows an hexagonal map.
+:class:`wx.Window` that shows an hexagonal map.
+
+:class:`HexMapWindow` supports drag scrolling and selecting hex, and
+dispatches events to its listeners.
 
 In addition a set of interfaces are defined to handle data to be shown
 by :class:`HexMapWindow`. These classes are
-:class:`~atlantis.wxgui.hexmap.HexMapDataHex` and
-:class:`~atlantis.wxgui.hexmap.HexMapData` that hold hexagon and map
-data respectively.
-    
-:mod:`atlantis.wxgui.hexmap` defines the following constant attributes:
+:class:`HexMapDataHex` and :class:`HexMapData` that hold hexagon and map
+data respectively. Classes implementing these interfaces will cover the
+gap between pure gui classes in this module and pure Atlantis data in
+:ref:`atlantis.gamedata` package.
 
-Zoom values:
+:mod:`atlantis.wxgui.hexmap` defines the following events.
 
-.. attribute:: ZOOM_25
-   
-   zooms the map at 25% size.
+.. attribute:: HexSelected
 
-.. attribute:: ZOOM_50
-   
-   zooms the map at 50% size.
-   
-.. attribute:: ZOOM_75
-
-   zooms the map at 75% size.
-   
-.. attribute:: ZOOM_100
-
-   zooms the map at 100% (normal) size.
-   
-.. attribute:: ZOOM_150
-  
-   zooms the map at 150% size.
-   
-.. attribute:: ZOOM_200
-   
-   zooms the map at 200% size.
-   
-.. attribute:: ZOOM_OUT
-
-   equivalent to ``ZOOM_25``.
-   
-.. attribute:: ZOOM_IN
-
-   equivalent to ``ZOOM_200``.
-
-.. attribute:: ZOOM_VALUES
-
-   total number of zoom values
+   An hexagon has been selected. Its event binder is
+   ``EVT_HEX_SELECTED``.
 
 """
 
 import wx
 import wx.lib.newevent
-import math
 
 from atlantis.wxgui import resources
+from atlantis.helpers.hex_math import HexMath
+
+from atlantis.helpers.hex_math import ZOOM_OUT, ZOOM_IN
 
 HexSelected, EVT_HEX_SELECTED = wx.lib.newevent.NewCommandEvent()
 
-ZOOM_VALUES = 6
-ZOOM_25, ZOOM_50, ZOOM_75, ZOOM_100, ZOOM_150, ZOOM_200 = range(ZOOM_VALUES)
-ZOOM_OUT = ZOOM_25
-ZOOM_IN = ZOOM_200
 
 class HexMapDataHex():
-    """Interface to hold data for an HexMapWindow hex.
+    """Interface to hold data for an :class:`HexMapWindow` hex.
     
     This interface should be implemented by data willing to be shown
     by :class:`~atlantis.wxgui.hexmap.HexMapWindow`.
@@ -103,8 +72,9 @@ class HexMapDataHex():
         """
         raise NotImplementedError('method must be defined')
 
+
 class HexMapData():
-    """Interface to hold data for an HexMapWindow map.
+    """Interface to hold data for an :class:`HexMapWindow` map.
     
     This interface should be implemented by data willing to be shown
     by :class:`HexMapWindow`.
@@ -122,101 +92,88 @@ class HexMapData():
         """ 
         raise NotImplementedError('method must be defined')
 
-    def set_zoom(self, zoom):
-        """Set map zoom.
+    def use_hex_math(self, hex_math):
+        """Set hex math object.
         
-        Map zoom is used by :class:`HexMapDataHex` themed class to
-        choose with elements have to be shown (in case some of them
-        are only shown in inner zoom values) and to resize bitmaps if
-        needed.
+        Set the :class:`atlantis.helpers.hex_math.HexMath` object used
+        by :class:`HexMapDataHex` themed class to choose with elements
+        have to be shown (in case some of them are only shown in inner
+        zoom values) and to resize bitmaps if needed.
         
-        :param zoom: zoom value, must be between ``ZOOM_OUT`` and
-            ``ZOOM_IN``.
+        :param hex_math: :class:`~atlantis.helpers.hex_math.HexMath`
+            object.
+        
+        """
+        raise NotImplementedError('method must be defined')
+    
+    def get_rect(self):
+        """Get map rect.
+        
+        Return a four elements tuple determining the rectangle which
+        encloses all known regions in the level. First two elements are
+        the upper left corner (x, y), and the last two elements the
+        lower right corner (x, y).
+        
+        :return: a tuple with the rectangle which encloses known
+            regions.
+        
+        """
+        raise NotImplementedError('method must be defined')
+    
+    def wraps_horizontally(self):
+        """Check if map wraps horizontally.
+        
+        :return: *True* if map wraps horizontally, *False* otherwise.
+        
+        """
+        raise NotImplementedError('method must be defined')
+    
+    def wraps_vertically(self):
+        """Check if map wraps vertically.
+        
+        :return: *True* if map wraps vertically, *False* otherwise.
         
         """
         raise NotImplementedError('method must be defined')
     
 
-class HexMapWindow(wx.ScrolledCanvas):
-    """Hex map canvas.
+class HexMapWindow(wx.Window):
+    """Hex map window.
     
-    Implements a :class:`wx.ScrolledCanvas` that shows an hex-based
+    Implements a scrollable :class:`wx.Window` that shows an hex-based
     map.
     
     """
     
-    _min_size = 6
-    """Hex side size for zoomed out map."""
-    
-    _hex_sizes = [r * 6 for r in [1, 2, 3, 4, 6, 8]]
-    """Hex side sizes for each zoom value."""
-    
-    _x_size = 128
-    _y_size = 128
-    
-    _padding = _min_size
-    """Map padding in pixels."""
-    
-    _ratio = math.sin(math.radians(60))
-    """Half the height of a side 1 hexagon."""
-    
-    _normalized_hexagon = ((-.5, -1), (.5, -1), (1, 0),
-                           (.5, 1), (-.5, 1), (-1, 0))
-    """Skeleton of an hexagon polygon.
-    
-    x values have to be multiplied by hexside size, and y values by
-    its half height value (sin(60) + hexside).
-    
-    """
-    
-    # Map data
-    _map_data = None
-    
-    # These values have to be set
-    _zoom = None
-    """Current zoom value"""
-    
-    _hex_long_side = None
-    """Side size of the hexagon."""
-    
-    _hex_short_side = None
-    """Half height of the hexagon."""
-    
-    _map_width = None
-    """Map width in pixels, padding included."""
-     
-    _map_height = None
-    """Map height in pixels, padding included."""
-    
-    _current_hex = None
-    """Current selected hex."""
-    
-    _buffer = None
-    """Image buffer for double buffering."""
-
     def __init__(self, *args, **kwargs):
         kwargs['style'] = kwargs.setdefault('style',
                                             wx.NO_FULL_REPAINT_ON_RESIZE) | \
                           wx.FULL_REPAINT_ON_RESIZE
-        wx.ScrolledCanvas.__init__(self, *args, **kwargs)
+        wx.Window.__init__(self, *args, **kwargs)
         
+        self.SetDoubleBuffered(True)
+        
+        self._hex_math = HexMath()
+        
+        self._map_data = None
+        
+        self._current_hex = None
         self._select_pen = wx.Pen(wx.RED, 3, wx.PENSTYLE_SOLID)
         self._thin_pen = wx.GREY_PEN
         self._start_position = None
         self._dragging = False
+        self._view_start = (0, 0)
+        self._buffer = None
 
         self.Bind(wx.EVT_PAINT, self._OnPaint)
         self.Bind(wx.EVT_SIZE, self._OnSize)
-        self.Bind(wx.EVT_SCROLLWIN, self._OnScroll)
         self.Bind(wx.EVT_MOTION, self._OnMouseMove)
         self.Bind(wx.EVT_LEFT_DOWN, self._OnMouseStartDrag)
         self.Bind(wx.EVT_LEFT_UP, self._OnMouseClick)
         self.Bind(wx.EVT_MOUSEWHEEL, self._OnMouseWheel)
         
-        self.set_zoom(ZOOM_200)
+        self.zoom_and_center(ZOOM_IN)
         
-    ## Map data
-    
     # Map data
     def set_map_data(self, map_data):
         """Set map data to be drawn.
@@ -233,45 +190,33 @@ class HexMapWindow(wx.ScrolledCanvas):
         
         """
         self._map_data = map_data
-        self._map_data.set_zoom(self._zoom)
-        self._redraw()
+        self._map_data.use_hex_math(self._hex_math)
+        self._hex_math.set_map_rect(map_data.get_rect())
+        self.zoom_and_center()
     
     # Zoom    
-    def set_zoom(self, zoom, centered_pos=None, centered_hex=None):
+    def zoom_and_center(self, zoom=None, centered_pos=None, centered_hex=None):
         """Set map zoom.
         
         :param zoom: zoom value. It must be one value from ``ZOOM_OUT``
             to ``ZOOM_IN``.
         
         """
-        if zoom in range(ZOOM_VALUES):
-            if zoom != self._zoom:
-                self._zoom = zoom
-                
-                if self._map_data:
-                    self._map_data.set_zoom(zoom)
-                
-                self._hex_long_side = self._hex_sizes[zoom]
-                self._hex_short_side = round(self._hex_long_side * self._ratio)
-                
-                self._hexagon = [(x * self._hex_long_side,
-                                  y * self._hex_short_side) \
-                                 for (x, y) in self._normalized_hexagon]
-                
-                self._map_width = (self._x_size * 1.5 + .5) * \
-                                  self._hex_long_side
-                self._map_height = (self._y_size + 1) * self._hex_short_side
-                
-                self.SetVirtualSize(self._map_width + 2 * self._padding,
-                                    self._map_height + 2 * self._padding)
-                self.SetScrollRate(self._hex_long_side, self._hex_long_side)
-                
-                if centered_pos and centered_hex:
-                    self._center_at(centered_pos, centered_hex)
-                
-                self._redraw()
+        if zoom is None:
+            zoom = self._hex_math.get_zoom()
         else:
-            raise IndexError('Zoom out of range')
+            self._hex_math.set_zoom(zoom)
+        
+        if not centered_pos:
+            sx, sy = self.GetClientSize()
+            centered_pos = (sx / 2, sy / 2)
+            
+        if not centered_hex:
+            centered_hex = self._hex_math.get_center_hex() 
+            
+        self._center_at(centered_pos, centered_hex)
+        
+        self._redraw()
 
     # Event handlers
     def _OnPaint(self, event):
@@ -280,25 +225,36 @@ class HexMapWindow(wx.ScrolledCanvas):
 
     def _OnSize(self, event):
         self._redraw()
-
-    def _OnScroll(self, event):
-        """Handle scroll events."""
-        wx.CallAfter(self._redraw)
     
     def _OnMouseClick(self, event):
         """Handle mouse clicks."""
-        print('click')
+        self._start_position = None
         if self._dragging:
-            self._dragging = False
-            self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
+            self._stop_dragging()
         else:
-            target_hex = self._event_position_to_hex(event)
+            target_hex = self._hex_math.get_position_hex(
+                    self._event_logical_position(event))
             if not self._current_hex or target_hex != self._current_hex:
                 self._current_hex = target_hex
                 self._redraw()
                 event = HexSelected(self.GetId())
                 event.hexagon = target_hex
                 wx.QueueEvent(self, event)
+                
+    def _start_dragging(self):
+        try:
+            self._mouse_timer.Stop()
+            del(self._mouse_timer)
+        except AttributeError:
+            pass
+        if self._start_position:
+            self.SetCursor(resources.get_drag_cursor())
+            self._dragging = True
+            
+    def _stop_dragging(self):
+        if self._dragging:
+            self._dragging = False
+            self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
     
     def _OnMouseStartDrag(self, event):
         """Start dragging the mouse.
@@ -307,126 +263,60 @@ class HexMapWindow(wx.ScrolledCanvas):
         not released.
         
         """
-        print('start drag')
         self._start_position = event.GetPosition()
-        self._start_view = self.GetViewStart()
+        self._mouse_timer = wx.CallLater(200, self._start_dragging)
+        event.Skip()
         
     def _OnMouseMove(self, event):
         if event.Dragging():
             if not self._dragging:
-                self.SetCursor(resources.get_drag_cursor())
-                self._dragging = True
+                self._start_dragging()
+                
             x0, y0 = self._start_position
             x1, y1 = event.GetPosition()
             dx = x1 - x0
             dy = y1 - y0
-            sx, sy = self._start_view
-            print('start', sx, sy)
-            print('end', sx-dx, sy-dy)
-            print('end?', sx+dx, sy+dy)
-            self.Scroll(sx - dx/self._hex_long_side, sy - dy/self._hex_long_side)
+            sx, sy = self._view_start
+            self._start_position = (x1, y1)
+            self._view_start = (sx+dx, sy+dy)
             self._redraw()
             
     def _OnMouseWheel(self, event):
         rotation = event.GetWheelRotation()
-        centered_hex = self._event_position_to_hex(event)
+        centered_hex = self._hex_math.get_position_hex(
+                self._event_logical_position(event))
         centered_pos = event.GetPosition()
         
+        print('wheel on', self._event_logical_position(event), centered_hex, centered_pos)
+        
         if rotation > 0:
-            if self._zoom < ZOOM_IN:
-                self.set_zoom(self._zoom + 1, centered_pos, centered_hex)
+            if self._hex_math.get_zoom() < ZOOM_IN:
+                self.zoom_and_center(self._hex_math.get_zoom() + 1,
+                                     centered_pos, centered_hex)
         else:
-            if self._zoom > ZOOM_OUT:
-                self.set_zoom(self._zoom - 1, centered_pos, centered_hex)
+            if self._hex_math.get_zoom() > ZOOM_OUT:
+                self.zoom_and_center(self._hex_math.get_zoom() - 1,
+                                     centered_pos, centered_hex)
         
-            
-    # Miscellaneus methods with hex math
-    def _hex_position(self, hexagon):
-        """Compute hex position on canvas.
-        
-        This method return position of hex center as an (x, y) tuple.
-        Canvas padding is taken into account, while scrolling is not.
-        Position is virtual position in the Scrolled canvas.
-        
-        Parameter:
-            hexagon
-                Hexagon coordinates as an (x, y) tuple.
-        
-        Returns:
-            Hexagon position.
-        
-        """
-        
-        x, y = hexagon
-        xoffset = (1.5 * x + 1) * self._hex_long_side + self._padding
-        yoffset = self._hex_short_side * (y + 1) + self._padding
-        return (xoffset, yoffset)
+
+    # Operations with DC
+    def _DoPrepareDC(self, dc):
+        """Set DC origin"""
+        dc.SetDeviceOrigin(*self._view_start)
     
-    def _is_in_hex(self, point, hexagon):
-        """Check if point is inside the hex.
-        
-        This method returns *True* if point is inside the hex, and
-        *False* otherwise.
-        
-        Parameters:
-            point
-                Point to check, as an (x, y) tuple.
-            hexagon
-                Hexagon against the check is done, as (x, y)
-                coordinates.
-        
-        """
-        xhex, yhex = self._hex_position(hexagon)
-        xpoint, ypoint = point
-        q2x = abs(xpoint - xhex)
-        q2y = abs(ypoint - yhex)
-        # Check against bounding rect
-        if q2x > self._hex_long_side or q2y > self._hex_short_side:
-            return False
-        # Check against the hexagon
-        if (self._hex_long_side * self._hex_short_side) < \
-           (self._hex_short_side * q2x + .5 * self._hex_long_side * q2y):
-            return False
-        else:
-            return True
-    
-    def _event_position_to_hex(self, event):
-        """Return hex coordinates of the event.
-        
-        This method returns the hexagon coordinates where the event
-        has been fired.
-        
-        Parameter:
-            event
-                Event fired from which hex coordinates are needed.
-        
-        Returns:
-            Hexagon coordinates as an (x, y) tuple, or *None* if the
-            event is fired on no valid hexagon.
-            
-        """
+    def _event_logical_position(self, event):
+        """Return event logical position"""
         dc = wx.ClientDC(self)
-        self.DoPrepareDC(dc)
-        xe, ye = event.GetLogicalPosition(dc)
-        x = xe - self._padding - self._hex_long_side
-        y = ye - self._padding - self._hex_short_side
-        x = round(x / 1.5 / self._hex_long_side)
-        if x % 2:
-            y = round(y / self._hex_short_side / 2 - .5) * 2 + 1
-        else:
-            y = round(y / self._hex_short_side / 2) * 2
-        # Check if it's valid hex and, finally, if point is inside
-        for xr in (x-1, x, x+1):
-            for yr in (y-1, y, y+1):
-                if xr in range(self._x_size) and \
-                   yr in range(self._y_size) and \
-                   (xr + yr) % 2 == 0 and \
-                   self._is_in_hex((xe, ye), (xr, yr)):
-                    return (xr, yr)
-        else:
-            return None
+        self._DoPrepareDC(dc)
+        return event.GetLogicalPosition(dc)
     
     # Drawing methods. These do all the hard work.
+    def _logical_position(self, pos):
+        """Return logical position"""
+        x, y = pos
+        sx, sy = self._view_start
+        return (x + sx, y + sy)
+    
     def _center_at(self, pos, hexagon):
         """Scroll and center view to ``hexagon``.
         
@@ -434,11 +324,10 @@ class HexMapWindow(wx.ScrolledCanvas):
         :param hexagon: hexagon position as an (x, y) tuple.
         
         """
-        x, y = self._hex_position(hexagon)
-        sx, sy = pos
-        
-        self.Scroll((x - sx) / self._hex_long_side,
-                    (y - sy) / self._hex_long_side)
+        x, y = self._hex_math.get_hex_position(hexagon)
+        px, py = pos
+        self._view_start = (px - x, py - y)
+        self._redraw()
         
     def _redraw(self):
         """Redraw current window.
@@ -447,21 +336,27 @@ class HexMapWindow(wx.ScrolledCanvas):
         can be caused by:
         
         - The user has resized the window.
+        
         - The window has been scrolled.
+        
         - Selected hex has changed.
+        
         - Zoom level has changed.
         
         """
         w, h = self.GetClientSize()
-        self._buffer = wx.Bitmap.FromRGBA(w, h, 0xff, 0xff, 0xff, 0)
-        self._draw_map()
-        self.Update()
-
-    def _draw_map(self):
+        self._buffer = wx.Bitmap.FromRGBA(w, h, 0xff, 0xff, 0xff,
+                                          wx.IMAGE_ALPHA_OPAQUE)
+        
         dc = wx.BufferedDC(wx.ClientDC(self), self._buffer,
                            wx.BUFFER_CLIENT_AREA)
-        self.DoPrepareDC(dc)
+        self._DoPrepareDC(dc)
         
+        self._draw_map(dc)
+        
+        self.Update()
+
+    def _draw_map(self, dc):
         if self._map_data:
             for h in self._map_data:
                 self._draw_hex(dc, h)
@@ -470,11 +365,14 @@ class HexMapWindow(wx.ScrolledCanvas):
         del dc
     
     def _draw_hex(self, dc, hexagon):
-        xoffset, yoffset = self._hex_position(hexagon.get_location())
+        xoffset, yoffset = self._hex_math.get_hex_position(
+                hexagon.get_location())
         dc.SetPen(self._thin_pen)
         for br in hexagon.get_brushes():
             dc.SetBrush(br)
-            dc.DrawPolygon(self._hexagon, xoffset=xoffset, yoffset=yoffset)
+            dc.DrawPolygon(
+                self._hex_math.get_hex_polygon(),
+                xoffset=xoffset, yoffset=yoffset)
         for bm in hexagon.get_bitmaps():
             dc.DrawBitmap(bm, xoffset - bm.GetWidth() / 2,
                           yoffset - bm.GetHeight() / 2)
@@ -482,8 +380,10 @@ class HexMapWindow(wx.ScrolledCanvas):
     def _draw_selected_hex(self, dc):
         if not self._current_hex:
             return
-        xoffset, yoffset = self._hex_position(self._current_hex)
+        xoffset, yoffset = self._hex_math.get_hex_position(self._current_hex)
         dc.SetPen(self._select_pen)
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
-        dc.DrawPolygon(self._hexagon, xoffset=xoffset, yoffset=yoffset)
+        dc.DrawPolygon(
+                self._hex_math.get_hex_polygon(),
+                xoffset=xoffset, yoffset=yoffset)
 

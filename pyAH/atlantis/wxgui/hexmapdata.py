@@ -19,10 +19,6 @@ from atlantis.gamedata.map import HEX_EXITS
 
 from atlantis.wxgui.hexmap import HexMapDataHex, HexMapData
 
-# from atlantis.wxgui.hexmap import ZOOM_VALUES, ZOOM_25, ZOOM_50,
-#     ZOOM_75, ZOOM_100, ZOOM_150, ZOOM_200, ZOOM_OUT, ZOOM_IN
-
-
 import wx
 import os.path
 
@@ -90,6 +86,7 @@ class MapData(HexMapData):
     """
     def __init__(self):
         """Empty constructor"""
+        self._hex_math = None
         self._zoom = None
         self._theme = None
         self._map_data = None
@@ -108,31 +105,74 @@ class MapData(HexMapData):
         """
         
         if self._map_data and self._current_level and self._theme:
-            lvl = self._map_data.get_level(self._current_level)
-            for mh in lvl:
+            for mh in self._current_level:
                 yield MapDataHex(mh, self)
     
-    def set_zoom(self, zoom):
-        """Set map zoom.
+    def use_hex_math(self, hex_math):
+        """Set hex math object.
         
-        This method implements :meth:`!set_zoom` in
+        This method implements :meth:`!use_hex_math` in
         :class:`atlantis.wxgui.hexmap.HexMapData` interface.
-        Map zoom is used by :class:`HexMapDataHex` themed class to
-        choose with elements have to be shown (in case some of them
-        are only shown in inner zoom values) and to resize bitmaps if
-        needed.
         
-        :param zoom: zoom value, must be between ``ZOOM_OUT`` and
-            ``ZOOM_IN``.
+        Set the :class:`atlantis.helpers.hex_math.HexMath` object used
+        by :class:`HexMapDataHex` themed class to choose with elements
+        have to be shown (in case some of them are only shown in inner
+        zoom values) and to resize bitmaps if needed.
+        
+        :param hex_math: :class:`~atlantis.helpers.hex_math.HexMath`
+            object.
         
         """
-        self._zoom = zoom
-        print('Aqui')
-        self._town_bitmaps = dict()
-        for town, image in self._town_images.items():
-            print('creando bitmap', town)
-            im = image.Scale(32, 32, wx.IMAGE_QUALITY_HIGH)
-            self._town_bitmaps[town] = im.ConvertToBitmap()
+        self._hex_math = hex_math
+        self._redim_bitmaps()
+        
+    def _redim_bitmaps(self):
+        """Dimensionate bitmaps to current zoom level."""
+        if self._zoom is None or self._zoom != self._hex_math.get_zoom():
+            self._town_bitmaps = dict()
+            width, height = self._hex_math.get_hex_bounding_size()
+            for town, image in self._town_images.items():
+                im = image.Scale(width, height, wx.IMAGE_QUALITY_HIGH)
+                self._town_bitmaps[town] = im.ConvertToBitmap()
+    
+    def get_rect(self):
+        """Get map rect.
+        
+        This method implements :meth:`!get_rect` in
+        :class:`atlantis.wxgui.hexmap.HexMapData` interface.
+        
+        Return a four elements tuple determining the rectangle which
+        encloses all known regions in the level. First two elements are
+        the upper left corner (x, y), and the last two elements the
+        lower right corner (x, y).
+        
+        :return: a tuple with the rectangle which encloses known
+            regions.
+        
+        """
+        return self._current_level.get_rect()
+    
+    def wraps_horizontally(self):
+        """Check if map wraps horizontally.
+        
+        This method implements :meth:`!wraps_horizontally` in
+        :class:`atlantis.wxgui.hexmap.HexMapData` interface.
+        
+        :return: *True* if map wraps horizontally, *False* otherwise.
+        
+        """
+        return self._current_level.wraps_horizontally()
+    
+    def wraps_vertically(self):
+        """Check if map wraps vertically.
+        
+        This method implements :meth:`!wraps_vertically` in
+        :class:`atlantis.wxgui.hexmap.HexMapData` interface.
+        
+        :return: *True* if map wraps vertically, *False* otherwise.
+        
+        """
+        return self._current_level.wraps_vertically()
     
     def use_theme(self, theme):
         """Set the theme used for this map.
@@ -190,12 +230,13 @@ class MapData(HexMapData):
         
         """
         self._map_data = map_data
+            
         if not self._current_level:
             levels = list(map_data.levels.keys())
             if 'surface' in levels:
-                self._current_level = 'surface'
+                self._current_level = map_data.get_level('surface')
             elif levels:
-                self._current_level = levels[0]
+                self._current_level = map_data.get_level(levels[0])
             else:
                 self._current_level = None
     
@@ -223,11 +264,11 @@ class MapData(HexMapData):
         if level_name:
             levels = list(self._map_data.levels.keys())
             if level_name in levels:
-                self._current_level = level_name
+                self._current_level = self._map_data.get_level(level_name)
             else:
                 raise KeyError('level {} does not exist'.format(level_name))
         else:
-            return self._current_level
+            return self._current_level.name
     
     def get_brushes(self, terrain, status):
         """Return the brushes used for a terrain and a status.
@@ -266,6 +307,7 @@ class MapData(HexMapData):
         
         """
         try:
+            self._redim_bitmaps()
             return self._town_bitmaps[town]
         except (KeyError, TypeError):
             return None
