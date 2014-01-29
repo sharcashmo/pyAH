@@ -1,14 +1,24 @@
 """This module implements an Atlantis game data manager.
 
-Main class defined in this module is
-:class:`~atlantis.gamedata.gamedata.GameData`, a class that implements
-:class:`atlantis.parsers.reportparser.ReportConsumer` and thus will
-hold all data read from Atlantis PBEM reports."""
+Main class defined in this module is :class:`GameData`. This class has
+two major functions:
+
+#. :class:`GameData` implements
+   :class:`~atlantis.parsers.reportparser.ReportConsumer` interface, so
+   data parsed from report is directly readed by this class.
+
+#. :class:`GameData` acts as the repository of one turn data. It holds
+   faction data, map data, structure, items and skills definitions, etc.
+    
+"""
 
 from atlantis.parsers.reportparser import ReportConsumer
 from atlantis.gamedata.map import Map, HEX_EXITS
 from atlantis.gamedata.region import Region
 from atlantis.gamedata.structure import Structure
+from atlantis.gamedata.rules import StructureType
+
+_SHIP_ID_OFFSET = 100
 
 class GameData(ReportConsumer):
     """This class hold all data of an Atlantis PBEM game.
@@ -49,6 +59,8 @@ class GameData(ReportConsumer):
         
         self.map = Map()
         self.rules = rules
+        self.structures = dict()
+        self.unknown_structures = list()
     
     def line(self, line):
         """Handle a new line.
@@ -277,7 +289,12 @@ class GameData(ReportConsumer):
         if self._descr_in_region:
             self._region.pop_report_description()
             self._descr_in_region = False
-            
+        
+        if num >= _SHIP_ID_OFFSET:
+            self.update_structure_definitions(structure_type, ship=True)
+        else:
+            self.update_structure_definitions(structure_type, ship=False)
+
         structure = Structure(num, name, structure_type, items,
                               incomplete, about_to_decay,
                               needs_maintenance, inner_location,
@@ -286,8 +303,67 @@ class GameData(ReportConsumer):
         
         self._structure = structure
         self._region.append_structure(structure)
-        print('Appended', structure.name, 'to hex', self._region.location)
+        
+    def structure(self, name, structuretype,
+                  monster=False, nomonstergrowth=False, canenter=False,
+                  nobuildable=False,
+                  protect=None, defense=None, maxMages=None,
+                  specials=None, sailors=None, productionAided=None,
+                  neverdecay=False, maxMaintenance=None, maxMonthlyDecay=None,
+                  maintFactor=None, maintItem=None):
+        """Handle a structure definition.
+        
+        Structures are places were units can enter into. Main types
+        of structures are buildings and ships. Some of them have
+        inner locations, like passages into underworld, some are monster
+        lairs, forts and castles, production buildings like mines, etc.
+        
+        :param name: name of the structure type.
+        :param structuretype: type of the structure. Can be
+            **building**, **ship** or **group of ships**.
+        :param monster: *True* if it's a monster lair.
+        :param nomonstergrowth: *True* if monsters in this structure
+            won't regenerate.
+        :param canenter: *True* if player units can enter the structure.
+        :param nobuildable: *True* if the structure cannot be built by
+            players.
+        :param protect: number of soldiers the structure can protect.
+        :param defense: defense bonus granted to the soldiers protected
+            by the structure. It's a dictionary where keys are the
+            attack types and values the bonus granted.
+        :param maxMages: number of mages that can study inside the
+            structure magic skills beyond 2nd level.
+        :param specials: list of special effects affected by the
+            structure. Each element in the list is a dictionary with two
+            keys:
+            
+            *specialname*
+                name of the special effect affected of the structure.
+            *affected*
+                if *True*, units inside this structure are affected by
+                the special. If *False*, units inside the structure are
+                not affected by it.
+        :param sailors: number of sailors needed to sail the ship. Only
+            for ship structures.
+        :param productionAided: *names* string of the item the structure
+            aids to produce. *entertainment* is an allowed special value.
+        :param neverdecay: *True* if the structure never decay.
+        :param maxMaintenance: maximum points of damage taken by the
+            structure before it begins to decay.
+        :param maxMonthlyDecay: maximum damage the structure will take
+            per month as decay.
+        :param maintFactor: damage repaired per unit of material used.
+        :param maintItem: *name* string of the item used to repair the
+            structure. *wood or stone* is a valid special value.
+            
+        """
+        
+        self.structures[name] = StructureType(name, structuretype)
+        self.update_structure_definitions(structuretype)
         
     # Methods handling definitions
     def update_item_definitions(self, items):
+        pass
+    
+    def update_structure_definitions(self, structure_type, ship=False):
         pass
