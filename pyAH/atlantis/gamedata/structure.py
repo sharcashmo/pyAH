@@ -35,7 +35,7 @@ from atlantis.helpers.json import JsonSerializable
 from atlantis.helpers.comparable import RichComparable # For testing
 
 class Structure(JsonSerializable, RichComparable):
-    """Holds all data of a structure.
+    """Hold all data of a structure.
     
     :class:`Structure` has the following public attributes:
     
@@ -111,7 +111,9 @@ class Structure(JsonSerializable, RichComparable):
         
         :param num: unique number identifying the :class:`Structure`.
         :param name: name of the :class:`Structure`.
-        :param structure_type: type of the :class:`Structure`.
+        :param structure_type: name of the
+            :class:`~atlantis.gamedata.rules.StructureType`, as **Mine**
+            or **Castle**.
         :param items: list of
             :class:`~atlantis.gamedata.item.ItemAmount` elements
             that build the :class:`Structure`.

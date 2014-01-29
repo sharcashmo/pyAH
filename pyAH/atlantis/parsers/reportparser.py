@@ -1086,76 +1086,53 @@ class ReportConsumer:
                    maintFactor=None, maintItem=None):
         """Handle a structure definition.
         
-        Structures are places were units can enter into. Main types of
-        structures are buildings and ships. Some of them have inner
-        locations, like passages into underworld, some are monster
+        Structures are places were units can enter into. Main types
+        of structures are buildings and ships. Some of them have
+        inner locations, like passages into underworld, some are monster
         lairs, forts and castles, production buildings like mines, etc.
         
-        Structures are defined by the following parameters:
-            name
-                Name of the structure type.
-            structuretype
-                Type of the structure. Can be **building**, **ship** or
-                **group of ships**.
-            monster
-                If *True* it's a monster lair. Defaults to *False*.
-            nomonstergrowth
-                It *True* monster in this structure won't regenerate.
-                Defaults to *False*
-            canenter
-                If *True* player units can enter the structure.
-                Defaults to *False*.
-            nobuildable
-                If *True* the structure cannot be build by players.
-                Defaults to *False*.
-            protect
-                Number of soldiers the structure can protect. Defaults
-                to *None*.
-            defense
-                Defense bonus granted to the units protected by the
-                structure. It is a dicionary where keys are the attack
-                types and values the bonus granted.
-            maxMages
-                Number of mages that can study inside the structure
-                magic skills beyond 2nd level.
-            specials
-                List of special effects affected by the structure. Each
-                element in the list is a dictionary with two keys:
-                    *specialname*
-                        Name of the special effect affected by the
-                        structure.
-                    *affected*
-                        If *True*, units inside this building are
-                        affected by the special. If *False*, units
-                        inside the building are not affected by it.
-            sailors
-                For ships, number of sailors needed to sail the ship.
-                Defaults to *None*.
-            productionAided
-                names of the item the structure aids to produce.
-                *entertainment* is an allowed special value.
-            neverdecay
-                If *True* the structure never decay. Defaults to
-                *False*.
-            maxMaintenance
-                Maximum points of damage taken by the structure before
-                it begins to decaul. Defauls to *None*.
-            maxMonthlyDecay
-                Maximum damage the structure will take per month as
-                decay. Defaults to *None*.
-            maintFactor
-                Damage repaired per unit of material used. Defaults to
-                *None*.
-            maintItem
-                Name of the item used to repair the structure.
-                *wood or stone* is a valid special value. Defaults to
-                *None*.
-                
+        :param name: name of the structure type.
+        :param structuretype: type of the structure. Can be
+            **building**, **ship** or **group of ships**.
+        :param monster: *True* if it's a monster lair.
+        :param nomonstergrowth: *True* if monsters in this structure
+            won't regenerate.
+        :param canenter: *True* if player units can enter the structure.
+        :param nobuildable: *True* if the structure cannot be built by
+            players.
+        :param protect: number of soldiers the structure can protect.
+        :param defense: defense bonus granted to the soldiers protected
+            by the structure. It's a dictionary where keys are the
+            attack types and values the bonus granted.
+        :param maxMages: number of mages that can study inside the
+            structure magic skills beyond 2nd level.
+        :param specials: list of special effects affected by the
+            structure. Each element in the list is a dictionary with two
+            keys:
+            
+            *specialname*
+                name of the special effect affected of the structure.
+            *affected*
+                if *True*, units inside this structure are affected by
+                the special. If *False*, units inside the structure are
+                not affected by it.
+        :param sailors: number of sailors needed to sail the ship. Only
+            for ship structures.
+        :param productionAided: *names* string of the item the structure
+            aids to produce. *entertainment* is an allowed special value.
+        :param neverdecay: *True* if the structure never decay.
+        :param maxMaintenance: maximum points of damage taken by the
+            structure before it begins to decay.
+        :param maxMonthlyDecay: maximum damage the structure will take
+            per month as decay.
+        :param maintFactor: damage repaired per unit of material used.
+        :param maintItem: *name* string of the item used to repair the
+            structure. *wood or stone* is a valid special value.
+        
+        :raise: :class:`NotImplementedError` if not overriden.
+            
         """
-        print('object', name, structuretype, monster, nomonstergrowth,
-              canenter, nobuildable, protect, defense, maxMages,
-              specials, sailors, productionAided, neverdecay,
-              maxMaintenance, maxMonthlyDecay, maintFactor, maintItem)
+        raise NotImplementedError('ReportConsumer method must be overriden')
     
     def faction(self, name, num, factype=None):
         """Handle faction name and type.
@@ -1489,7 +1466,7 @@ class ReportConsumer:
         """
         raise NotImplementedError('ReportConsumer method must be overriden')
     
-    def region_structure(self, num, name, structure_type, items=None,
+    def region_structure(self, num, name, structuretype, items=None,
                            incomplete=False, about_to_decay=False,
                            needs_maintenance=False, inner_location=False,
                            has_runes=False, can_enter=True):
@@ -3068,18 +3045,16 @@ class ReportParser:
             return
         
     def parse_structure(self, l):
-        """Parse an object description line.
+        """Parse an *structure* description line.
         
-        As with skills and items, structure descriptions appear at the
-        very beginning of the report when they're first discovered or
-        when the player issues a show order.
+        As with *skills* and *items*, *structure* descriptions appear at
+        the very beginning of the *report* when they're first discovered
+        or when the player issues a *show* order.
         
         When found, :meth:`ReportConsumer.structure`is called. See
-        :class:`Reportconsumer` documentation for further details.
+        :class:`ReportConsumer` documentation for further details.
         
-        Parameter:
-            l
-                Line to be parsed.
+        :param l: line to be parsed.
         
         """
         
