@@ -1504,7 +1504,8 @@ class TestReportParser(unittest.TestCase):
                  'structure.'
             parser.parse_structure(ob)
             consumer_mock().structure.assert_called_with(
-                    name='Fleet', structuretype='group of ships', canenter=True)
+                    name='Fleet', structuretype='group of ships',
+                    canenter=True)
                  
             # Lair
             ob = 'Ruin: This is a building. Monsters can potentially lair in ' \
