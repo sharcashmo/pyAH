@@ -323,8 +323,6 @@ class HexMapWindow(wx.Window):
                 self._event_logical_position(event))
         centered_pos = event.GetPosition()
         
-        print('wheel on', self._event_logical_position(event), centered_hex, centered_pos)
-        
         if rotation > 0:
             if self._hex_math.get_zoom() < ZOOM_IN:
                 self.zoom_and_center(self._hex_math.get_zoom() + 1,
@@ -420,7 +418,6 @@ class HexMapWindow(wx.Window):
         xoffset, yoffset = self._hex_math.get_hex_position(
                 hexagon.get_location())
         for label in hexagon.get_labels():
-            print(dc.GetFullTextExtent(label.label, label.font))
             width, height = dc.GetFullTextExtent(label.label, label.font)[:2]
             xlabel, ylabel = label.offset
             if label.font:
