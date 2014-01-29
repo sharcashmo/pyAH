@@ -36,5 +36,148 @@
       "size": 6,
       "colour": [0, 0, 0]
     }
+  },
+  "structures": {
+    "fleet": {
+      "bitmap": "ship.png"
+    },
+    "tower": {
+      "bitmap": "castle.png"
+    },
+    "fort": {
+      "bitmap": "castle.png"
+    },
+    "castle": {
+      "bitmap": "castle.png"
+    },
+    "citadel": {
+      "bitmap": "castle.png"
+    },
+    "shaft": {
+      "bitmap": null
+    },
+    "lair": {
+      "bitmap": "lair.png"
+    },
+    "ruin": {
+      "bitmap": "lair.png"
+    },
+    "cave": {
+      "bitmap": "lair.png"
+    },
+    "demon pit": {
+      "bitmap": "lair.png"
+    },
+    "crypt": {
+      "bitmap": "lair.png"
+    },
+    "magical tower": {
+      "bitmap": "castle.png"
+    },
+    "magical fortress": {
+      "bitmap": "castle.png"
+    },
+    "magical castle": {
+      "bitmap": "castle.png"
+    },
+    "magical citadel": {
+      "bitmap": "castle.png"
+    },
+    "mine": {
+      "bitmap": null
+    },
+    "farm": {
+      "bitmap": null
+    },
+    "ranch": {
+      "bitmap": null
+    },
+    "timber yard": {
+      "bitmap": null
+    },
+    "inn": {
+      "bitmap": null
+    },
+    "quarry": {
+      "bitmap": null
+    },
+    "island": {
+      "bitmap": "lair.png"
+    },
+    "derelict ship": {
+      "bitmap": "lair.png"
+    },
+    "cavern": {
+      "bitmap": "lair.png"
+    },
+    "whirpool": {
+      "bitmap": "lair.png"
+    },
+    "road n": {
+      "bitmap": "road_n.png"
+    },
+    "road nw": {
+      "bitmap": "road_nw.png"
+    },
+    "road ne": {
+      "bitmap": "road_ne.png"
+    },
+    "road sw": {
+      "bitmap": "road_sw.png"
+    },
+    "road se": {
+      "bitmap": "road_se.png"
+    },
+    "road s": {
+      "bitmap": "road_s.png"
+    },
+    "temple": {
+      "bitmap": null
+    },
+    "mystic quarry": {
+      "bitmap": null
+    },
+    "arcane mine": {
+      "bitmap": null
+    },
+    "forest preserve": {
+      "bitmap": null
+    },
+    "sacred grove": {
+      "bitmap": null
+    },
+    "black tower": {
+      "bitmap": "castle.png"
+    },
+    "gateway": {
+      "bitmap": null
+    },
+    "longship": {
+      "bitmap": "ship.png"
+    },
+    "raft": {
+      "bitmap": "ship.png"
+    },
+    "cog": {
+      "bitmap": "ship.png"
+    },
+    "galleon": {
+      "bitmap": "ship.png"
+    },
+    "galley": {
+      "bitmap": "ship.png"
+    },
+    "corsair": {
+      "bitmap": "ship.png"
+    },
+    "balloon": {
+      "bitmap": "ship.png"
+    },
+    "airship": {
+      "bitmap": "ship.png"
+    },
+    "cloudship": {
+      "bitmap": "ship.png"
+    }
   }
 }
