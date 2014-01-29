@@ -306,8 +306,9 @@ class HexMapWindow(wx.Window):
     def _OnMouseMove(self, event):
         if event.Dragging():
             if not self._dragging:
+                self._start_position = event.GetPosition()
                 self._start_dragging()
-                
+            
             x0, y0 = self._start_position
             x1, y1 = event.GetPosition()
             dx = x1 - x0
