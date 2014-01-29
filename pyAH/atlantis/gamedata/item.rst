@@ -12,6 +12,7 @@ Public classes in :mod:`atlantis.gamedata.item` module:
    Item
    ItemAmount
    ItemMarket
+   ItemUnit
  
 :class:`~atlantis.gamedata.item.Item`
 +++++++++++++++++++++++++++++++++++++
@@ -31,5 +32,12 @@ Public classes in :mod:`atlantis.gamedata.item` module:
 +++++++++++++++++++++++++++++++++++++++++++
 
 .. autoclass:: atlantis.gamedata.item.ItemMarket()
+   :members:
+   :special-members: __init__
+ 
+:class:`~atlantis.gamedata.item.ItemUnit`
++++++++++++++++++++++++++++++++++++++++++++
+
+.. autoclass:: atlantis.gamedata.item.ItemUnit()
    :members:
    :special-members: __init__

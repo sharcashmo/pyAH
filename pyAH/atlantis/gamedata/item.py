@@ -12,14 +12,15 @@ Main class in :mod:`atlantis.gamedata.item` is :class:`ItemDef`, which
 holds and handle all data about an item type definition.
 
 In addition some more classes are defined to hold actual items in game,
-as they're :class:`Item`, :class:`ItemAmount` and
-:class:`ItemMarket`.
+as they're :class:`Item`, :class:`ItemAmount`, :class:`ItemMarket` and
+:class:`ItemUnit`
 
 """
 
 
 from atlantis.helpers.json import JsonSerializable
 from atlantis.helpers.comparable import RichComparable # For testing
+
 
 class Item(JsonSerializable, RichComparable):
     """Item reference.
@@ -82,6 +83,7 @@ class Item(JsonSerializable, RichComparable):
         """
         return Item(**json_object)
 
+
 class ItemAmount(Item):
     """Item amount.
     
@@ -137,6 +139,7 @@ class ItemAmount(Item):
         """
         return ItemAmount(**json_object)
 
+
 class ItemMarket(ItemAmount):
     """Items in market.
     
@@ -152,7 +155,7 @@ class ItemMarket(ItemAmount):
     
     """
     def __init__(self, abr, amt, price, name=None, names=None):
-        """:class:`ItemAmount` constructor.
+        """:class:`ItemMarket` constructor.
         
         :param abr: abbreviature of the item.
         :param amt: number of items.
@@ -190,3 +193,68 @@ class ItemMarket(ItemAmount):
         
         """
         return ItemMarket(**json_object)
+
+
+class ItemUnit(ItemAmount):
+    """Items in an unit.
+    
+    This class holds information about items in an unit. This class
+    extends :class:`ItemAmount` adding information about it's
+    finished of unfinished, and if it's an illusion.
+    
+    Public attributes in addition to those defined in
+    :class:`ItemAmount`:
+    
+    .. attribute:: unfinished
+    
+       Amount of work needed to finish the item.
+    
+    .. attribute:: illusion
+    
+       *True* if the item is an illusion.
+    
+    """
+    def __init__(self, abr, amt, name=None, names=None,
+                 unfinished=0, illusion=False):
+        """:class:`ItemUnit` constructor.
+        
+        :param abr: abbreviature of the item.
+        :param amt: number of items.
+        :param name: singular name of the item.
+        :param names: plural name of the item.
+        :param unfinished: amount of work needed to finish the item.
+        :param illusion: *True* if the item is an illusion.
+        
+        """
+        
+        ItemAmount.__init__(self, abr, amt, name, names)
+        self.unfinished = unfinished
+        self.illusion = illusion
+    
+    def json_serialize(self):
+        """Return a serializable version of :class:`ItemUnit`.
+        
+        :return: a *dict* representing the :class:`ItemUnit`
+            object.
+        
+        .. seealso::
+           :class:`atlantis.helpers.json.JsonSerializable`
+        
+        """
+        return {'abr': self.abr, 'name': self.name, 'names': self.names,
+                'amt': self.amt, 'unfinished': self.unfinished,
+                'illusion': self.illusion}
+    
+    @staticmethod
+    def json_deserialize(json_object):
+        """Load :class:`ItemUnit` from a deserialized json object.
+
+        :param json_object: object returned by :func:`json.load`.
+        
+        :return: the :class:`ItemUnit` object from json data.
+        
+        .. seealso::
+           :class:`atlantis.helpers.json.JsonSerializable`
+        
+        """
+        return ItemUnit(**json_object)

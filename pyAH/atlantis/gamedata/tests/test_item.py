@@ -1,11 +1,12 @@
 """Unit tests for module atlantis.gamedata.item."""
 
-from atlantis.gamedata.item import Item, ItemAmount, ItemMarket
+from atlantis.gamedata.item import Item, ItemAmount, ItemMarket, ItemUnit
 
 from io import StringIO
 
 import json
 import unittest
+
 
 class TestItem(unittest.TestCase):
     """Test Item class."""
@@ -122,6 +123,64 @@ class TestItemMarket(unittest.TestCase):
         io.seek(0)
         it_new = ItemMarket.json_deserialize(json.load(io))
         self.assertEqual(it, it_new)
+        
+
+class TestItemUnit(unittest.TestCase):
+    """Test ItemUnit class."""
+    
+    def test_constructor(self):
+        """Test ItemUnit constructor.
+        
+        Test both forms of constructors, with ``name`` and ``names`` as
+        parameters.
+        
+        """
+        it = ItemUnit('HORS', 5, names='horses')
+        self.assertEqual(it.abr, 'HORS')
+        self.assertEqual(it.amt, 5)
+        self.assertEqual(it.names, 'horses')
+        self.assertIsNone(it.name)
+        self.assertEqual(it.unfinished, 0)
+        self.assertFalse(it.illusion)
+        
+        it = ItemUnit('GALL', 1, name='galleon', unfinished=3)
+        self.assertEqual(it.abr, 'GALL')
+        self.assertEqual(it.amt, 1)
+        self.assertEqual(it.name, 'galleon')
+        self.assertIsNone(it.names)
+        self.assertEqual(it.unfinished, 3)
+        self.assertFalse(it.illusion)
+        
+        it = ItemUnit('IWOLF', 3, names='wolves', illusion=True)
+        self.assertEqual(it.abr, 'IWOLF')
+        self.assertEqual(it.amt, 3)
+        self.assertEqual(it.names, 'wolves')
+        self.assertIsNone(it.name)
+        self.assertEqual(it.unfinished, 0)
+        self.assertTrue(it.illusion)
+
+    def test_json_methods(self):
+        """Test implementation of JsonSerializeble interface."""
+        io = StringIO()
+        
+        it = ItemUnit('HORS', 5, names='horses')
+        json.dump(it, io, default=ItemMarket.json_serialize)
+        io.seek(0)
+        it_new = ItemMarket.json_deserialize(json.load(io))
+        self.assertEqual(it, it_new)
+        
+        it = ItemUnit('GALL', 1, name='galleon', unfinished=3)
+        json.dump(it, io, default=ItemMarket.json_serialize)
+        io.seek(0)
+        it_new = ItemMarket.json_deserialize(json.load(io))
+        self.assertEqual(it, it_new)
+        
+        it = ItemUnit('IWOLF', 3, names='wolves', illusion=True)
+        json.dump(it, io, default=ItemMarket.json_serialize)
+        io.seek(0)
+        it_new = ItemMarket.json_deserialize(json.load(io))
+        self.assertEqual(it, it_new)
+
 
 if __name__ == '__main__':
     unittest.main()
