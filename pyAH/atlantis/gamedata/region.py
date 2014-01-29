@@ -50,7 +50,10 @@ from atlantis.helpers.comparable import RichComparable # For testing
 class Region(JsonSerializable, RichComparable):
     """Holds all data of an Atlantis PBEM region.
     
-    :class:`Region` has the following public attributes:
+    :class:`Region` has the following public attributes. Some attributes
+    may not exist if its information is unknown. Note that this is not
+    the same than having this attributes with a *None* value, what would
+    mean that the entity is known to be not existing in the region:
     
     .. attribute:: report
     
@@ -85,12 +88,14 @@ class Region(JsonSerializable, RichComparable):
        Dictionary with *name* and *type* of the present town if any.
     
     .. attribute:: weather
-    
+       
        Dictionary with *last*, *next*, *clearskies* and *blizzard*.
        First two keys are weather for *last* and *next* month
        respectively, while the latter are flags telling if last
        month weather was caused by ``Clear Skies`` or ``Blizzard``
        spells.
+    
+       .. note:: This attribute may not exist.
     
     .. attribute:: wages
     
@@ -98,6 +103,8 @@ class Region(JsonSerializable, RichComparable):
        *productivity* and *amount* values. The first is the amount
        received per man and month by work, while the latter is the
        maximum total amount available in :class:`Region`.
+    
+       .. note:: This attribute may not exist.
        
     .. attribute:: market
     
@@ -105,35 +112,47 @@ class Region(JsonSerializable, RichComparable):
        dictionary with at most two keys, *sell* and *buy*. Values are a
        list of :class:`~atlantis.gamedata.item.ItemMarket` objects.
     
+       .. note:: This attribute may not exist.
+    
     .. attribute:: entertainment
     
        Entertainment available in :class:`Region`.
+    
+       .. note:: This attribute may not exist.
     
     .. attribute:: products
     
        Available production in :class:`Region`. This attribute is a list
        of :class:`~atlantis.gamedata.item.ItemAmount` objects.
     
+       .. note:: This attribute may not exist.
+    
     .. attribute:: exits
     
-        Available exits from :class:`Region`. This attribute is a
-        dictionary with the exit directions are the keys and destination
-        locations values.
+       Available exits from :class:`Region`. This attribute is a
+       dictionary with the exit directions are the keys and destination
+       locations values.
         
-        Directions are defined in :class:`~atlantis.gamedasta.rules`
-        but usually are ``north``, ``northeast``, ``southeast``,
-        ``south``, ``southwest`` and ``northwest``.
+       Directions are defined in :class:`~atlantis.gamedasta.rules`
+       but usually are ``north``, ``northeast``, ``southeast``,
+       ``south``, ``southwest`` and ``northwest``.
+    
+       .. note:: This attribute may not exist.
         
     .. attribute:: gate
     
-        If a gate exists in :class:`Region` it is a dictionary with two
-        keys, *number* which stores gate number, and *is_open* that is
-        *True* if the gate is open and *False* if it's closed.
+       If a gate exists in :class:`Region` it is a dictionary with two
+       keys, *number* which stores gate number, and *is_open* that is
+       *True* if the gate is open and *False* if it's closed.
+    
+       .. note:: This attribute may not exist.
     
     .. attribute:: structures
     
-        List of :class:`~atlantis.gamedata.structure.Structure` objects
-        existing in :class:`Region`.
+       List of :class:`~atlantis.gamedata.structure.Structure` objects
+       existing in :class:`Region`.
+    
+       .. note:: This attribute may not exist.
        
     """
     
@@ -166,6 +185,7 @@ class Region(JsonSerializable, RichComparable):
         self.racenames = racenames
         self.wealth = wealth
         self.town = town
+        
         self.report = []
         
     def append_report_description(self, line):
