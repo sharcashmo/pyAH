@@ -59,6 +59,15 @@ class MapDataHex(HexMapDataHex):
             if bitmap:
                 bitmaps.append(bitmap)
         
+        try:
+            for s in self._map_hex.region.structures.values():
+                bitmap = \
+                    self._parent.get_structure_bitmap(s.structure_type.lower())
+                if bitmap:
+                    bitmaps.append(bitmap)
+        except AttributeError:
+            pass
+        
         return bitmaps
     
     
@@ -150,8 +159,10 @@ class MapData(HexMapData):
         """Dimensionate bitmaps to current zoom level."""
         if self._zoom is None or self._zoom != self._hex_math.get_zoom():
             self._town_bitmaps = dict()
+            self._structure_bitmaps = dict()
             width, height = self._hex_math.get_hex_bounding_size()
             scale = self._hex_math.get_scale()
+            
             for town, image in self._town_images.items():
                 im = image.Scale(width, height, wx.IMAGE_QUALITY_HIGH)
                 self._town_bitmaps[town] = im.ConvertToBitmap()
@@ -163,6 +174,10 @@ class MapData(HexMapData):
                 self._town_labels[town]['font'] = wx.Font(
                         wx.FontInfo(label['font_size'] * scale).
                         FaceName(label['font_face']))
+            
+            for structure_type, image in self._structure_images.items():
+                im = image.Scale(width, height, wx.IMAGE_QUALITY_HIGH)
+                self._structure_bitmaps[structure_type] = im.ConvertToBitmap()
     
     def get_rect(self):
         """Get map rect.
@@ -243,6 +258,15 @@ class MapData(HexMapData):
             td['font_face'] = town_data['font']
             td['font_size'] = town_data['size']
             self._town_labels[town] = td
+        
+        self._structure_images = dict(
+                [(structure_type,
+                  wx.Image(os.path.join(theme.get_art_folder(),
+                                        structure_data['bitmap']))) \
+                 for (structure_type, structure_data) \
+                    in theme._data['structures'].items() \
+                    if structure_data['bitmap'] is not None])
+        self._structure_bitmaps = None
         
     
     def use_map(self, map_data):
@@ -341,7 +365,7 @@ class MapData(HexMapData):
         :param town: town type. Valid values are ``village``, ``town``
             and ``city``.
         
-        :return: a :class:`wx.Bitmap` object, or **None** if no bitmap
+        :return: a :class:`wx.Bitmap` object, or *None* if no bitmap
             has to be shown.
         
         """
@@ -369,6 +393,26 @@ class MapData(HexMapData):
             self._redim_bitmaps()
             td = self._town_labels[town]
             return (td['offset'], td['font'], td['colour'])
+        except (KeyError, TypeError):
+            return None
+        
+    def get_structure_bitmap(self, structure_type):
+        """Return the bitmap used to show a structure type.
+        
+        :meth:`get_structure_bitmap` can return *None* if there's no
+        icon for the structure type, or current zoom level causes
+        the structure type to not be shown.
+        
+        :param structure_type: *name* of the structure type to be
+            shown. Examples are ``Mine``, ``Timber Yard`` or ``Fort``.
+        
+        :return: a :class:`wx.Bitmap` object, or *None* if no bitmap
+            has to be shown.
+        
+        """
+        try:
+            self._redim_bitmaps()
+            return self._structure_bitmaps[structure_type]
         except (KeyError, TypeError):
             return None
         

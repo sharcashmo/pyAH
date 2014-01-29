@@ -10,6 +10,7 @@ Public classes in :mod:`atlantis.gamedata.rules` module:
    :nosignatures:
    
    TerrainType
+   StructureType
    AtlantisRules
  
 :class:`~atlantis.gamedata.rules.TerrainType`
@@ -19,7 +20,14 @@ Public classes in :mod:`atlantis.gamedata.rules` module:
    :members:
    :special-members: __init__
    :member-order: bysource
-   
+
+:class:`~atlantis.gamedata.rules.StructureType`
++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. autoclass:: atlantis.gamedata.rules.StructureType
+   :members:
+   :special-members: __init__
+   :member-order: bysource
  
 :class:`~atlantis.gamedata.rules.AtlantisRules`
 +++++++++++++++++++++++++++++++++++++++++++++++
