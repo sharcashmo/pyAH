@@ -1,8 +1,10 @@
 """Unit tests for module atlantis.gamedata.rules."""
 
 from atlantis.gamedata.rules import TerrainType
+from atlantis.gamedata.rules import StructureType
 from atlantis.gamedata.rules import AtlantisRules
 from atlantis.gamedata.rules import DIR_NORTH, DIR_NORTHWEST
+from atlantis.gamedata.rules import STRUCTURE_BUILDING
 
 import json
 
@@ -29,6 +31,27 @@ class TestTerrainType(unittest.TestCase):
         tt_new = TerrainType.json_deserialize(json.load(io))
         
         self.assertEqual(tt, tt_new)
+
+class TestStructureType(unittest.TestCase):
+    """Test StructureType class."""
+    
+    def test_json_methods(self):
+        """Test implementation of JsonSerializable interface."""
+        io = StringIO()
+        
+        st = StructureType(name='Magical Citadel',
+                           structuretype=STRUCTURE_BUILDING,
+                           canenter=True, protect=1250,
+                           defense={'melee': 2, 'energy': 2, 'spirit': 2,
+                                    'weather': 2, 'riding': 2, 'ranged': 2},
+                           maxMages=100,
+                           specials={'specialname': 'earthquake',
+                                     'affected': False})
+        json.dump(st, io, default=StructureType.json_serialize)
+        io.seek(0)
+        st_new = StructureType.json_deserialize(json.load(io))
+        
+        self.assertEqual(st, st_new)
 
 class TestAtlantisRules(unittest.TestCase):
     """Test AtlantisRules class."""
@@ -60,6 +83,15 @@ class TestAtlantisRules(unittest.TestCase):
                           {'product': 'yew', 'chance': 25, 'amount': 5}],
                 normal_races=['viki', 'welf'], coastal_races=['self'])
         
+        st = StructureType(name='Magical Citadel',
+                           structuretype=STRUCTURE_BUILDING,
+                           canenter=True, protect=1250,
+                           defense={'melee': 2, 'energy': 2, 'spirit': 2,
+                                    'weather': 2, 'riding': 2, 'ranged': 2},
+                           maxMages=100,
+                           specials={'specialname': 'earthquake',
+                                     'affected': False})
+        
         str_ = {'months': ['january', 'february', 'march', 'april', 'may',
                            'june', 'july', 'august', 'september', 'october',
                            'november', 'december'],
@@ -72,6 +104,7 @@ class TestAtlantisRules(unittest.TestCase):
         
         ar = AtlantisRules()
         ar.terrain_types['forest'] = tt
+        ar.structures['Magical Citadel'] = st
         ar.strings = str_
         
         json.dump(ar, io, default=AtlantisRules.json_serialize)

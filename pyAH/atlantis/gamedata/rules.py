@@ -1,11 +1,11 @@
 """Handles Atlantis PBEM world rules.
 
-:class:`AtlantisRules` includes all those immutable data that controls
-how Atlantis PBEM world behaves and is shown. :class:`AtlantisRules`
-doesn't include *real* objects, even if immutable (as the
-:class:`~atlantis.gamedata.map.Map`) but it will hold information about
-the different :class:`TerrainType`, :class:`ItemType`, :class:`RaceType`
-and so on.
+Main class in this module is :class:`AtlantisRules`. This class includes
+all those immutable data that controls how Atlantis PBEM world behaves
+and is shown. :class:`AtlantisRules` doesn't include *real* objects,
+even if immutable (as the :class:`~atlantis.gamedata.map.Map`) but it
+will hold information about the different :class:`TerrainType`,
+:class:`ItemType`, :class:`RaceType` and so on.
 
 Most of this data can be guessed from Atlantis game manual, as the
 :class:`RaceType` in the game and which :class:`SkillType` can
@@ -22,8 +22,12 @@ either to fix any wrong data from ruleset files or incorporate advanced
 :class:`ItemType`, :class:`StructureType` or :class:`SkillType` as
 they are discovered.
 
-:mod:`atlantis.gamedata.rules` defines the following constant
-attributes:
+:class:`StructureType` holds data about a type of
+:class:`~atlantis.gamedata.structure.Structure`.
+While there can be multiple ``mine`` :class:`Structure` objects in the
+game, they all have in common the same :class:`StructureType`, ``mine``.
+
+This module also defines the following public attributes:
 
 Directions:
 
@@ -50,6 +54,20 @@ Directions:
 .. attribute:: DIR_NORTHWEST
 
    northwest direction.
+
+Structure types:
+
+.. attribute:: STRUCTURE_BUILDING
+
+   Constant for :class:`StructureType` that are buildings.
+   
+.. attribute:: STRUCTURE_SHIP
+
+   Constant for :class:`StructureType` that are ships.
+   
+.. attribute:: STRUCTURE_FLEET
+
+   Constant for :class:`StructureType` that are fleets of ships.
    
 """
 
@@ -62,6 +80,10 @@ import os.path
 
 DIR_NORTH, DIR_NORTHEAST, DIR_SOUTHEAST, \
     DIR_SOUTH, DIR_SOUTHWEST, DIR_NORTHWEST = range(6)
+
+STRUCTURE_BUILDING = 'building'
+STRUCTURE_SHIP = 'ship'
+STRUCTURE_FLEET = 'group of ships'
     
 class TerrainType(JsonSerializable, RichComparable):
     """Handles different terrain types (swamps, woods, etc).
@@ -150,6 +172,166 @@ class TerrainType(JsonSerializable, RichComparable):
         
         """
         return TerrainType(**json_object)
+    
+
+class StructureType(JsonSerializable, RichComparable):
+    """Hold definition of a structure type.
+    
+    :class:`StructureType` has the following public attributes:
+    
+    .. attribute:: name
+       
+       Name of the :class:`StructureType`. This name is used to identify
+       the :class:`StructureType`.
+    
+    .. attribute:: structuretype
+    
+       Generic type of the structure. Structure can be a
+       ``STRUCTURE_BUILDING``, a ``STRUCTURE_SHIP`` or a
+       ``STRUCTURE_FLEET``.
+    
+    .. attribute:: monster
+    
+       *True* if it's a monster lair.
+    
+    .. attribute:: nomonstergrowth
+    
+       *True* if monsters in this structure won't regenerate.
+    
+    .. attribute:: protect
+    
+       number of soldiers the structure can protect.
+    
+    .. attribute:: defense
+    
+       defense bonus granted to the soldiers protected by the structure.
+       It's a dictionary where keys are the attack types and values the
+       bonus granted.
+       
+    .. attribute:: maxMages
+    
+       number of mages that can study inside the structure magic skills
+       beyond 2nd level.
+    
+    .. attribute:: specials
+    
+       list of special effects affected by the structure. Each element
+       in the list is a dictionary with two keys:
+       
+           *specialname*
+               name of the special effect affected of the structure.
+           *affected*
+               if *True*, units inside this structure are affected by
+               the special. If *False*, units inside the structure are
+               not affected by it.
+    .. attribute:: sailors
+    
+       number of sailors needed to sail the ship. Only for ship
+       structures.
+    
+    .. attribute:: productionAided
+    
+       *names* string of the item the structure aids to produce.
+       *entertainment* is an allowed special value.
+    
+    .. attribute:: neverdecay
+       
+       *True* if the structure never decay.
+    
+    .. attribute:: maxMaintenance
+    
+       maximum points of damage taken by the structure before it begins
+       to decay.
+    
+    .. attribute:: maxMonthlyDecay
+
+       maximum damage the structure will take per month as decay.
+    
+    .. attribute:: maintFactor
+    
+       damage repaired per unit of material used.
+    
+    .. attribute:: maintItem
+    
+       *name* string of the item used to repair the structure.
+       *wood or stone* is a valid special value.
+    
+    """
+    
+    def __init__(self, name, structuretype, monster=False,
+                 nomonstergrowth=False, canenter=False, nobuildable=False,
+                 protect=None, defense=None, maxMages=None, specials=None,
+                 sailors=None, productionAided=None, neverdecay=False,
+                 maxMaintenance=None, maxMonthlyDecay=None, maintFactor=None,
+                 maintItem=None):
+        """Class constructor."""
+        
+        self.name = name
+        self.structuretype = structuretype
+        self.monster = monster
+        self.nomonstergrowth = nomonstergrowth
+        self.canenter = canenter
+        self.nobuildable = nobuildable
+        self.protect = protect
+        self.defense = defense
+        self.maxMages = maxMages
+        self.specials = specials
+        self.sailors = sailors
+        self.productionAided = productionAided
+        self.neverdecay = neverdecay
+        self.maxMaintenance = maxMaintenance
+        self.maxMonthlyDecay = maxMonthlyDecay
+        self.maintFactor = maintFactor
+        self.maintItem = maintItem
+    
+    # JsonSerializable methods
+    def json_serialize(self):
+        """Return a serializable version of :class:`StructureType`.
+        
+        :return: a *dict* representing the :class:`StructureType`
+            object.
+        
+        .. seealso::
+           :class:`atlantis.helpers.json.JsonSerializable`
+        
+        """
+        
+        json_object = {'name': self.name,
+                       'structuretype': self.structuretype,
+                       'monster': self.monster,
+                       'nomonstergrowth': self.nomonstergrowth,
+                       'canenter': self.canenter,
+                       'nobuildable': self.nobuildable,
+                       'protect': self.protect,
+                       'defense': self.defense,
+                       'maxMages': self.maxMages,
+                       'specials': self.specials,
+                       'sailors': self.sailors,
+                       'productionAided': self.productionAided,
+                       'neverdecay': self.neverdecay,
+                       'maxMaintenance': self.maxMaintenance,
+                       'maxMonthlyDecay': self.maxMonthlyDecay,
+                       'maintFactor': self.maintFactor,
+                       'maintItem': self.maintItem}
+                
+        return json_object
+    
+    @staticmethod
+    def json_deserialize(json_object):
+        """Load :class:`StructureType` from a deserialized json object.
+
+        :param json_object: object returned by :func:`json.load`.
+        
+        :return: the :class:`StructureType` object from json data.
+        
+        .. seealso::
+           :class:`atlantis.helpers.json.JsonSerializable`
+        
+        """
+        
+        s = StructureType(**json_object)
+        
+        return s
 
 
 class AtlantisRules(JsonSerializable, RichComparable):
@@ -185,16 +367,22 @@ class AtlantisRules(JsonSerializable, RichComparable):
         :param json_data: dictionary with object data from json file.
         
         """
+        
+        self.terrain_types = dict()
+        self.structures = dict()
+        self.strings = dict()
+        
         if json_data:
             if 'terrain_types' in json_data.keys():
                 self.terrain_types = dict(
                         [(ob['name'], TerrainType.json_deserialize(ob)) \
                          for ob in json_data['terrain_types']])
+            if 'structures' in json_data.keys():
+                self.structures = dict(
+                        [(ob['name'], StructureType.json_deserialize(ob)) \
+                         for ob in json_data['structures']])
             if 'strings' in json_data.keys():
                 self.strings = json_data['strings']
-        else:
-            self.terrain_types = dict()
-            self.strings = dict()
     
     def get_direction(self, dir_str):
         """Return the direction represented by a string.
@@ -231,6 +419,10 @@ class AtlantisRules(JsonSerializable, RichComparable):
         if self.terrain_types:
             json_object['terrain_types'] = \
                     [t.json_serialize() for t in self.terrain_types.values()]
+        
+        if self.structures:
+            json_object['structures'] = \
+                    [s.json_serialize() for s in self.structures.values()]
                     
         if self.strings:
             json_object['strings'] = self.strings
@@ -271,6 +463,9 @@ class AtlantisRules(JsonSerializable, RichComparable):
         
         with open(os.path.join(folder_name, 'terrain_types.json')) as f:
             ar.terrain_types = json_load_list(f, TerrainType)
+        
+        with open(os.path.join(folder_name, 'structures.json')) as f:
+            ar.structures = json_load_list(f, StructureType)
         
         with open(os.path.join(folder_name, 'strings.json')) as f:
             ar.strings = json_load_dict(f)

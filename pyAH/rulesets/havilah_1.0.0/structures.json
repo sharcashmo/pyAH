@@ -1,0 +1,352 @@
+[
+  {
+    "name": "Fleet",
+    "structuretype": "group of ships",
+    "canenter": true
+  },
+  {
+    "name": "Tower",
+    "structuretype": "building",
+    "canenter": true,
+    "protect": 10,
+    "defense": {
+      "melee": 2,
+      "energy": 2,
+      "spirit": 2,
+      "weather": 2,
+      "riding": 2,
+      "ranged": 2
+    }
+  },
+  {
+    "name": "Fort",
+    "structuretype": "building",
+    "canenter": true,
+    "protect": 50,
+    "defense": {
+      "melee": 2,
+      "energy": 2,
+      "spirit": 2,
+      "weather": 2,
+      "riding": 2,
+      "ranged": 2
+    }
+  },
+  {
+    "name": "Castle",
+    "structuretype": "building",
+    "canenter": true,
+    "protect": 250,
+    "defense": {
+      "melee": 2,
+      "energy": 2,
+      "spirit": 2,
+      "weather": 2,
+      "riding": 2,
+      "ranged": 2
+    }
+  },
+  {
+    "name": "Citadel",
+    "structuretype": "building",
+    "canenter": true,
+    "protect": 1250,
+    "defense": {
+      "melee": 2,
+      "energy": 2,
+      "spirit": 2,
+      "weather": 2,
+      "riding": 2,
+      "ranged": 2
+    }
+  },
+  {
+    "name": "Shaft",
+    "structuretype": "building",
+    "canenter": true,
+    "nobuildable": true
+  },
+  {
+    "name": "Lair",
+    "structuretype": "building",
+    "monster": true,
+    "nobuildable": true
+  },
+  {
+    "name": "Ruin",
+    "structuretype": "building",
+    "monster": true,
+    "nobuildable": true
+  },
+  {
+    "name": "Cave",
+    "structuretype": "building",
+    "monster": true,
+    "nobuildable": true
+  },
+  {
+    "name": "Demon Pit",
+    "structuretype": "building",
+    "monster": true,
+    "nobuildable": true
+  },
+  {
+    "name": "Crypt",
+    "structuretype": "building",
+    "monster": true,
+    "nobuildable": true
+  },
+  {
+    "name": "Magical Tower",
+    "structuretype": "building",
+    "canenter": true,
+    "protect": 10,
+    "defense": {
+      "melee": 2,
+      "energy": 2,
+      "spirit": 2,
+      "weather": 2,
+      "riding": 2,
+      "ranged": 2
+    },
+    "maxMages": 10,
+    "specials": {
+      "specialname": "earthquake",
+      "affected": false
+    }
+  },
+  {
+    "name": "Magical Fortress",
+    "structuretype": "building",
+    "canenter": true,
+    "protect": 50,
+    "defense": {
+      "melee": 2,
+      "energy": 2,
+      "spirit": 2,
+      "weather": 2,
+      "riding": 2,
+      "ranged": 2
+    },
+    "maxMages": 20,
+    "specials": {
+      "specialname": "earthquake",
+      "affected": false
+    }
+  },
+  {
+    "name": "Magical Castle",
+    "structuretype": "building",
+    "canenter": true,
+    "protect": 250,
+    "defense": {
+      "melee": 2,
+      "energy": 2,
+      "spirit": 2,
+      "weather": 2,
+      "riding": 2,
+      "ranged": 2
+    },
+    "maxMages": 60,
+    "specials": {
+      "specialname": "earthquake",
+      "affected": false
+    }
+  },
+  {
+    "name": "Magical Citadel",
+    "structuretype": "building",
+    "canenter": true,
+    "protect": 1250,
+    "defense": {
+      "melee": 2,
+      "energy": 2,
+      "spirit": 2,
+      "weather": 2,
+      "riding": 2,
+      "ranged": 2
+    },
+    "maxMages": 100,
+    "specials": {
+      "specialname": "earthquake",
+      "affected": false
+    }
+  },
+  {
+    "name": "Mine",
+    "structuretype": "building",
+    "canenter": true,
+    "productionAided": "iron"
+  },
+  {
+    "name": "Farm",
+    "structuretype": "building",
+    "canenter": true,
+    "productionAided": "grain"
+  },
+  {
+    "name": "Ranch",
+    "structuretype": "building",
+    "canenter": true,
+    "productionAided": "livestock"
+  },
+  {
+    "name": "Timber Yard",
+    "structuretype": "building",
+    "canenter": true,
+    "productionAided": "wood"
+  },
+  {
+    "name": "Inn",
+    "structuretype": "building",
+    "canenter": true,
+    "productionAided": "entertainment"
+  },
+  {
+    "name": "Quarry",
+    "structuretype": "building",
+    "canenter": true,
+    "productionAided": "stone"
+  },
+  {
+    "name": "Island",
+    "structuretype": "building",
+    "monster": true,
+    "nobuildable": true
+  },
+  {
+    "name": "Derelict Ship",
+    "structuretype": "building",
+    "monster": true,
+    "nobuildable": true
+  },
+  {
+    "name": "Cavern",
+    "structuretype": "building",
+    "monster": true,
+    "nobuildable": true
+  },
+  {
+    "name": "Whirlpool",
+    "structuretype": "building",
+    "monster": true,
+    "nobuildable": true
+  },
+  {
+    "name": "Road N",
+    "structuretype": "building",
+    "canenter": true
+  },
+  {
+    "name": "Road NW",
+    "structuretype": "building",
+    "canenter": true
+  },
+  {
+    "name": "Road NE",
+    "structuretype": "building",
+    "canenter": true
+  },
+  {
+    "name": "Road SW",
+    "structuretype": "building",
+    "canenter": true
+  },
+  {
+    "name": "Road SE",
+    "structuretype": "building",
+    "canenter": true
+  },
+  {
+    "name": "Road S",
+    "structuretype": "building",
+    "canenter": true
+  },
+  {
+    "name": "Temple",
+    "structuretype": "building",
+    "canenter": true,
+    "productionAided": "herbs"
+  },
+  {
+    "name": "Mystic Quarry",
+    "structuretype": "building",
+    "canenter": true,
+    "productionAided": "rootstone"
+  },
+  {
+    "name": "Arcane Mine",
+    "structuretype": "building",
+    "canenter": true,
+    "productionAided": "mithril"
+  },
+  {
+    "name": "Forest Preserve",
+    "structuretype": "building",
+    "canenter": true,
+    "productionAided": "ironwood"
+  },
+  {
+    "name": "Sacred Grove",
+    "structuretype": "building",
+    "canenter": true,
+    "productionAided": "yew"
+  },
+  {
+    "name": "Black Tower",
+    "structuretype": "building",
+    "canenter": true,
+    "nobuildable": true
+  },
+  {
+    "name": "Gateway",
+    "structuretype": "building",
+    "canenter": true,
+    "nobuildable": true
+  },
+  {
+    "name": "Longship",
+    "structuretype": "ship",
+    "canenter": true
+  },
+  {
+    "name": "Raft",
+    "structuretype": "ship",
+    "canenter": true
+  },
+  {
+    "name": "Cog",
+    "structuretype": "ship",
+    "canenter": true
+  },
+  {
+    "name": "Galleon",
+    "structuretype": "ship",
+    "canenter": true
+  },
+  {
+    "name": "Galley",
+    "structuretype": "ship",
+    "canenter": true
+  },
+  {
+    "name": "Corsair",
+    "structuretype": "ship",
+    "canenter": true
+  },
+  {
+    "name": "Balloon",
+    "structuretype": "ship",
+    "canenter": true
+  },
+  {
+    "name": "Airship",
+    "structuretype": "ship",
+    "canenter": true
+  },
+  {
+    "name": "Cloudship",
+    "structuretype": "ship",
+    "canenter": true
+  }
+]
