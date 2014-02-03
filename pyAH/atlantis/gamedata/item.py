@@ -8,12 +8,14 @@ are items.
 as list of items, and *items* forming them are what give these *units*
 their main stats.
 
-Main class in :mod:`atlantis.gamedata.item` is :class:`ItemDef`, which
-holds and handle all data about an item type definition.
+This module does not have information about *items* characteristics.
+That is handled by :class:`atlantis.gamedata.rules.ItemType`. Classes
+defined in :mod:`atlantis.gamedata.item`, instead, reference actual
+instances of *items* in the game.
 
-In addition some more classes are defined to hold actual items in game,
-as they're :class:`Item`, :class:`ItemAmount`, :class:`ItemMarket` and
-:class:`ItemUnit`
+Actual *items* form *units*, are sold in *markets*, produced by
+*regions*, etc, and this data is managed by
+:mod:`atlantis.gamedata.item`.
 
 """
 
@@ -122,8 +124,9 @@ class ItemAmount(Item):
            :class:`atlantis.helpers.json.JsonSerializable`
         
         """
-        return {'abr': self.abr, 'name': self.name, 'names': self.names,
-                'amt': self.amt}
+        json_object = Item.json_serialize(self)
+        json_object.update(amt=self.amt)
+        return json_object
     
     @staticmethod
     def json_deserialize(json_object):
@@ -177,8 +180,9 @@ class ItemMarket(ItemAmount):
            :class:`atlantis.helpers.json.JsonSerializable`
         
         """
-        return {'abr': self.abr, 'name': self.name, 'names': self.names,
-                'amt': self.amt, 'price': self.price}
+        json_object = ItemAmount.json_serialize(self)
+        json_object.update(price=self.price)
+        return json_object
     
     @staticmethod
     def json_deserialize(json_object):
@@ -241,9 +245,10 @@ class ItemUnit(ItemAmount):
            :class:`atlantis.helpers.json.JsonSerializable`
         
         """
-        return {'abr': self.abr, 'name': self.name, 'names': self.names,
-                'amt': self.amt, 'unfinished': self.unfinished,
-                'illusion': self.illusion}
+        
+        json_object = ItemAmount.json_serialize(self)
+        json_object.update(unfinished=self.unfinished, illusion=self.illusion)
+        return json_object
     
     @staticmethod
     def json_deserialize(json_object):
