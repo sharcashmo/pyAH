@@ -17,6 +17,7 @@ Modules in :ref:`atlantis.gamedata` package:
    atlantis.gamedata.region
    atlantis.gamedata.structure
    atlantis.gamedata.item
+   atlantis.gamedata.skill
    atlantis.gamedata.rules
    atlantis.gamedata.theme
  
