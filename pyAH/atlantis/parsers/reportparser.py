@@ -24,7 +24,8 @@ Public attributes in :mod:`atlantis.parsers.reportparser` module:
 
 """
 
-from atlantis.gamedata.item import Item, ItemAmount, ItemMarket
+from atlantis.gamedata.item import Item, ItemAmount, ItemMarket, ItemUnit
+from atlantis.gamedata.skill import Skill, SkillDays
 
 import re
 
@@ -1529,7 +1530,7 @@ class ReportConsumer:
                       combat=None, skills=None,
                       weight=None, capacity=None
                       ):
-        """Handle a unit report in a region.
+        """Handle a unit in a region report.
         
         Units are the main entities in Atlantis: every action a player
         does is by issuing orders to their units.
@@ -1549,141 +1550,99 @@ class ReportConsumer:
         - Own units. Always visible and complete report.
         
         - Extended report. Unit is revealing faction or our *OBSE* is
-        greater than unit *STEA*. Faction is revealed, as well as some
-        flags like *avoiding* and *behind*.
+          greater than unit *STEA*. Faction is revealed, as well as
+          some flags like *avoiding* and *behind*.
         
         - Basic report. Unit is revealing unit, on guard, or our *OBSE*
-        is equal than unit *STEA*. Unit is visible, but less stats are
-        reported.
-        
-        These parameters are reported every time a unit is visible:
-            num
-                Unique identifier of the unit.
-            name
-                Name of the unit.
-            items
-                List of items in the unit (including men). All items
-                are reported *except* weightless items, that are only
-                reported for own units.
-                
-                Each element in the list is a dictionary with the
-                following keys:
-                    *amt*
-                        Amount of items of this type.
-                    *abr*
-                        Abbreviature of the item type.
-                    *name*/*names*
-                        Name or names of the item.
-                    *illusion*
-                        *True* if it's an illusion. Defaults to
-                        *False*.
-                    *unfinished*
-                        *True* if the item is unfinished. Defaults to
-                        *False*.
-                    *num*
-                        Amount of work needed to finish the item if
-                        it's unfinished. Defaults to 0.
-            tab
-                If *True* the unit is tabbed. That is, the unit is
-                inside a structure. Defaults to *False*.
-            guard
-                Flags if the unit is on guard (**guard**), avoiding
-                (**avoid**) or *None*. Note that while **guard** is
-                always reported, **avoid** only in the *extended*
-                report. Defaults to *None*.
-                
-        In addition these parameters are reported with superior *OBSE*
-        or if the unit is revealing faction:
-            faction
-                If visible, faction will be a dictionary with *num* and
-                *name* of unit's faction. Defaults to *None*.
-            attitude
-                If the option *showattitudes* is chosen for the report
-                this parameter will show our attitude towards unit's
-                faction. Possible values are **me**, **ally**,
-                **friendly**, **neutral**, **unfriendly** and
-                **hostile**.
-                
-                If *showattitudes* is not active or unit's faction is
-                unknown *attitude* will take **neutral** value.
-            behind
-                If *True* the unit is *behind* in combat. Defaults to
-                *False*.
+          is equal than unit *STEA*. Unit is visible, but less stats
+          are reported.
             
-        Parameters only give for own units:
-            holding
-                If *True* the unit is *holding* its position. Defaults
-                to *False*.
-            autotax
-                If *True* the unit will always tax without having to
-                issue the *tax* order. Defaults to *False*.
-            noaid
-                If *True* the unit won't call for help if attacked.
-                Defaults to *False*.
-            sharing
-                If *True* the unit will share its posessions with any
-                other unit of your faction that needs them. Defaults to
-                *False*.
-            nocross
-                If *True* the unit won't cross a body of water even if
-                it can do it. Defaults to *False*.
-            reveal
-                Reveal flag of the unit. Can be **faction**, **unit**
-                or *None*. Defaults to *None*.
-            consuming
-                If set the unit will consume food in preference to
-                silver. Possible values are **unit** and **faction**
-                to consume own's unit food or faction food. Defaults to
-                *None*.
-            spoils
-                If set the unit has limited which spoils can take from
-                battle. Possible values are **weightless**, **flying**,
-                **walking**, **riding** and **sailing**. Defaults to
-                *None*.
-            visited
-                List of places (strings) the unit has visited, for
-                quests. Defaults to *None*.
-            canstudy
-                List of advanced skills that need prerequisites that
-                the unit has fulfilled so it can now study them. Each
-                element in the list is a dicionary with skill *abbr*
-                and *name*. Defaults to *None*.
-            readyitem
-                List of ready miscellaneous combat items for the unit.
-                Each element in the list is a dictionary with item
-                *abr* and *name*. Defaults to *None*.
-            readyarmor
-                List of ready armor items for the unit. Each element in
-                the list is a dictionary with item *abr* and *name*.
-                Defaults to *None*.
-            readyweapon
-                List of ready weapon items for the unit. Each element
-                in the list is a dictionary with item *abr* and *name*.
-                Defaults to *None*.
-            combat
-                Unit combat spell. It's a dictionary with skill *abbr*
-                and *name*. Defaults to *None*.
-            skills
-                List of unit skills. Each element in the list is a
-                dictionary with *abbr*, *name*, *level* and *days* of
-                the studied skill. In addition, if skills require
-                experience is activated a *rate* is added to the
-                dictionary.
+        :param num: unique identifier of the unit. 
+        :param name: name of the unit.
+        :param items: list of :class:`~atlantis.gamedata.item.ItemUnit`
+            elements. All items are reported *except* weightless items,
+            that are only reported for own units.
+        :param tab: if *True* the unit is tabbed. That is, the unit is
+            inside a structure. Defaults to *False*.
+        :param guard: flags if the unit is on guard (**guard**),
+            avoiding (**avoid**) or *None*. Defaults to *None*.
+            
+            .. note:: while **guard** is always reported, **avoid** only
+                in the *extended* report.
+
+        :param faction: if visible, faction will be a dictionary with
+            *num* and *name* of unit's faction. Defaults to *None*.
+            
+            .. note:: *faction*, *attitude* and *behind* are shown for
+                own units and in *extended* report, but not in *basic*
+                report.
+        
+        :param attitude: if the option *showattitudes* is chosen for the
+            report this parameter will show our attitude towards unit's
+            faction. Possible values are **me**, **ally**, **friendly**,
+            **neutral**, **unfriendly** and **hostile**.
+            
+            If *showattitudes* is not active or unit's faction is
+            unknown *attitude* will take **neutral** value.
+        :param behind: if *True* the unit is *behind* in combat.
+            Defaults to *False*.
+        :param holding: if *True* the unit is *holding* its position.
+            Defaults to *False*.
+            
+            .. note:: *holding* and all next parameters are shown only
+                for own units and never for other units, neither in
+                *extended* nor *basic* report.
+        
+        :param autotax: if *True* the unit will always tax without
+            having to issue the *tax* order. Defaults to *False*.
+        :param noaid: if *True* the unit won't call for help if
+            attacked. Defaults to *False*.
+        :param sharing: if *True* the unit will share its posessions
+            with any other unit of your faction that needs them.
+            Defaults to *False*.
+        :param nocross: if *True* the unit won't cross a body of water
+            even if it can do it. Defaults to *False*.
+        :param reveal: reveal flag of the unit. Can be **faction**,
+            **unit** or *None*. Defaults to *None*.
+        :param consuming: if set the unit will consume food in
+            preference to silver. Possible values are **unit** and
+            **faction** to consume own's unit food or faction food.
+            Defaults to *None*.
+        :param spoils: if set the unit has limited which spoils can take
+            from battle. Possible values are **weightless**, **flying**,
+            **walking**, **riding** and **sailing**. Defaults to *None*.
+        :param visited: list of places (strings) the unit has visited,
+            for quests. Defaults to *None*.
+        :param canstudy: list of :class:`~atlantis.gamedata.skill.Skill`
+            needing prerequisites that the unit has fulfilled so it can
+            now study them. Defaults to *None*.
+        :param readyitem: list of ready miscellaneous combat
+            :class:`~atlantis.gamedata.item.Item` for the unit. Defaults
+            to *None*.
+        :param readyarmor: list of ready armor
+            :class:`~atlantis.gamedata.item.Item` for the unit. Defaults
+            to *None*.
+        :param readyweapon: list of ready weapon
+            :class:`~atlantis.gamedata.item.Item` for the unit. Defaults
+            to *None*.
+        :param combat: unit combat spell. It's a
+            :class:`~atlantis.gamedata.skill.Skill` instance. Defaults
+            to *None*.
+        :param skills: list of
+            :class:`~atlantis.gamedata.skill.SkillDays` elements.
+            Defaults to *None*.
+        :param weight: unit weight. Defaults to *None*.
+        :param capacity: unit capacity. It's a dictionary where keys are
+            the movement types and values are capacities for them. Note
+            that capacity include own weight, so a man will have a
+            capacity of 15 and a weight of 10, being able to carry up to
+            5 weight of items with him.
                 
-                Defaults to *None*.
-            weight
-                Unit weight. Defaults to *None*.
-            capacity
-                Unit capacity. It's a dictionary where keys are the
-                movement types and values are capacities for them. Note
-                that capacity include own weight, so a man will have
-                a capacity of 15 and a weight of 10, being able to
-                carry up to 5 weight of items with him.
-                
-                Movement types are: *flying*, *riding*, *walking* and
-                *swimming*.
+            Movement types are: *flying*, *riding*, *walking* and
+            *swimming*.
         
         """
+        
         print('region_unit', num, name, items, tab, guard, faction, attitude,
               behind, holding, autotax, noaid, sharing, nocross, reveal,
               consuming, spoils, visited, canstudy, readyitem, readyarmor,
@@ -3410,8 +3369,9 @@ class ReportParser:
                 params['canstudy'] = []
                 for sk in result.group('canstudy').split(', '):
                     result = re.match(ReportParser._re_str_skill_str, sk)
-                    params['canstudy'].append({'abbr': result.group('abbr'),
-                                               'name': result.group('name')})
+                    params['canstudy'].append(
+                            Skill(abr=result.group('abbr'),
+                                  name=result.group('name')))
                     
             # Ready items
             for r in ('item', 'armor', 'weapon'):
@@ -3423,15 +3383,15 @@ class ReportParser:
                 params['ready' + r] = []
                 for it in result.group('items').split(', '):
                     result = re.match(ReportParser._re_str_item_str, it)
-                    params['ready' + r].append(result.groupdict())
+                    params['ready' + r].append(Item(**result.groupdict()))
             
             # Combat spell
             result = re.match('(?P<unit>.+)' + \
                               ReportParser._re_str_unit_combat_skill, unit)
             if result:
                 unit = result.group('unit').strip()
-                params['combat'] = {'abbr': result.group('abbr'),
-                                    'name': result.group('name')}
+                params['combat'] = Skill(abr=result.group('abbr'),
+                                         name=result.group('name'))
             
             # Skills
             result = re.match('(?P<unit>.+)' + \
@@ -3445,13 +3405,13 @@ class ReportParser:
                                 ReportParser._re_str_unit_skills_skill, sk)
                         if not result:
                             continue
-                        skilldict = {'abbr': result.group('abbr'),
+                        skilldict = {'abr': result.group('abbr'),
                                      'name': result.group('name'),
                                      'level': int(result.group('level')),
                                      'days': int(result.group('days'))}
                         if result.group('rate'):
-                            skilldict['rate'] = int(result.group('rate'))
-                        params['skills'].append(skilldict)
+                            skilldict.update(rate=int(result.group('rate')))
+                        params['skills'].append(SkillDays(**skilldict))
             
             # Capacity
             result = re.match('(?P<unit>.+)' + \
@@ -3470,17 +3430,16 @@ class ReportParser:
             params['items'] = []
             for it in unit.split(', '):
                 itemdict = dict()
-                params['items'].append(itemdict)
                 result = re.match(ReportParser._re_str_item_unfinished, it)
                 if result:
-                    itemdict['unfinished'] = True
-                    itemdict['num'] = int(result.group('num'))
+                    itemdict['unfinished'] = int(result.group('num'))
                     it = result.group('item')
                 result = re.match(ReportParser._re_str_item_illusion, it)
                 if result:
                     itemdict['illusion'] = True
                     it = result.group('unit')
                 itemdict.update(ReportParser._parse_item_str(it))
+                params['items'].append(ItemUnit(**itemdict))
 
             self._consumer.region_unit(**params)
             return
@@ -3993,15 +3952,16 @@ class ReportParser:
     
     @staticmethod
     def _parse_item_str(itemstr):
-        """Parse item string
+        """Parse item string.
         
         Its only parameter is the item string to be parsed. Returns a
         dictionary with the amount of items, its abreviature and its
         name or names.
         
-        Parameter:
-            itemstr
-                Item string.
+        :param itemstr: item string.
+        
+        :return: a dictionary with item *amt*, *abr* and *name* or
+            *names* values.
         
         """
         result = re.match(ReportParser._re_str_item_amt_str, itemstr)

@@ -4,7 +4,8 @@ from atlantis.parsers.reportparser import ReportReader
 from atlantis.parsers.reportparser import ReportParser
 from atlantis.parsers import reportparser  # @UnusedImport
 
-from atlantis.gamedata.item import Item, ItemAmount, ItemMarket
+from atlantis.gamedata.item import Item, ItemAmount, ItemMarket, ItemUnit
+from atlantis.gamedata.skill import Skill, SkillDays
 
 try:
     from unittest.mock import patch  # @UnresolvedImport @UnusedImport
@@ -1772,10 +1773,9 @@ class TestReportParser(unittest.TestCase):
                     name='Scout', num=1710, attitude='me',
                     faction={'name': 'Mathoyoh', 'num': 13},
                     guard='avoid', behind=True, noaid=True, nocross=True,
-                    items=[{'abr': 'TELF', 'name': 'tribal elf', 'amt': 1},
-                           {'abr': 'SILV', 'names': 'silver', 'amt': 51}],
-                    skills=[{'abbr': 'COMB', 'name': 'combat',
-                             'level': 1, 'days': 30}],
+                    items=[ItemUnit(abr='TELF', name='tribal elf', amt=1),
+                           ItemUnit(abr='SILV', names='silver', amt=51)],
+                    skills=[SkillDays('COMB', 'combat', 1, 30)],
                     capacity={'riding': 0, 'flying': 0, 'walking': 15,
                               'swimming': 0}, weight=10)
             
@@ -1789,11 +1789,10 @@ class TestReportParser(unittest.TestCase):
                     name='Ship', num=468, attitude='me',
                     faction={'name': 'Mathoyoh', 'num': 3},
                     guard='avoid', behind=True, nocross=True,
-                    items=[{'abr': 'VIKI', 'names': 'vikings', 'amt': 10},
-                           {'abr': 'GALL', 'name': 'Galleon', 'amt': 1,
-                            'unfinished': True, 'num': 15}],
-                    skills=[{'abbr': 'SHIP', 'name': 'shipbuilding',
-                             'level': 3, 'days': 180}],
+                    items=[ItemUnit(abr='VIKI', names='vikings', amt=10),
+                           ItemUnit(abr='GALL', name='Galleon', amt=1,
+                                    unfinished=15)],
+                    skills=[SkillDays('SHIP', 'shipbuilding', 3, 180)],
                     capacity={'riding': 0, 'flying': 0, 'walking': 150,
                               'swimming': 0}, weight=100)
             
@@ -1803,8 +1802,8 @@ class TestReportParser(unittest.TestCase):
             parser.parse_region(unit)
             consumer_mock().region_unit.assert_called_with(
                     name='City Guard', num=188, attitude='neutral',
-                    items=[{'abr': 'LEAD', 'names': 'leaders', 'amt': 80},
-                           {'abr': 'SWOR', 'names': 'swords', 'amt': 80}],
+                    items=[ItemUnit(abr='LEAD', names='leaders', amt=80),
+                           ItemUnit(abr='SWOR', names='swords', amt=80)],
                     faction={'name': 'The Guardsmen', 'num': 1},
                     guard='guard')
             
@@ -1827,45 +1826,32 @@ class TestReportParser(unittest.TestCase):
                     name='ShArcashmo', num=397, attitude='me',
                     faction={'name': 'Mathoyoh', 'num': 13},
                     behind=True, nocross=True,
-                    items=[{'abr': 'LEAD', 'name': 'leader', 'amt': 1},
-                           {'abr': 'WOLF', 'names': 'wolves', 'amt': 4},
-                           {'abr': 'SWOR', 'names': 'swords', 'amt': 4},
-                           {'abr': 'HORS', 'names': 'horses', 'amt': 24}],
+                    items=[ItemUnit(abr='LEAD', name='leader', amt=1),
+                           ItemUnit(abr='WOLF', names='wolves', amt=4),
+                           ItemUnit(abr='SWOR', names='swords', amt=4),
+                           ItemUnit(abr='HORS', names='horses', amt=24)],
                     capacity={'riding': 1740, 'flying': 0, 'walking': 1755,
                               'swimming': 0}, weight=1254,
-                    combat={'abbr': 'FIRE', 'name': 'fire'},
-                    skills=[{'abbr': 'PATT', 'name': 'pattern',
-                             'level': 2, 'days': 120},
-                            {'abbr': 'FORC', 'name': 'force',
-                             'level': 1, 'days': 70},
-                            {'abbr': 'WEAT', 'name': 'weather lore',
-                             'level': 1, 'days': 30},
-                            {'abbr': 'CLEA', 'name': 'clear skies',
-                             'level': 1, 'days': 30},
-                            {'abbr': 'EART', 'name': 'earth lore',
-                             'level': 2, 'days': 105},
-                            {'abbr': 'BIRD', 'name': 'bird lore',
-                             'level': 2, 'days': 90},
-                            {'abbr': 'FIRE', 'name': 'fire',
-                             'level': 1, 'days': 30},
-                            {'abbr': 'EQUA', 'name': 'earthquake',
-                             'level': 1, 'days': 30},
-                            {'abbr': 'WOLF', 'name': 'wolf lore',
-                             'level': 2, 'days': 100},
-                            {'abbr': 'OBSE', 'name': 'observation',
-                             'level': 1, 'days': 60},
-                            {'abbr': 'STEA', 'name': 'stealth',
-                             'level': 1, 'days': 60},
-                            {'abbr': 'SWIN', 'name': 'summon wind',
-                             'level': 1, 'days': 30},
-                            {'abbr': 'MHEA', 'name': 'magical healing',
-                             'level': 1, 'days': 60}],
-                    canstudy=[{'abbr': 'FSHI', 'name': 'force shield'},
-                              {'abbr': 'ESHI', 'name': 'energy shield'},
-                              {'abbr': 'MHEA', 'name': 'magical healing'},
-                              {'abbr': 'MIND', 'name': 'mind reading'},
-                              {'abbr': 'SSTO', 'name': 'summon storm'},
-                              {'abbr': 'ILLU', 'name': 'illusion'}])
+                    combat=Skill(abr='FIRE', name='fire'),
+                    skills=[SkillDays('PATT', 'pattern', 2, 120),
+                            SkillDays('FORC', 'force', 1, 70),
+                            SkillDays('WEAT', 'weather lore', 1, 30),
+                            SkillDays('CLEA', 'clear skies', 1, 30),
+                            SkillDays('EART', 'earth lore', 2, 105),
+                            SkillDays('BIRD', 'bird lore', 2, 90),
+                            SkillDays('FIRE', 'fire', 1, 30),
+                            SkillDays('EQUA', 'earthquake', 1, 30),
+                            SkillDays('WOLF', 'wolf lore', 2, 100),
+                            SkillDays('OBSE', 'observation', 1, 60),
+                            SkillDays('STEA', 'stealth', 1, 60),
+                            SkillDays('SWIN', 'summon wind', 1, 30),
+                            SkillDays('MHEA', 'magical healing', 1, 60)],
+                    canstudy=[Skill(abr='FSHI', name='force shield'),
+                              Skill(abr='ESHI', name='energy shield'),
+                              Skill(abr='MHEA', name='magical healing'),
+                              Skill(abr='MIND', name='mind reading'),
+                              Skill(abr='SSTO', name='summon storm'),
+                              Skill(abr='ILLU', name='illusion')])
             
             # Unit. Ready
             unit = '* Garrison (3286), on guard, Fhetoky (21), tribal elf ' \
@@ -1879,18 +1865,17 @@ class TestReportParser(unittest.TestCase):
             consumer_mock().region_unit.assert_called_with(
                     name='Garrison', num=3286, attitude='me',
                     faction={'name': 'Fhetoky', 'num': 21}, guard='guard',
-                    items=[{'abr': 'TELF', 'name': 'tribal elf', 'amt': 1},
-                           {'abr': 'SWOR', 'name': 'sword', 'amt': 1},
-                           {'abr': 'LARM', 'name': 'leather armor', 'amt': 1},
-                           {'abr': 'CNSR', 'name': 'censer of protection',
-                            'amt': 1}],
+                    items=[ItemUnit(abr='TELF', name='tribal elf', amt=1),
+                           ItemUnit(abr='SWOR', name='sword', amt=1),
+                           ItemUnit(abr='LARM', name='leather armor', amt=1),
+                           ItemUnit(abr='CNSR', name='censer of protection',
+                                    amt=1)],
                     capacity={'riding': 0, 'flying': 0, 'walking': 15,
                               'swimming': 0}, weight=12,
-                    skills=[{'abbr': 'COMB', 'name': 'combat',
-                             'days': 90, 'level': 2}],
-                    readyweapon=[{'abr': 'SWOR', 'name': 'sword'}],
-                    readyarmor=[{'abr': 'LARM', 'name': 'leather armor'}],
-                    readyitem=[{'abr': 'CNSR', 'name': 'censer of protection'}])
+                    skills=[SkillDays('COMB', 'combat', 2, 90)],
+                    readyweapon=[Item(abr='SWOR', name='sword')],
+                    readyarmor=[Item(abr='LARM', name='leather armor')],
+                    readyitem=[Item(abr='CNSR', name='censer of protection')])
 
 if __name__ == '__main__':
     unittest.main()
