@@ -164,21 +164,25 @@ class TestItemUnit(unittest.TestCase):
         io = StringIO()
         
         it = ItemUnit('HORS', 5, names='horses')
-        json.dump(it, io, default=ItemMarket.json_serialize)
+        json.dump(it, io, default=ItemUnit.json_serialize)
         io.seek(0)
-        it_new = ItemMarket.json_deserialize(json.load(io))
+        it_new = ItemUnit.json_deserialize(json.load(io))
         self.assertEqual(it, it_new)
         
+        io.seek(0)
+        io.truncate()
         it = ItemUnit('GALL', 1, name='galleon', unfinished=3)
-        json.dump(it, io, default=ItemMarket.json_serialize)
+        json.dump(it, io, default=ItemUnit.json_serialize)
         io.seek(0)
-        it_new = ItemMarket.json_deserialize(json.load(io))
+        it_new = ItemUnit.json_deserialize(json.load(io))
         self.assertEqual(it, it_new)
         
-        it = ItemUnit('IWOLF', 3, names='wolves', illusion=True)
-        json.dump(it, io, default=ItemMarket.json_serialize)
         io.seek(0)
-        it_new = ItemMarket.json_deserialize(json.load(io))
+        io.truncate()
+        it = ItemUnit('IWOLF', 3, names='wolves', illusion=True)
+        json.dump(it, io, default=ItemUnit.json_serialize)
+        io.seek(0)
+        it_new = ItemUnit.json_deserialize(json.load(io))
         self.assertEqual(it, it_new)
 
 
